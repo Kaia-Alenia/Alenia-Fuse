@@ -93,3 +93,51 @@ func TestIsExt(t *testing.T) {
 		})
 	}
 }
+
+func TestLanguageLabel(t *testing.T) {
+	tests := []struct {
+		name     string
+		code     string
+		expected string
+	}{
+		{
+			name:     "English code",
+			code:     "en",
+			expected: "English",
+		},
+		{
+			name:     "Spanish code",
+			code:     "es",
+			expected: "Español",
+		},
+		{
+			name:     "Portuguese (BR) code",
+			code:     "pt-br",
+			expected: "Português (BR)",
+		},
+		{
+			name:     "German code",
+			code:     "de",
+			expected: "Deutsch",
+		},
+		{
+			name:     "Unknown code returns self",
+			code:     "unknown",
+			expected: "unknown",
+		},
+		{
+			name:     "Empty code returns self",
+			code:     "",
+			expected: "",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := languageLabel(tt.code)
+			if result != tt.expected {
+				t.Errorf("languageLabel(%q) = %q, expected %q", tt.code, result, tt.expected)
+			}
+		})
+	}
+}
