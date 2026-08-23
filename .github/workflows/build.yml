@@ -1,4 +1,4 @@
-name: Build Alenia Porter v7.0
+name: Build Alenia Porter CLI
 
 on:
   push:
@@ -6,343 +6,77 @@ on:
       - 'v*'
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build-windows:
-    runs-on: windows-latest
-    timeout-minutes: 60
-    outputs:
-      verified: ${{ steps.set-verified.outputs.verified }}
+  build:
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+        include:
+          - os: windows-latest
+            artifact_name: porter-windows.zip
+            binary_name: porter.exe
+            platform: windows
+          - os: macos-latest
+            artifact_name: porter-macos.zip
+            binary_name: porter
+            platform: macos
+          - os: ubuntu-latest
+            artifact_name: porter-linux.tar.gz
+            binary_name: porter
+            platform: linux
+
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v7
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install nuitka ordered-set zstandard pywebview pillow requests imageio
-
-      - name: Set up FFmpeg
-        uses: FedericoCarboni/setup-ffmpeg@36c6454b5a2348e7794ba2d82a21506605921e3d # v3
-
-      - name: Copy FFmpeg binaries to package
-        run: |
-          $ErrorActionPreference = 'Stop'
-          mkdir src\alenia_porter\bin
-          $ffmpegPath = (Get-Command ffmpeg -CommandType Application).Path
-          $ffprobePath = (Get-Command ffprobe -CommandType Application).Path
-          Copy-Item $ffmpegPath src\alenia_porter\bin\ffmpeg.exe
-          Copy-Item $ffprobePath src\alenia_porter\bin\ffprobe.exe
-          Get-ChildItem src\alenia_porter\bin
-
-      - name: Build frontend
-        working-directory: legacy/ide/frontend
-        run: |
-          npm install
-          npm run build
-
-      - name: Build executable with Nuitka
-        env:
-          PYTHONPATH: src
-        run: |
-          python -m nuitka --standalone --assume-yes-for-downloads --disable-ccache --windows-console-mode=disable --enable-plugin=pywebview --include-package=alenia_porter --include-module=legacy.ide.gui_web --include-module=unicodedata --include-data-dir=src/alenia_porter/assets=alenia_porter/assets --include-data-dir=legacy/ide/frontend/dist=legacy/ide/frontend/dist --include-data-files=src/alenia_porter/bin/ffmpeg.exe=alenia_porter/bin/ffmpeg.exe --include-data-files=src/alenia_porter/bin/ffprobe.exe=alenia_porter/bin/ffprobe.exe --windows-icon-from-ico=src/alenia_porter/assets/images/logo.ico --output-filename=AleniaPorter.exe porter_launcher.py
-
       - name: Set up Go
-        uses: actions/setup-go@v7
+        uses: actions/setup-go@v5
         with:
-          go-version: '1.25.11'
+          go-version: '1.22.x'
 
       - name: Build Go CLI
         run: |
-          go build -o porter_launcher.dist\porter.exe .\cmd\ap
+          mkdir -p dist
+          go build -o dist/${{ matrix.binary_name }} ./cmd/ap
 
-      - name: Smoke test executable
+      - name: Package build (Windows)
+        if: matrix.platform == 'windows'
         run: |
-          if (Test-Path ALENIA_ERROR.txt) { Remove-Item ALENIA_ERROR.txt }
-          & porter_launcher.dist\AleniaPorter.exe --headless
-          if ($LASTEXITCODE -ne 0) {
-            echo "El ejecutable fallo con codigo de salida $LASTEXITCODE"
-            exit $LASTEXITCODE
-          }
-          if (Test-Path ALENIA_ERROR.txt) {
-            echo "Se detectaron errores fatales durante el arranque:"
-            Get-Content ALENIA_ERROR.txt
-            exit 1
-          }
+          if (Test-Path LICENSE) { Copy-Item LICENSE dist/ }
+          Compress-Archive -Path dist/* -DestinationPath ${{ matrix.artifact_name }}
 
-      - name: Package build
+      - name: Package build (macOS)
+        if: matrix.platform == 'macos'
         run: |
-          copy LICENSE porter_launcher.dist\
-          ren porter_launcher.dist AleniaPorter
-          7z a AleniaPorter-Windows.zip AleniaPorter\
+          cp LICENSE dist/ || true
+          cd dist
+          zip -r ../${{ matrix.artifact_name }} *
+
+      - name: Package build (Linux)
+        if: matrix.platform == 'linux'
+        run: |
+          cp LICENSE dist/ || true
+          cd dist
+          tar -czf ../${{ matrix.artifact_name }} *
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
-          name: AleniaPorter-Windows
-          path: AleniaPorter-Windows.zip
-
-      - name: Mark verified
-        id: set-verified
-        run: |
-          if (Test-Path AleniaPorter-Windows.zip) {
-            echo "verified=true" >> $env:GITHUB_OUTPUT
-          } else {
-            echo "verified=false" >> $env:GITHUB_OUTPUT
-            exit 1
-          }
-
-  build-macos:
-    runs-on: macos-latest
-    timeout-minutes: 60
-    outputs:
-      verified: ${{ steps.set-verified.outputs.verified }}
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v7
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install nuitka ordered-set zstandard pywebview pillow requests pyobjc pyobjc-framework-WebKit imageio
-
-      - name: Download and extract FFmpeg for macOS
-        run: |
-          mkdir -p src/alenia_porter/bin
-          FFMPEG_URL="https://evermeet.cx/ffmpeg/getrelease/zip"
-          FFPROBE_URL="https://evermeet.cx/ffmpeg/getrelease/ffprobe/zip"
-          if ! curl -L --fail -o ffmpeg.zip "$FFMPEG_URL"; then
-            echo "Error: no se pudo descargar ffmpeg desde $FFMPEG_URL"
-            exit 1
-          fi
-          if ! curl -L --fail -o ffprobe.zip "$FFPROBE_URL"; then
-            echo "Error: no se pudo descargar ffprobe desde $FFPROBE_URL"
-            exit 1
-          fi
-          unzip ffmpeg.zip -d src/alenia_porter/bin/
-          unzip ffprobe.zip -d src/alenia_porter/bin/
-          chmod +x src/alenia_porter/bin/ffmpeg src/alenia_porter/bin/ffprobe
-          rm *.zip
-
-      - name: Build frontend
-        working-directory: legacy/ide/frontend
-        run: |
-          npm install
-          npm run build
-
-      - name: Convert icon for macOS
-        run: |
-          python -c "
-          from PIL import Image
-          img = Image.open('src/alenia_porter/assets/images/logo.ico')
-          img.save('src/alenia_porter/assets/images/logo.png')
-          "
-
-      - name: Build executable with Nuitka
-        env:
-          PYTHONPATH: src
-        run: |
-          python -m nuitka --standalone --macos-disable-console --macos-create-app-bundle --enable-plugin=pywebview --macos-app-name=AleniaPorter --include-package=alenia_porter --include-module=legacy.ide.gui_web --include-module=unicodedata --include-data-dir=src/alenia_porter/assets=alenia_porter/assets --include-data-dir=legacy/ide/frontend/dist=legacy/ide/frontend/dist --include-data-files=src/alenia_porter/bin/ffmpeg=alenia_porter/bin/ffmpeg --include-data-files=src/alenia_porter/bin/ffprobe=alenia_porter/bin/ffprobe --macos-app-icon=src/alenia_porter/assets/images/logo.png --output-filename=AleniaPorter porter_launcher.py
-          mkdir -p porter_launcher.dist
-          mv *.app porter_launcher.dist/
-
-      - name: Set up Go
-        uses: actions/setup-go@v7
-        with:
-          go-version: '1.25.11'
-
-      - name: Build Go CLI
-        run: |
-          go build -o porter_launcher.dist/porter ./cmd/ap
-
-      - name: Debug - list dist contents
-        run: find porter_launcher.dist -maxdepth 3
-
-      - name: Smoke test executable
-        run: |
-          rm -f ALENIA_ERROR.txt
-          APP_BINARY=$(find porter_launcher.dist -maxdepth 4 -type f -perm -u+x -path "*.app/Contents/MacOS/*" | head -n 1)
-          if [ -z "$APP_BINARY" ]; then
-            echo "No se encontro el binario dentro del .app bundle"
-            find porter_launcher.dist -maxdepth 4
-            exit 1
-          fi
-          echo "Usando binario: $APP_BINARY"
-          "$APP_BINARY" --headless
-          STATUS=$?
-          if [ $STATUS -ne 0 ]; then
-            echo "El ejecutable fallo con codigo de salida $STATUS"
-            exit $STATUS
-          fi
-          if [ -f ALENIA_ERROR.txt ]; then
-            echo "Se detectaron errores fatales durante el arranque:"
-            cat ALENIA_ERROR.txt
-            exit 1
-          fi
-
-      - name: Package build
-        run: |
-          cp LICENSE porter_launcher.dist/
-          mv porter_launcher.dist AleniaPorter
-          zip -r AleniaPorter-macOS.zip AleniaPorter
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: AleniaPorter-macOS
-          path: AleniaPorter-macOS.zip
-
-      - name: Mark verified
-        id: set-verified
-        run: |
-          if [ -f AleniaPorter-macOS.zip ]; then
-            echo "verified=true" >> $GITHUB_OUTPUT
-          else
-            echo "verified=false" >> $GITHUB_OUTPUT
-            exit 1
-          fi
-
-  build-linux:
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    outputs:
-      verified: ${{ steps.set-verified.outputs.verified }}
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v7
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          sudo apt-get update && sudo apt-get install -y xvfb libgirepository1.0-dev gir1.2-webkit2-4.1 libcairo2-dev pkg-config python3-dev
-          pip install nuitka ordered-set zstandard pywebview PyGObject==3.48.2 pillow requests imageio
-
-      - name: Install FFmpeg
-        run: sudo apt-get install -y ffmpeg
-
-      - name: Copy FFmpeg binaries to package
-        run: |
-          mkdir -p src/alenia_porter/bin
-          cp $(which ffmpeg) src/alenia_porter/bin/
-          cp $(which ffprobe) src/alenia_porter/bin/
-
-      - name: Build frontend
-        working-directory: legacy/ide/frontend
-        run: |
-          npm install
-          npm run build
-
-      - name: Build executable with Nuitka
-        env:
-          PYTHONPATH: src
-        run: |
-          python -m nuitka --standalone --enable-plugin=pywebview \
-            --include-package=alenia_porter \
-            --include-package=webview \
-            --include-package=gi \
-            --include-module=legacy.ide.gui_web \
-            --include-module=unicodedata \
-            --include-module=webview.platforms.gtk \
-            --include-module=webview.platforms.qt \
-            --include-module=webview.platforms.cocoa \
-            --include-module=webview.guilib \
-            --include-data-dir=src/alenia_porter/assets=alenia_porter/assets \
-            --include-data-dir=legacy/ide/frontend/dist=legacy/ide/frontend/dist \
-            --include-data-files=src/alenia_porter/bin/ffmpeg=alenia_porter/bin/ffmpeg \
-            --include-data-files=src/alenia_porter/bin/ffprobe=alenia_porter/bin/ffprobe \
-            --output-filename=AleniaPorter porter_launcher.py
-
-      - name: Set up Go
-        uses: actions/setup-go@v7
-        with:
-          go-version: '1.25.11'
-
-      - name: Build Go CLI
-        run: |
-          go build -o porter_launcher.dist/porter ./cmd/ap
-
-      - name: Smoke test executable
-        run: |
-          rm -f ALENIA_ERROR.txt
-          xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" ./porter_launcher.dist/AleniaPorter --headless
-          STATUS=$?
-          if [ $STATUS -ne 0 ]; then
-            echo "El ejecutable fallo con codigo de salida $STATUS"
-            exit $STATUS
-          fi
-          if [ -f ALENIA_ERROR.txt ]; then
-            echo "Se detectaron errores fatales durante el arranque:"
-            cat ALENIA_ERROR.txt
-            exit 1
-          fi
-
-      - name: Package build
-        run: |
-          cp LICENSE porter_launcher.dist/
-          cp update.sh porter_launcher.dist/
-          cp launch.sh porter_launcher.dist/
-          chmod +x porter_launcher.dist/update.sh porter_launcher.dist/launch.sh
-          # Bundle gi (PyGObject) for WebKit2/GTK support
-          GI_PATH=$(python3 -c "import gi, os; print(os.path.dirname(gi.__file__))" 2>/dev/null || true)
-          if [ -n "$GI_PATH" ] && [ -d "$GI_PATH" ]; then
-            cp -a "$GI_PATH" porter_launcher.dist/gi
-          fi
-          mv porter_launcher.dist AleniaPorter
-          tar -czf AleniaPorter-Linux.tar.gz AleniaPorter
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: AleniaPorter-Linux
-          path: AleniaPorter-Linux.tar.gz
-
-      - name: Mark verified
-        id: set-verified
-        run: |
-          if [ -f AleniaPorter-Linux.tar.gz ]; then
-            echo "verified=true" >> $GITHUB_OUTPUT
-          else
-            echo "verified=false" >> $GITHUB_OUTPUT
-            exit 1
-          fi
-
-  snyk-security:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/python@master
-        continue-on-error: true
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          name: porter-${{ matrix.platform }}
+          path: ${{ matrix.artifact_name }}
 
   release:
-    needs: [build-windows, build-macos, build-linux, snyk-security]
-    if: ${{ needs.build-windows.outputs.verified == 'true' && needs.build-macos.outputs.verified == 'true' && needs.build-linux.outputs.verified == 'true' && startsWith(github.ref, 'refs/tags/') }}
+    needs: [build]
+    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -350,15 +84,15 @@ jobs:
 
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
           files: |
-            artifacts/AleniaPorter-Windows/AleniaPorter-Windows.zip
-            artifacts/AleniaPorter-macOS/AleniaPorter-macOS.zip
-            artifacts/AleniaPorter-Linux/AleniaPorter-Linux.tar.gz
+            artifacts/porter-windows/porter-windows.zip
+            artifacts/porter-macos/porter-macos.zip
+            artifacts/porter-linux/porter-linux.tar.gz
