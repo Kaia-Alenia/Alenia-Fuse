@@ -4,7 +4,6 @@ import sys
 import webview
 import json
 import threading
-import tempfile
 import glob
 import base64
 import urllib.parse
