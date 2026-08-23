@@ -97,6 +97,41 @@ class ToolTip(object):
             tw.destroy()
 
 
+def load_themes():
+    import os
+    import json
+    import glob
+    from alenia_porter import porter
+
+    themes_dict = {}
+    with porter.resource_path(os.path.join("assets", "themes")) as themes_path:
+        if os.path.exists(themes_path):
+            for file in glob.glob(os.path.join(themes_path, "*.json")):
+                try:
+                    with open(file, "r", encoding="utf-8") as f:
+                        data = json.load(f)
+                        name = data.get("name", os.path.basename(file))
+                        themes_dict[name] = data
+                except Exception:
+                    pass
+    if not themes_dict:
+        themes_dict["Default Theme"] = {
+            "name": "Default Theme",
+            "bg_main": "#1e1e1e",
+            "fg_main": "#ffffff",
+            "fg_dim": "#a3a3a3",
+            "accent": "#8b5cf6",
+            "accent_hover": "#a78bfa",
+            "link": "#F96854",
+            "success": "#4ade80",
+            "error": "#f87171",
+            "warning": "#fbbf24",
+            "progressbar_trough": "#2d2d2d",
+            "char_sprite": "assets/images/kaia_default.png",
+            "studio_logo_image": "assets/images/studio_logo_white.png"
+        }
+    return themes_dict
+
 def main():
     import sys
     import os
@@ -220,36 +255,6 @@ def main():
                     json.dump(config_to_save, config_file)
             except Exception:
                 pass
-
-        def load_themes():
-            themes_dict = {}
-            with porter.resource_path(os.path.join("assets", "themes")) as themes_path:
-                if os.path.exists(themes_path):
-                    for file in glob.glob(os.path.join(themes_path, "*.json")):
-                        try:
-                            with open(file, "r", encoding="utf-8") as f:
-                                data = json.load(f)
-                                name = data.get("name", os.path.basename(file))
-                                themes_dict[name] = data
-                        except Exception:
-                            pass
-            if not themes_dict:
-                themes_dict["Default Theme"] = {
-                    "name": "Default Theme",
-                    "bg_main": "#1e1e1e",
-                    "fg_main": "#ffffff",
-                    "fg_dim": "#a3a3a3",
-                    "accent": "#8b5cf6",
-                    "accent_hover": "#a78bfa",
-                    "link": "#F96854",
-                    "success": "#4ade80",
-                    "error": "#f87171",
-                    "warning": "#fbbf24",
-                    "progressbar_trough": "#2d2d2d",
-                    "char_sprite": "assets/images/kaia_default.png",
-                    "studio_logo_image": "assets/images/studio_logo_white.png"
-                }
-            return themes_dict
 
         available_themes = load_themes()
         theme_names = list(available_themes.keys())

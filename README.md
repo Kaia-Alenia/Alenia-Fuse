@@ -56,6 +56,10 @@ Originally designed for game engines (Ren'Py, Godot), it has evolved into a **ge
 
 <br>
 
+> **Notice:** The IDE Edition is permanently frozen at **v7.0** and will no longer receive updates. Moving forward, **only the Go CLI Edition** will be actively maintained and updated.
+
+<br>
+
 **Quick start:**
 
 1. Run the **AleniaPorter** executable.

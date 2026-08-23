@@ -34,23 +34,26 @@ async function startServer() {
     timestamp: string;
   }
 
+  // Async queue to prevent concurrent read/writes to telemetry file data loss
+  let telemetryQueue = Promise.resolve();
+
   // Load telemetry data helper
-  const loadTelemetry = (): TelemetryEvent[] => {
+  const loadTelemetry = async (): Promise<TelemetryEvent[]> => {
     try {
-      if (fs.existsSync(TELEMETRY_FILE)) {
-        const raw = fs.readFileSync(TELEMETRY_FILE, "utf8");
-        return JSON.parse(raw);
+      const raw = await fs.promises.readFile(TELEMETRY_FILE, "utf8");
+      return JSON.parse(raw);
+    } catch (e: any) {
+      if (e.code !== "ENOENT") {
+        console.error("Failed to read telemetry file:", e);
       }
-    } catch (e) {
-      console.error("Failed to read telemetry file:", e);
     }
     return [];
   };
 
   // Save telemetry data helper
-  const saveTelemetry = (data: TelemetryEvent[]) => {
+  const saveTelemetry = async (data: TelemetryEvent[]): Promise<void> => {
     try {
-      fs.writeFileSync(TELEMETRY_FILE, JSON.stringify(data, null, 2), "utf8");
+      await fs.promises.writeFile(TELEMETRY_FILE, JSON.stringify(data, null, 2), "utf8");
     } catch (e) {
       console.error("Failed to write telemetry file:", e);
     }
@@ -61,7 +64,7 @@ async function startServer() {
   };
 
   // API Route: Submit telemetry events (Upsert-like statistics)
-  app.post("/api/telemetry", (req: express.Request, res: express.Response) => {
+  app.post("/api/telemetry", async (req: express.Request, res: express.Response) => {
     try {
       const { uuid, nickname, os_family, interface_type, file_type, file_count, duration_seconds, savings_bytes } = req.body;
       
@@ -70,37 +73,47 @@ async function startServer() {
         return;
       }
 
-      const db = loadTelemetry();
-      
-      // Upsert logic: if event for uuid exists, we can register/append, or update aggregate stats.
-      // We will record the new event line representing a real PostgreSQL row insertion.
-      const newEvent: TelemetryEvent = {
-        uuid: String(uuid),
-        nickname: String(nickname),
-        os_family: String(os_family || "Unknown"),
-        interface_type: String(interface_type || "IDE"),
-        file_type: String(file_type || "unknown"),
-        file_count: typeof file_count === "number" ? file_count : 1,
-        duration_seconds: typeof duration_seconds === "number" ? duration_seconds : 1.5,
-        savings_bytes: typeof savings_bytes === "number" ? savings_bytes : 1000,
-        timestamp: new Date().toISOString()
-      };
+      // Ensure single-threaded processing for file-based DB modifications
+      telemetryQueue = telemetryQueue.then(async () => {
+        const db = await loadTelemetry();
+        
+        // Upsert logic: if event for uuid exists, we can register/append, or update aggregate stats.
+        // We will record the new event line representing a real PostgreSQL row insertion.
+        const newEvent: TelemetryEvent = {
+          uuid: String(uuid),
+          nickname: String(nickname),
+          os_family: String(os_family || "Unknown"),
+          interface_type: String(interface_type || "IDE"),
+          file_type: String(file_type || "unknown"),
+          file_count: typeof file_count === "number" ? file_count : 1,
+          duration_seconds: typeof duration_seconds === "number" ? duration_seconds : 1.5,
+          savings_bytes: typeof savings_bytes === "number" ? savings_bytes : 1000,
+          timestamp: new Date().toISOString()
+        };
 
-      db.push(newEvent);
-      saveTelemetry(db);
+        db.push(newEvent);
+        await saveTelemetry(db);
 
-      console.log(`[Telemetry] Recorded event from ${sanitizeLog(newEvent.nickname)} (${sanitizeLog(newEvent.uuid)}): ${sanitizeLog(newEvent.file_type)} optimized.`);
-      res.json({ success: true, event: newEvent });
+        console.log(`[Telemetry] Recorded event from ${sanitizeLog(newEvent.nickname)} (${sanitizeLog(newEvent.uuid)}): ${sanitizeLog(newEvent.file_type)} optimized.`);
+        res.json({ success: true, event: newEvent });
+      }).catch((error: any) => {
+        console.error("Telemetry Submission Queue Error:", error);
+        res.status(500).json({ error: "Failed to log telemetry" });
+      });
+      await telemetryQueue;
+
     } catch (error: any) {
-      console.error("Telemetry Submission Error:", error);
-      res.status(500).json({ error: "Failed to log telemetry" });
+      console.error("Telemetry Submission Request Error:", error);
+      if (!res.headersSent) {
+         res.status(500).json({ error: "Failed to process request" });
+      }
     }
   });
 
   // API Route: Get summarized global statistics (SUM and aggregations)
-  app.get("/api/telemetry/stats", (req: express.Request, res: express.Response) => {
+  app.get("/api/telemetry/stats", async (req: express.Request, res: express.Response) => {
     try {
-      const db = loadTelemetry();
+      const db = await loadTelemetry();
       
       // Summarize metrics
       const totalEvents = db.length;

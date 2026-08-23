@@ -15,6 +15,7 @@ from alenia_porter import porter
 import tempfile
 
 VIDEO_SEMAPHORE = threading.Semaphore(max(1, os.cpu_count() // 3))
+_CACHE_LOCK = threading.Lock()
 
 _AMR_CODEC_AVAILABLE = None  # lazy check: None = not yet tested
 
@@ -108,7 +109,7 @@ def get_best_video_encoder(ffmpeg_executable_path, target_codec):
         pass
     return "libx264" if target_codec == "mp4" else "libvpx-vp9"
 
-def process_single_file_top_level(file_info, target_audio_format, target_video_format, target_image_format, audio_output_directory, video_output_directory, image_output_directory, ffmpeg_executable_path, subprocess_creation_flags, preserve_structure=False, audio_bitrate="192k", video_crf="23", video_preset="veryfast", image_quality="80", safe_mode=False, cache_dict=None, force_overwrite=False, video_extra_args="", audio_extra_args="", image_extra_args=""):
+def process_single_file_top_level(file_info, target_audio_format, target_video_format, target_image_format, audio_output_directory, video_output_directory, image_output_directory, ffmpeg_executable_path, subprocess_creation_flags, preserve_structure=False, audio_bitrate="192k", video_crf="23", video_preset="veryfast", image_quality="80", safe_mode=False, cache_dict=None, force_overwrite=False, video_extra_args="", audio_extra_args="", image_extra_args="", existing_files_cache=None):
     absolute_path, relative_path, media_type = file_info
     base_name = os.path.splitext(os.path.basename(relative_path))[0]
     orig_ext = os.path.splitext(os.path.basename(absolute_path))[1].lstrip('.').lower()
@@ -177,14 +178,25 @@ def process_single_file_top_level(file_info, target_audio_format, target_video_f
     # Skip this entirely if force_overwrite is True (e.g. user applied a custom formula)
     if not force_overwrite:
         existing_same_base = None
-        if os.path.isdir(dest_dir):
-            for existing_entry in os.scandir(dest_dir):
-                if not existing_entry.is_file():
-                    continue
-                existing_base = os.path.splitext(existing_entry.name)[0].lower()
-                if existing_base == cleaned_base_name:
-                    existing_same_base = existing_entry.path
-                    break
+        if existing_files_cache is not None:
+            norm_dest = os.path.normpath(dest_dir)
+            with _CACHE_LOCK:
+                if norm_dest not in existing_files_cache:
+                    existing_files_cache[norm_dest] = {}
+                    if os.path.isdir(dest_dir):
+                        for existing_entry in os.scandir(dest_dir):
+                            if existing_entry.is_file():
+                                existing_files_cache[norm_dest][os.path.splitext(existing_entry.name)[0].lower()] = existing_entry.path
+            existing_same_base = existing_files_cache[norm_dest].get(cleaned_base_name)
+        else:
+            if os.path.isdir(dest_dir):
+                for existing_entry in os.scandir(dest_dir):
+                    if not existing_entry.is_file():
+                        continue
+                    existing_base = os.path.splitext(existing_entry.name)[0].lower()
+                    if existing_base == cleaned_base_name:
+                        existing_same_base = existing_entry.path
+                        break
 
         if existing_same_base is not None:
             if existing_same_base.lower() == output_file_path.lower():
@@ -535,6 +547,8 @@ def convert_media(input_directory, target_audio_format, target_video_format, tar
         audio_count, video_count, image_count = 0, 0, 0
         total_original_size, total_final_size = 0, 0
         processed_files_count = 0
+        
+        existing_files_cache = {}
 
         max_workers = max(1, os.cpu_count() - 1)
         with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -545,7 +559,7 @@ def convert_media(input_directory, target_audio_format, target_video_format, tar
                     audio_output_directory, video_output_directory, image_output_directory,
                     ffmpeg_executable_path, subprocess_creation_flags, preserve_structure,
                     audio_bitrate, video_crf, video_preset, image_quality, safe_mode, cache_dict, force_overwrite,
-                    video_extra_args, audio_extra_args, image_extra_args
+                    video_extra_args, audio_extra_args, image_extra_args, existing_files_cache
                 ): file_info for file_info in file_list
             }
 
