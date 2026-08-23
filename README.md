@@ -1,8 +1,10 @@
 <div align="center">
 
-# Alenia Porter v7.0
+# Alenia Porter v2.1
 
 *Universal, high-performance multimedia optimizer — image, video and audio in a single tool.*
+
+> **⚠️ IMPORTANT NOTICE:** The Graphical IDE Edition is still available and can be used indefinitely, but it **will NEVER be updated again** (frozen at v7.0). Moving forward, all new features, updates, and maintenance will be focused **exclusively on the native Go CLI Edition (v2.1+)**.
 
 <a href="https://www.producthunt.com/products/alenia-porter?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-alenia-porter" target="_blank" rel="noopener noreferrer"><img alt="Alenia Porter - Universal multimedia optimizer for image, video &amp; audio. | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1199433&amp;theme=light&amp;t=1784323367056"></a>
 
@@ -33,14 +35,6 @@ Originally designed for game engines (Ren'Py, Godot), it has evolved into a **ge
 
 ## IDE Edition (Graphical User Interface)
 
-<div align="center">
-
-<img src="docs/images/ide-dashboard.png" alt="Alenia Porter IDE Dashboard" width="860" />
-
-*Main panel — folder selector, format selector, real-time progress bar*
-
-</div>
-
 <br>
 
 <div align="center">
@@ -56,10 +50,6 @@ Originally designed for game engines (Ren'Py, Godot), it has evolved into a **ge
 
 <br>
 
-> **Notice:** The IDE Edition is permanently frozen at **v7.0** and will no longer receive updates. Moving forward, **only the Go CLI Edition** will be actively maintained and updated.
-
-<br>
-
 **Quick start:**
 
 1. Run the **AleniaPorter** executable.
@@ -67,14 +57,6 @@ Originally designed for game engines (Ren'Py, Godot), it has evolved into a **ge
 3. Choose the preferred output format for audio (OGG or OPUS), video (WebM or MP4), and images (WebP or JPG).
 4. Click on **Select Folder** and select the source directory.
 5. Processed files are saved in an `Alenia_Optimized/` subfolder, respecting the original directory structure.
-
-<div align="center">
-
-<img src="docs/images/ide-settings.png" alt="Alenia Porter Settings Panel" width="860" />
-
-*Format selection, quality controls, and theme selector*
-
-</div>
 
 ---
 
