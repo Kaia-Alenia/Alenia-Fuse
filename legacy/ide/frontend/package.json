@@ -21,7 +21,7 @@
     "motion": "^13.1.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "vite": "^8.2.1"
+    "vite": "^8.2.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
@@ -33,6 +33,6 @@
     "tailwindcss": "^4.1.14",
     "tsx": "^4.23.12",
     "typescript": "~7.0.2",
-    "vite": "^8.2.1"
+    "vite": "^8.2.2"
   }
 }
