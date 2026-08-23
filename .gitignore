@@ -46,7 +46,7 @@ test_media_conversion/
 test_results/
 test_validate_out/
 
-test_*.py
+# test_*.py
 test_*.js
 
 /ap
