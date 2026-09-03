@@ -18,7 +18,14 @@
     "converting": "Convirtiendo {input} a {output}...",
     "success": "Conversión exitosa.",
     "failed": "Conversión fallida: {error}",
-    "cancelled": "Operación cancelada."
+    "cancelled": "Operación cancelada.",
+    "banner_subtitle": "Convierte • edita • optimiza",
+    "banner_help": "Escribe /help para ver comandos",
+    "unknown_cmd": "Comando desconocido:",
+    "usage": "Uso:",
+    "options": "Opciones:",
+    "commands": "Comandos",
+    "error": "Error:"
   },
   "settings": {
     "language": "Idioma"

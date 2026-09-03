@@ -32,7 +32,14 @@ class CompressOperation:
             p = Path(self.media.path)
             self.output_path = str(p.parent / f"compressed_{p.name}")
 
-        if not Path(self.media.path).exists():
+        in_p = Path(self.media.path).resolve()
+        out_p = Path(self.output_path).resolve()
+        
+        if in_p == out_p:
+            from alenia_porter.errors import IncompatibleOperationError
+            raise IncompatibleOperationError("Input and output paths cannot be identical (would overwrite input).")
+
+        if not in_p.exists():
             raise MediaNotFoundError(f"Input file not found: {self.media.path}")
 
         planner = OperationPlanner()

@@ -42,6 +42,11 @@ class ConvertOperation:
         if not plan.is_valid:
             raise IncompatibleOperationError(plan.error_reason)
 
+        if getattr(plan, "needs_preflight", False):
+            print(f"\n  [INFO] Running preflight check for format '{self.target_format}'...", flush=True)
+            if not planner.preflight_check(plan):
+                raise IncompatibleOperationError(plan.error_reason or "Preflight check failed. This format conversion is not supported.")
+
         ffmpeg_path = str(default_resolver.ffmpeg_path)
         cmd = [ffmpeg_path, "-y"] + plan.args
 

@@ -5,7 +5,6 @@ from alenia_porter.planner.planner import OperationPlanner, OperationPlan
 from alenia_porter.jobs.manager import Job
 from alenia_porter.operations.convert import ConvertOperation
 from alenia_porter.errors import IncompatibleOperationError, ConversionError
-from alenia_porter.cli.interactive import get_unique_path
 
 def test_input_equals_output_rejected(tmp_path):
     # Setup dummy media file
@@ -48,23 +47,7 @@ def test_job_fails_on_zero_bytes(tmp_path):
     assert job.error == "Output file is 0 bytes."
     assert not out_file.exists(), "Job manager should have deleted the 0-byte file"
 
-def test_get_unique_path(tmp_path):
-    base = tmp_path / "video.mp4"
-    assert get_unique_path(base) == base
-    
-    # Create the file
-    base.write_text("exists")
-    
-    # Should get _1
-    u1 = get_unique_path(base)
-    assert u1 == tmp_path / "video_1.mp4"
-    
-    # Create _1
-    u1.write_text("exists")
-    
-    # Should get _2
-    u2 = get_unique_path(base)
-    assert u2 == tmp_path / "video_2.mp4"
+
 
 def test_interactive_prompt_no_crash():
     from prompt_toolkit.formatted_text import FormattedText

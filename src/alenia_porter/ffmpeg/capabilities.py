@@ -15,7 +15,10 @@ class CapabilityRegistry:
     # Known categorizations to map FFmpeg format names to our internal categories
     KNOWN_VIDEO = {"mp4", "mkv", "matroska", "webm", "mov", "avi", "flv", "mpeg", "mpg", "m4v", "ts", "m2ts", "mts", "3gp", "3g2", "ogv", "ogg", "f4v", "asf", "wmv", "vob", "mxf", "nut", "gif"}
     KNOWN_AUDIO = {"mp3", "wav", "flac", "aac", "m4a", "opus", "ogg", "oga", "wma", "ac3", "eac3", "mka", "aiff", "aif", "alac", "amr", "au"}
-    KNOWN_IMAGE = {"png", "jpg", "jpeg", "webp", "bmp", "tiff", "tif", "gif", "ico", "ppm", "pgm", "pbm", "pam", "tga", "pcx", "sgi", "jp2", "j2k", "jpf", "jpx", "avif", "exr", "image2"}
+    KNOWN_IMAGE = {"png", "jpg", "jpeg", "webp", "bmp", "tiff", "tif", "gif", "ico", "ppm", "pgm", "pbm", "pam", "tga", "pcx", "sgi", "jp2", "j2k", "jpf", "jpx", "avif", "exr"}
+    
+    # Non-file targets, protocols, and pipes that shouldn't be presented to the user
+    EXCLUDED_FORMATS = {"image2", "image2pipe", "rtsp", "http", "https", "udp", "tcp", "rtp", "alsa", "dshow", "null", "tee", "fifo", "dash", "hls", "smoothstreaming", "chromaprint", "framemd5", "crc", "sdl", "opengl", "fbdev", "v4l2", "oss", "pulse"}
 
     def __init__(self):
         self.codecs: Set[str] = set()
@@ -70,9 +73,6 @@ class CapabilityRegistry:
         # Flags for formats: D (demuxing), E (muxing). A 'd' might mean device in some contexts if printed.
         for line in result.stdout.splitlines():
             if len(line) > 4 and line.startswith(" ") and not line.strip().startswith("--"):
-                # " D  3dostr          3DO STR"
-                # "  E 3g2             3GP2 (3GPP2 file format)"
-                # " DE ac3             raw AC-3"
                 flags_str = line[0:4]
                 can_demux = "D" in flags_str
                 can_mux = "E" in flags_str
@@ -89,11 +89,14 @@ class CapabilityRegistry:
                 names_str = parts[0]
                 description = parts[1].strip() if len(parts) > 1 else ""
                 
-                if "_pipe" in names_str:
+                if "pipe" in names_str.lower():
                     continue
                     
                 names = names_str.split(",")
                 for name in names:
+                    clean_name = name.lower()
+                    if "pipe" in clean_name or clean_name in self.EXCLUDED_FORMATS:
+                        continue
                     cat = self._classify_format(name)
                     self.formats[name] = FormatInfo(
                         name=name,

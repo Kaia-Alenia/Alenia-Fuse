@@ -61,11 +61,11 @@ def confirm_overwrite(output_path: str) -> bool:
         return True
 
     from prompt_toolkit import prompt
-    from prompt_toolkit.formatted_text import HTML
+    from prompt_toolkit.formatted_text import FormattedText
 
     print(f"\n  Output already exists: {output_path}")
     choice = prompt(
-        HTML("  <ansicyan>Overwrite? [y/N]: </ansicyan>"),
+        FormattedText([("class:cyan", "  Overwrite? [y/N]: ")]),
         default="N"
     ).strip().lower()
     return choice in ("y", "yes")
@@ -151,18 +151,26 @@ def handle_convert(args):
         finish_progress()
 
         if success:
-            # Validate output with FFprobe
-            if Path(output_file).exists():
+            # Validate output with FFprobe and strict conditions
+            out_p = Path(output_file)
+            if out_p.exists():
+                out_size = out_p.stat().st_size
+                if out_size == 0 or "webp_pipe" in output_file:
+                    out_p.unlink(missing_ok=True)
+                    print(f"\n  Error: Conversion failed (result was 0 bytes or an invalid pipe).", file=sys.stderr)
+                    return 1
+
                 from alenia_porter.ffmpeg.probe import probe
-                out_info = probe(Path(output_file))
+                out_info = probe(out_p)
                 out_fmt = out_info.get("format", {}).get("format_name", "?")
-                out_size = int(out_info.get("format", {}).get("size", 0)) // 1024
+                out_size_kb = out_size // 1024
                 print(f"  Conversion complete.")
                 print(f"  Output  : {output_file}")
                 print(f"  Format  : {out_fmt}")
-                print(f"  Size    : {out_size} KB\n")
+                print(f"  Size    : {out_size_kb} KB\n")
             else:
-                print("  Conversion complete.\n")
+                print(f"\n  Error: Conversion failed (output file not found).", file=sys.stderr)
+                return 1
         return 0 if success else 1
 
     except IncompatibleOperationError as e:
@@ -509,16 +517,50 @@ def handle_fade(args):
 # ─── Inspection commands ─────────────────────────────────────────────────────
 
 @register_command(name="formats", description="List supported media formats.",
-                  arguments=[])
+                  arguments=[CommandArgument(name="category", help="Optional category: video, audio, image", nargs="?", action="store")])
 def handle_formats(args):
     from alenia_porter.ffmpeg.capabilities import default_registry
     default_registry.load_from_ffmpeg()
-    fmts = sorted(default_registry.formats)
-    print(f"\n  Supported formats ({len(fmts)} total):\n")
-    for i in range(0, len(fmts), 6):
-        row = fmts[i:i+6]
-        print("  " + "  ".join(f"{f:<12}" for f in row))
-    print()
+    cat_filter = getattr(args, "category", None)
+    
+    categories = {
+        "video": "Video / Containers",
+        "audio": "Audio",
+        "image": "Images"
+    }
+    
+    if not cat_filter:
+        print("\n  ALENIA PORTER — OUTPUT FORMATS\n")
+        
+        for cat_key, cat_label in categories.items():
+            muxers = sorted([m.name for m in default_registry.get_muxers_by_category(cat_key)])
+            print(f"  {cat_label}")
+            if len(muxers) > 6:
+                print("    " + "   ".join(muxers[:6]) + "   ...")
+                print(f"    + {len(muxers) - 6} more\n")
+            else:
+                print("    " + "   ".join(muxers) + "\n")
+                
+        print("  Use:")
+        print("    porter formats video")
+        print("    porter formats audio")
+        print("    porter formats image\n")
+        print("  Inside Porter:")
+        print("    /formats\n")
+    else:
+        cat_key = cat_filter.lower()
+        if cat_key not in categories:
+            print(f"\n  Unknown category: {cat_filter}")
+            print("  Use: video, audio, image\n")
+            return 1
+            
+        print(f"\n  ALENIA PORTER — {categories[cat_key].upper()} FORMATS\n")
+        muxers = sorted(default_registry.get_muxers_by_category(cat_key), key=lambda x: x.name)
+        for i in range(0, len(muxers), 5):
+            row = muxers[i:i+5]
+            print("    " + "   ".join(f"{m.name:<6}" for m in row))
+        print(f"\n  Total {cat_key} output formats: {len(muxers)}\n")
+
     return 0
 
 
@@ -540,7 +582,7 @@ def handle_codecs(args):
                   arguments=[CommandArgument(name="code", help="Language code: en, es, pt, fr, de...")])
 def handle_lang(args):
     from alenia_porter.config.manager import config
-    from alenia_porter.i18n.manager import i18n
+    from alenia_porter.i18n.manager import i18n, t
     code = args.code.lower()
     supported = ["en", "es", "pt", "fr", "de", "it", "ja", "ko", "zh", "ru"]
     if code not in supported:
@@ -549,7 +591,12 @@ def handle_lang(args):
         return 1
     config.set("language", code)
     i18n.load_language(code)
-    print(f"\n  Language set to '{code}'.\n")
+    
+    # After loading the new language, print the localized success message
+    # (If no key exists, it will fallback to the key string)
+    success_msg = t("settings.language")
+    print(f"\n  {success_msg}: {code.upper()} -> OK")
+    print(f"  ({t('cli.banner_help')})\n")
     return 0
 
 
