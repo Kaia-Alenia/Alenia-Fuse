@@ -14,65 +14,30 @@ concurrency:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
-        include:
-          - os: windows-latest
-            artifact_name: porter-windows.zip
-            binary_name: porter.exe
-            platform: windows
-          - os: macos-latest
-            artifact_name: porter-macos.zip
-            binary_name: porter
-            platform: macos
-          - os: ubuntu-latest
-            artifact_name: porter-linux.tar.gz
-            binary_name: porter
-            platform: linux
-
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     timeout-minutes: 30
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          go-version: '1.22.x'
+          python-version: '3.11'
 
-      - name: Build Go CLI
-        run: |
-          mkdir -p dist
-          go build -o dist/${{ matrix.binary_name }} ./cmd/ap
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
-      - name: Package build (Windows)
-        if: matrix.platform == 'windows'
+      - name: Build Python Package
         run: |
-          if (Test-Path LICENSE) { Copy-Item LICENSE dist/ }
-          Compress-Archive -Path dist/* -DestinationPath ${{ matrix.artifact_name }}
-
-      - name: Package build (macOS)
-        if: matrix.platform == 'macos'
-        run: |
-          cp LICENSE dist/ || true
-          cd dist
-          zip -r ../${{ matrix.artifact_name }} *
-
-      - name: Package build (Linux)
-        if: matrix.platform == 'linux'
-        run: |
-          cp LICENSE dist/ || true
-          cd dist
-          tar -czf ../${{ matrix.artifact_name }} *
+          uv build
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: porter-${{ matrix.platform }}
-          path: ${{ matrix.artifact_name }}
+          name: porter-dist
+          path: dist/*
 
   release:
     needs: [build]
@@ -93,6 +58,4 @@ jobs:
         with:
           generate_release_notes: true
           files: |
-            artifacts/porter-windows/porter-windows.zip
-            artifacts/porter-macos/porter-macos.zip
-            artifacts/porter-linux/porter-linux.tar.gz
+            artifacts/porter-dist/*

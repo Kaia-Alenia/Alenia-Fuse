@@ -1,96 +1,109 @@
 import os
+import platform
 import subprocess
 from pathlib import Path
-from typing import Optional, Tuple, Dict, Any
+from typing import Optional, Dict
+
+class FFmpegUnavailableError(Exception):
+    pass
+
+class UnsupportedPlatformError(Exception):
+    pass
 
 class FFmpegResolver:
-    """Resolves and validates FFmpeg and FFprobe executables."""
-
     def __init__(self):
-        self._ffmpeg_path: Optional[str] = None
-        self._ffprobe_path: Optional[str] = None
-        self._is_resolved = False
+        self.project_root = self._get_project_root()
+        self.ffmpeg_path: Optional[Path] = None
+        self.ffprobe_path: Optional[Path] = None
+        self.version_info: Dict[str, str] = {}
+        
+        self.resolve()
 
     def _get_project_root(self) -> Path:
-        # Assuming this file is at src/alenia_porter/ffmpeg/resolver.py
-        # project root would be 4 levels up: src/alenia_porter/ffmpeg -> alenia_porter -> src -> root
-        return Path(__file__).resolve().parent.parent.parent.parent
+        current_file = Path(__file__).resolve()
+        # Navigate up: ffmpeg/ <- alenia_porter/ <- src/ <- project_root
+        return current_file.parents[3]
 
-    def _find_bundled(self, executable: str) -> Optional[str]:
-        # Platform extension
-        exts = [".exe", ".bat"] if os.name == "nt" else [""]
+    def _get_platform_dir_and_ext(self):
+        system = platform.system().lower()
+        machine = platform.machine().lower()
         
-        # Check project root bin/
-        root = self._get_project_root()
+        if system == "windows":
+            if machine in ["amd64", "x86_64"]:
+                return "windows-x64", ".exe"
+            else:
+                raise UnsupportedPlatformError(f"Alenia-Porter does not include an FFmpeg build for:\\nPlatform: {system}\\nArchitecture: {machine}")
+        elif system == "linux":
+            if machine in ["amd64", "x86_64"]:
+                return "linux-x64", ""
+            else:
+                raise UnsupportedPlatformError(f"Alenia-Porter does not include an FFmpeg build for:\\nPlatform: {system}\\nArchitecture: {machine}")
+        elif system == "darwin":
+            if machine in ["arm64", "aarch64"]:
+                return "macos-arm64", ""
+            else:
+                raise UnsupportedPlatformError(f"Alenia-Porter does not include an FFmpeg build for:\\nPlatform: {system}\\nArchitecture: {machine}")
+        else:
+            raise UnsupportedPlatformError(f"Alenia-Porter does not include an FFmpeg build for:\\nPlatform: {system}\\nArchitecture: {machine}")
+
+    def resolve(self):
+        plat_dir, ext = self._get_platform_dir_and_ext()
+        bin_dir = self.project_root / "bin" / plat_dir
         
-        for ext in exts:
-            exec_name = f"{executable}{ext}"
-            bin_path = root / "bin" / exec_name
+        ffmpeg = bin_dir / f"ffmpeg{ext}"
+        ffprobe = bin_dir / f"ffprobe{ext}"
+        
+        if not ffmpeg.exists():
+            raise FFmpegUnavailableError(f"Bundled FFmpeg not found at {ffmpeg}")
+        if not ffprobe.exists():
+            raise FFmpegUnavailableError(f"Bundled FFprobe not found at {ffprobe}")
             
-            if bin_path.exists() and os.access(bin_path, os.X_OK):
-                return str(bin_path)
+        # Verify they are executable
+        if not os.access(ffmpeg, os.X_OK):
+            raise FFmpegUnavailableError(f"FFmpeg binary at {ffmpeg} is not executable")
+        if not os.access(ffprobe, os.X_OK):
+            raise FFmpegUnavailableError(f"FFprobe binary at {ffprobe} is not executable")
             
-            # Check inside package bin/ (for installed package)
-            pkg_bin_path = Path(__file__).resolve().parent.parent / "bin" / exec_name
-            if pkg_bin_path.exists() and os.access(pkg_bin_path, os.X_OK):
-                return str(pkg_bin_path)
+        # Verify by running -version
+        self.ffmpeg_path = ffmpeg
+        self.ffprobe_path = ffprobe
+        
+        try:
+            result = subprocess.run([str(self.ffmpeg_path), "-version"], 
+                                    stdout=subprocess.PIPE, 
+                                    stderr=subprocess.PIPE, 
+                                    text=True, 
+                                    shell=False,
+                                    check=True)
+            if "ffmpeg version" not in result.stdout:
+                raise FFmpegUnavailableError("Binary responded but does not appear to be a real FFmpeg.")
                 
-        return None
-
-    def _find_system(self, executable: str) -> Optional[str]:
-        # Fallback to system PATH only if explicitly permitted (as per rule 5A.2 fallback)
-        import shutil
-        return shutil.which(executable)
-
-    def resolve(self) -> None:
-        """Locates the executables prioritizing bundled versions."""
-        if self._is_resolved:
-            return
-
-        self._ffmpeg_path = self._find_bundled("ffmpeg")
-        self._ffprobe_path = self._find_bundled("ffprobe")
-
-        # Fallback to system if not found (only as last resort)
-        if not self._ffmpeg_path:
-            self._ffmpeg_path = self._find_system("ffmpeg")
-        
-        if not self._ffprobe_path:
-            self._ffprobe_path = self._find_system("ffprobe")
+            first_line = result.stdout.splitlines()[0]
+            self.version_info["ffmpeg"] = first_line
+        except subprocess.CalledProcessError as e:
+            raise FFmpegUnavailableError(f"FFmpeg failed to run -version. Exit code: {e.returncode}")
+        except Exception as e:
+            raise FFmpegUnavailableError(f"Error executing FFmpeg: {e}")
             
-        self._is_resolved = True
-
-    @property
-    def ffmpeg_path(self) -> Optional[str]:
-        self.resolve()
-        return self._ffmpeg_path
-
-    @property
-    def ffprobe_path(self) -> Optional[str]:
-        self.resolve()
-        return self._ffprobe_path
+        try:
+            result = subprocess.run([str(self.ffprobe_path), "-version"], 
+                                    stdout=subprocess.PIPE, 
+                                    stderr=subprocess.PIPE, 
+                                    text=True, 
+                                    shell=False,
+                                    check=True)
+            if "ffprobe version" not in result.stdout:
+                raise FFmpegUnavailableError("Binary responded but does not appear to be a real FFprobe.")
+                
+            first_line = result.stdout.splitlines()[0]
+            self.version_info["ffprobe"] = first_line
+        except subprocess.CalledProcessError as e:
+            raise FFmpegUnavailableError(f"FFprobe failed to run -version. Exit code: {e.returncode}")
+        except Exception as e:
+            raise FFmpegUnavailableError(f"Error executing FFprobe: {e}")
 
     @property
     def is_ffmpeg_available(self) -> bool:
-        return self.ffmpeg_path is not None
-
-    @property
-    def is_ffprobe_available(self) -> bool:
-        return self.ffprobe_path is not None
-
-    def get_version(self) -> Optional[str]:
-        if not self.is_ffmpeg_available:
-            return None
-            
-        try:
-            result = subprocess.run(
-                [self.ffmpeg_path, "-version"], 
-                capture_output=True, 
-                text=True, 
-                check=True
-            )
-            # Usually the first line contains the version
-            return result.stdout.split('\n')[0]
-        except (subprocess.SubprocessError, FileNotFoundError):
-            return None
+        return self.ffmpeg_path is not None and self.ffmpeg_path.exists()
 
 default_resolver = FFmpegResolver()

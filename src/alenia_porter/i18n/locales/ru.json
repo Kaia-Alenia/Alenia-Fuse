@@ -1,0 +1,26 @@
+{
+  "cli": {
+    "title": "ALENIA PORTER",
+    "subtitle": "Мультимедиа — просто",
+    "prompt": "Что вы хотите сделать?",
+    "menu": {
+      "convert": "Конвертировать медиа",
+      "compress": "Сжать медиа",
+      "edit_video": "Редактировать видео",
+      "edit_audio": "Редактировать аудио",
+      "process_images": "Обработать изображения",
+      "extract_media": "Извлечь медиа",
+      "analyze": "Анализировать файл",
+      "settings": "Настройки",
+      "help": "Помощь",
+      "exit": "Выход"
+    },
+    "converting": "Конвертация {input} → {output}...",
+    "success": "Конвертация завершена.",
+    "failed": "Ошибка конвертации: {error}",
+    "cancelled": "Операция отменена."
+  },
+  "settings": {
+    "language": "Язык"
+  }
+}

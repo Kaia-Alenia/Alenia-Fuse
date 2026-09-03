@@ -1,0 +1,26 @@
+{
+  "cli": {
+    "title": "ALENIA PORTER",
+    "subtitle": "Multimedia leicht gemacht",
+    "prompt": "Was möchten Sie tun?",
+    "menu": {
+      "convert": "Medien konvertieren",
+      "compress": "Medien komprimieren",
+      "edit_video": "Video bearbeiten",
+      "edit_audio": "Audio bearbeiten",
+      "process_images": "Bilder verarbeiten",
+      "extract_media": "Medien extrahieren",
+      "analyze": "Datei analysieren",
+      "settings": "Einstellungen",
+      "help": "Hilfe",
+      "exit": "Beenden"
+    },
+    "converting": "Konvertierung {input} → {output}...",
+    "success": "Konvertierung abgeschlossen.",
+    "failed": "Konvertierung fehlgeschlagen: {error}",
+    "cancelled": "Vorgang abgebrochen."
+  },
+  "settings": {
+    "language": "Sprache"
+  }
+}

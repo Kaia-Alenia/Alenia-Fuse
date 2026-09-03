@@ -9,5 +9,6 @@ def test_ffmpeg_availability():
     # We just ensure it doesn't crash
     path = default_resolver.ffmpeg_path
     if path:
-        assert isinstance(path, str)
+        from pathlib import Path
+        assert isinstance(path, Path)
         assert default_resolver.is_ffmpeg_available

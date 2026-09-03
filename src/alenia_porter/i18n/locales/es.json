@@ -1,0 +1,26 @@
+{
+  "cli": {
+    "title": "ALENIA PORTER",
+    "subtitle": "Multimedia simplificada",
+    "prompt": "¿Qué deseas hacer?",
+    "menu": {
+      "convert": "Convertir medio",
+      "compress": "Comprimir medio",
+      "edit_video": "Editar video",
+      "edit_audio": "Editar audio",
+      "process_images": "Procesar imágenes",
+      "extract_media": "Extraer medio",
+      "analyze": "Analizar archivo",
+      "settings": "Configuración",
+      "help": "Ayuda",
+      "exit": "Salir"
+    },
+    "converting": "Convirtiendo {input} a {output}...",
+    "success": "Conversión exitosa.",
+    "failed": "Conversión fallida: {error}",
+    "cancelled": "Operación cancelada."
+  },
+  "settings": {
+    "language": "Idioma"
+  }
+}

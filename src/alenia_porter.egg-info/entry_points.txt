@@ -1,0 +1,2 @@
+[console_scripts]
+porter = alenia_porter.cli.main:main

@@ -1,0 +1,26 @@
+{
+  "cli": {
+    "title": "ALENIA PORTER",
+    "subtitle": "多媒体化繁为简",
+    "prompt": "您想做什么？",
+    "menu": {
+      "convert": "转换媒体",
+      "compress": "压缩媒体",
+      "edit_video": "编辑视频",
+      "edit_audio": "编辑音频",
+      "process_images": "处理图片",
+      "extract_media": "提取媒体",
+      "analyze": "分析文件",
+      "settings": "设置",
+      "help": "帮助",
+      "exit": "退出"
+    },
+    "converting": "正在将 {input} 转换为 {output}...",
+    "success": "转换成功。",
+    "failed": "转换失败：{error}",
+    "cancelled": "操作已取消。"
+  },
+  "settings": {
+    "language": "语言"
+  }
+}
