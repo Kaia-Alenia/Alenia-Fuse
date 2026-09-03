@@ -7,6 +7,7 @@ class CommandArgument:
     help: str
     nargs: Optional[str] = None
     action: Optional[str] = None
+    completion: Optional[str] = None
 
 @dataclass
 class CommandDefinition:
@@ -15,12 +16,17 @@ class CommandDefinition:
     handler: Callable
     aliases: List[str] = None
     arguments: List[CommandArgument] = None
+    category: str = "General"
+    syntax: str = ""
+    examples: List[str] = None
 
     def __post_init__(self):
         if self.aliases is None:
             self.aliases = []
         if self.arguments is None:
             self.arguments = []
+        if self.examples is None:
+            self.examples = []
 
 class CommandRegistry:
     def __init__(self):
@@ -44,14 +50,17 @@ class CommandRegistry:
 
 registry = CommandRegistry()
 
-def register_command(name: str, description: str, aliases: List[str] = None, arguments: List[CommandArgument] = None):
+def register_command(name: str, description: str, aliases: List[str] = None, arguments: List[CommandArgument] = None, category: str = "General", syntax: str = "", examples: List[str] = None):
     def decorator(handler):
         cmd = CommandDefinition(
             name=name,
             description=description,
             handler=handler,
             aliases=aliases,
-            arguments=arguments
+            arguments=arguments,
+            category=category,
+            syntax=syntax,
+            examples=examples
         )
         registry.register(cmd)
         return handler

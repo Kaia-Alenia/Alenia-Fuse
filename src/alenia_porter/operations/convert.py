@@ -25,9 +25,15 @@ class ConvertOperation:
     def run(self, on_progress: Optional[Callable[[JobProgress], None]] = None) -> bool:
         if not self.output_path:
             raise ValueError("Output path must be set before calling run(). Use .output('file.ext')")
+            
+        in_p = Path(self.media.path).resolve()
+        out_p = Path(self.output_path).resolve()
+        
+        if in_p == out_p:
+            raise IncompatibleOperationError("Input and output paths cannot be identical (would overwrite input).")
 
         # Validate input still exists
-        if not Path(self.media.path).exists():
+        if not in_p.exists():
             raise MediaNotFoundError(f"Input file not found: {self.media.path}")
 
         planner = OperationPlanner()

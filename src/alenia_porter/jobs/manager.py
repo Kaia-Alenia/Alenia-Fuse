@@ -121,6 +121,37 @@ class Job:
                 self.error = f"FFmpeg exited with code {self._process.returncode}"
                 return False
 
+            # Strict output validation
+            if self.output_path:
+                out = Path(self.output_path)
+                if not out.exists():
+                    self.state = JobState.FAILED
+                    self.error = "Output file was not created."
+                    return False
+                    
+                if out.stat().st_size == 0:
+                    self.state = JobState.FAILED
+                    self.error = "Output file is 0 bytes."
+                    self._cleanup_output()
+                    return False
+                    
+                # Prevent fake success on pipes
+                if out.name.endswith("_pipe"):
+                    self.state = JobState.FAILED
+                    self.error = "Operation resulted in an invalid pipe output instead of a real file."
+                    self._cleanup_output()
+                    return False
+
+                # FFprobe validation
+                from alenia_porter.ffmpeg.probe import probe, FFprobeError
+                try:
+                    probe(out)
+                except FFprobeError as e:
+                    self.state = JobState.FAILED
+                    self.error = f"Output file is corrupt or invalid: {e}"
+                    self._cleanup_output()
+                    return False
+
             self.state = JobState.COMPLETED
             return True
 

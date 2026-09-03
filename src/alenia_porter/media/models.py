@@ -13,6 +13,7 @@ class Stream:
     width: Optional[int] = None
     height: Optional[int] = None
     fps: Optional[float] = None
+    pix_fmt: Optional[str] = None
     
     # Audio specific
     sample_rate: Optional[int] = None
@@ -73,6 +74,7 @@ class Media:
             if stream.codec_type == "video":
                 stream.width = int(s.get("width", 0))
                 stream.height = int(s.get("height", 0))
+                stream.pix_fmt = s.get("pix_fmt")
                 fps_str = s.get("r_frame_rate", "0/1")
                 if "/" in fps_str:
                     num, den = fps_str.split("/")

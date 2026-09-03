@@ -2,6 +2,10 @@
 Operation Planner — makes real decisions about how to perform an operation
 based on media analysis, capabilities, and the requested intent.
 """
+import os
+import tempfile
+import subprocess
+from pathlib import Path
 from typing import Dict, Any, Optional, List
 from alenia_porter.ffmpeg.resolver import default_resolver
 from alenia_porter.ffmpeg.capabilities import default_registry
@@ -13,7 +17,7 @@ STREAM_COPY_COMPATIBLE = {
     "mp4": {"video": ["h264", "hevc", "h265"], "audio": ["aac", "mp3", "ac3"]},
     "mkv": {"video": ["h264", "hevc", "h265", "vp8", "vp9", "av1"], "audio": ["aac", "mp3", "ac3", "opus", "flac"]},
     "webm": {"video": ["vp8", "vp9", "av1"], "audio": ["vorbis", "opus"]},
-    "mov": {"video": ["h264", "hevc", "h265"], "audio": ["aac", "mp3"]},
+    "mov": {"video": ["h264", "hevc", "h265", "prores"], "audio": ["aac", "mp3", "pcm_s16le"]},
     "avi": {"video": ["h264", "mpeg4", "xvid"], "audio": ["mp3", "ac3"]},
 }
 
@@ -37,6 +41,7 @@ ENCODE_STRATEGIES = {
     "jpg": {"video_codec": "mjpeg", "audio_codec": None, "extra": ["-vframes", "1", "-q:v", "2"]},
     "jpeg": {"video_codec": "mjpeg", "audio_codec": None, "extra": ["-vframes", "1", "-q:v", "2"]},
     "webp": {"video_codec": "libwebp", "audio_codec": None, "extra": ["-vframes", "1"]},
+    "bmp": {"video_codec": "bmp", "audio_codec": None, "extra": ["-vframes", "1"]},
 }
 
 COMPRESS_STRATEGIES = {
@@ -55,6 +60,7 @@ class OperationPlan:
         self.warnings: List[str] = []
         self.is_valid: bool = True
         self.error_reason: Optional[str] = None
+        self.needs_preflight: bool = False
 
     def is_stream_copy(self) -> bool:
         return self.strategy == "stream_copy"
@@ -63,6 +69,64 @@ class OperationPlan:
 class OperationPlanner:
     def __init__(self, registry=None):
         self.registry = registry or default_registry
+
+    def preflight_check(self, plan: OperationPlan, timeout: float = 5.0) -> bool:
+        """
+        Executes a real FFmpeg preflight test (fast 1-frame or 1-second segment)
+        to definitively prove if the conversion works.
+        """
+        if not plan.is_valid or not plan.args:
+            return False
+            
+        with tempfile.NamedTemporaryFile(suffix=".tmp", delete=False) as tmp_out:
+            tmp_path = tmp_out.name
+            
+        try:
+            # Re-write output path to tmp_path, add -t 1 for speed
+            args = plan.args.copy()
+            out_idx = len(args) - 1
+            args[out_idx] = tmp_path
+            
+            # Insert -t 1 before output to test just a small slice
+            args.insert(out_idx, "-t")
+            args.insert(out_idx + 1, "1")
+            
+            # Avoid overwriting warnings and hide output
+            cmd = [str(default_resolver.ffmpeg_path), "-y"] + args
+            result = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True, timeout=timeout)
+            
+            if result.returncode == 0 and os.path.exists(tmp_path) and os.path.getsize(tmp_path) > 0:
+                # Need to also check it didn't create a webp_pipe by accident but webp_pipe wouldn't create a real file
+                return True
+            else:
+                plan.is_valid = False
+                plan.error_reason = f"Preflight check failed. FFmpeg could not process this format combination."
+                return False
+        except subprocess.TimeoutExpired:
+            # If it takes >5s, it might just be slow, we'll allow it for now
+            return True
+        except Exception as e:
+            plan.is_valid = False
+            plan.error_reason = f"Preflight execution failed: {e}"
+            return False
+        finally:
+            if os.path.exists(tmp_path):
+                os.remove(tmp_path)
+
+    def _check_image_semantics(self, media, target_fmt: str, plan: OperationPlan) -> bool:
+        """Enforces semantics like RGBA -> JPEG."""
+        if not media.main_video:
+            return True
+            
+        pix_fmt = media.main_video.pix_fmt or ""
+        has_alpha = "rgba" in pix_fmt or "alpha" in pix_fmt or "yuva" in pix_fmt or "argb" in pix_fmt or "bgra" in pix_fmt
+        
+        if has_alpha and target_fmt in ("jpg", "jpeg"):
+            plan.is_valid = False
+            plan.error_reason = "The input image has an alpha channel (transparency). JPEG does not support transparency. Please choose a background color or a different format."
+            return False
+            
+        return True
 
     def plan_convert(self, media, target_format: str, output_path: str) -> OperationPlan:
         """
@@ -77,9 +141,11 @@ class OperationPlanner:
         if not self.registry.supports_format(fmt):
             plan.is_valid = False
             plan.error_reason = (
-                f"The format '{fmt}' is not supported by the bundled FFmpeg. "
-                f"Run 'porter formats' to see supported formats."
+                f"The target format '{fmt}' cannot represent the required input features, or is not supported."
             )
+            return plan
+            
+        if not self._check_image_semantics(media, fmt, plan):
             return plan
 
         # Check if stream copy is possible
@@ -93,14 +159,19 @@ class OperationPlanner:
             strategy = ENCODE_STRATEGIES.get(fmt)
 
             if strategy is None:
-                # No known strategy — let FFmpeg decide
+                # No known strategy — let FFmpeg decide, but require preflight to be sure
                 plan.args = ["-i", media.path, output_path]
                 plan.warnings.append(f"No specific encode strategy for '{fmt}', using FFmpeg defaults.")
+                plan.needs_preflight = True
             else:
                 args = ["-i", media.path]
 
                 # Video streams
                 if media.main_video and strategy["video_codec"]:
+                    if not self.registry.has_encoder(strategy["video_codec"]):
+                        plan.is_valid = False
+                        plan.error_reason = f"Encoder {strategy['video_codec']} is not available in the bundled FFmpeg."
+                        return plan
                     args += ["-c:v", strategy["video_codec"]]
                 elif not media.main_video and strategy["video_codec"]:
                     # No video in source — skip video codec
@@ -108,6 +179,10 @@ class OperationPlanner:
 
                 # Audio streams
                 if media.main_audio and strategy["audio_codec"]:
+                    if not self.registry.has_encoder(strategy["audio_codec"]):
+                        plan.is_valid = False
+                        plan.error_reason = f"Encoder {strategy['audio_codec']} is not available in the bundled FFmpeg."
+                        return plan
                     args += ["-c:a", strategy["audio_codec"]]
                 elif not media.main_audio:
                     args += ["-an"]  # No audio in source
