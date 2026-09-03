@@ -4,17 +4,17 @@ version = "7.0.0"
 description = "Python code transformation and analysis tool"
 readme = "README.md"
 authors = [
-    { name = "Alejandro Martinez", email = "alejandrotrrsa9@gmail.com" },
-    { name = "Kevin Turcios", email = "turcioskevinr@gmail.com" }
+    { name = "Alejandro Martinez", email = "contact.aleniastudios@gmail.com" }
 ]
 requires-python = ">=3.11"
 dependencies = [
-    "pywebview>=6.2",
     "pillow>=10.0",
+    "rich>=13.7.0",
+    "prompt_toolkit>=3.0.40"
 ]
 
 [project.scripts]
-porter = "alenia_porter.cli:main"
+porter = "alenia_porter.cli.main:main"
 
 [build-system]
 requires = ["uv_build>=0.11.17,<0.12.0"]

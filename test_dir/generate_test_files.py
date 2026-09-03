@@ -15,8 +15,9 @@ print(f"Generating 15 test files in: {test_dir}")
 for fmt in audio_formats:
     target_file = os.path.join(test_dir, f"sample_audio.{fmt}")
     codec = "libmp3lame" if fmt == "mp3" else "libvorbis" if fmt == "ogg" else "aac" if fmt == "m4a" else "flac" if fmt == "flac" else "pcm_s16le"
+    ffmpeg_path = r"C:\Users\BearS\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg.Essentials_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.1.1-essentials_build\bin\ffmpeg.exe"
     subprocess.run([
-        "ffmpeg", "-y",
+        ffmpeg_path, "-y",
         "-f", "lavfi", "-i", "sine=f=261.63:d=3",
         "-f", "lavfi", "-i", "sine=f=329.63:d=3",
         "-f", "lavfi", "-i", "sine=f=392.00:d=3",
@@ -43,7 +44,7 @@ for fmt in video_formats:
         acodec = "flac"
         
     subprocess.run([
-        "ffmpeg", "-y",
+        ffmpeg_path, "-y",
         "-f", "lavfi", "-i", "testsrc2=size=320x240:d=3",
         "-f", "lavfi", "-i", "sine=f=261.63:d=3",
         "-c:v", vcodec,

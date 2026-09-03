@@ -1,6 +1,0 @@
-{
-  "name": "Alenia Media Optimizer",
-  "description": "An interactive, minimalist IDE for media compression and optimization, featuring a drag-and-drop studio, an interactive FFmpeg command editor, and real-time split-screen visual preview.",
-  "requestFramePermissions": [],
-  "majorCapabilities": []
-}

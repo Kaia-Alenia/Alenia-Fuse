@@ -3,7 +3,7 @@
 APP_NAME = porter
 
 build:
-	go build -o bin/$(APP_NAME) ./cmd/ap
+	go build -o bin/$(APP_NAME) ./cmd/porter
 
 run: build
 	./bin/$(APP_NAME)

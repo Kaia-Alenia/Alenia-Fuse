@@ -9,9 +9,6 @@ if __name__ == "__main__":
         sys.argv.remove("--cli-engine")
         from alenia_porter.headless import main
         main()
-    elif "--headless" in sys.argv:
-        from alenia_porter.cli import main
-        main()
     else:
-        from legacy.ide.gui_web import main
+        from alenia_porter.cli.main import main
         main()
