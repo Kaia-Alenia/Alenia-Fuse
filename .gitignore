@@ -1,27 +1,35 @@
 __pycache__/
+*.py[cod]
+.mypy_cache/
+.ruff_cache/
+.tox/
 build/
 dist/
+*.whl
+*.tar.gz
+*.tar
 *.spec
 ALENIA_ERROR.txt
 .env
 .env.local
 .env.example
 bin/
-src/alenia_porter/bin/
+src/fuse/bin/
+src/fuse/_bin/
+src/fuse/_cache/
 compilar_alenia.bat
 demo_assets/
 
 clean_assets.py
 
-
-
+*.egg-info/
+.eggs/
 
 /target
 .coverage
 .jules/
-inspect_telemetry.py
-porter_launcher.bin
-porter_launcher.sh
+fuse_launcher.bin
+fuse_launcher.sh
 requirements.txt
 *.build/
 *.dist/
@@ -29,9 +37,11 @@ requirements.txt
 .venv-1/
 .pytest_cache/
 .vscode/
+.idea/
+.DS_Store
+Thumbs.db
 
 
-fill_telemetry.py
 formats.txt
 parse_formats.py
 parsed_formats.txt
@@ -45,6 +55,12 @@ test_assets/
 test_media_conversion/
 test_results/
 test_validate_out/
+test_output/
+test_outputs/
+test_fixtures_generated/
+.test_appdata/
+.test_appdata_*/
+test_run_temp_*/
 
 # test_*.py
 test_*.js
@@ -59,15 +75,27 @@ frontend/fetch_roadmap.js
 frontend/patch_formulas.py
 frontend/dist/
 frontend/node_modules/
-telemetry-service/.env
 *.bak
 *_backup.*
-cmd/telemetry/
-AleniaPorter
-AleniaPorter.exe
-AleniaPorter-*.zip
+AleniaFuse
+AleniaFuse.exe
+AleniaFuse-*.zip
 tools/
 
 # Trash and logs
 node_modules_trash_*/
 crash.log
+no-registry/
+
+# Local installers, archives, reports and temporary files
+*.log
+*.tmp
+*.temp
+*.part
+*.download
+*.dmp
+*.coverage
+coverage.xml
+htmlcov/
+reports/
+*.local.*

@@ -20,6 +20,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           level: warning
-          reporter: github-pr-review # Publishes review comments directly on the PR
+          refuse: github-pr-review # Publishes review comments directly on the PR
           trivy_command: fs
           trivy_target: '.'

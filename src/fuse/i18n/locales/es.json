@@ -1,0 +1,250 @@
+{
+  "cli": {
+    "title": "ALENIA FUSE",
+    "subtitle": "Multimedia simplificada",
+    "prompt": "¿Qué deseas hacer?",
+    "menu": {
+      "convert": "Convertir medio",
+      "compress": "Comprimir medio",
+      "edit_video": "Editar video",
+      "edit_audio": "Editar audio",
+      "process_images": "Procesar imágenes",
+      "extract_media": "Extraer medio",
+      "analyze": "Analizar archivo",
+      "settings": "Configuración",
+      "help": "Ayuda",
+      "exit": "Salir"
+    },
+    "converting": "Convirtiendo {input} a {output}...",
+    "success": "Conversión exitosa.",
+    "failed": "Conversión fallida: {error}",
+    "cancelled": "Operación cancelada.",
+    "banner_subtitle": "Convierte • edita • optimiza",
+    "banner_help": "Escribe /help para ver comandos",
+    "unknown_cmd": "Comando desconocido:",
+    "usage": "Uso:",
+    "options": "Opciones:",
+    "commands": "Comandos",
+    "error": "Error:",
+    "banner_formats": "formatos",
+    "banner_hint": "Escribe / para ver comandos · Tab para sugerencias",
+    "history_cleared": "Historial de comandos eliminado.",
+    "history_empty": "El historial de comandos ya estaba vacío.",
+    "language_changed": "Idioma cambiado a {code}.",
+    "convert": {
+      "no_input": "Proporciona un archivo o directorio de entrada.",
+      "no_media": "No se encontraron archivos multimedia en {path}",
+      "scanning": "Escaneando {path}...",
+      "found_summary": "Se encontraron {videos} video(s), {audios} audio(s), {images} imagen(es).",
+      "section_header": "{type} ({count} archivos)",
+      "choose_format": "Formato de destino",
+      "format_options": "Opciones",
+      "skip": "omitir",
+      "invalid_format": "Formato no valido. Elige de la lista o escribe omitir.",
+      "skipping_type": "Omitiendo {type}.",
+      "no_output_extension": "La salida {output} no tiene extension. Usa: convert {input} {output}.mp4  o: convert {input} to mp4",
+      "converting": "Convirtiendo {name}",
+      "done": "Listo!",
+      "output_dir": "Directorio de salida",
+      "original_size": "Original",
+      "output_size": "Salida",
+      "same_format_skip": "Omitido (mismo formato): {path}",
+      "overwrite_prompt": "El archivo ya existe. Sobreescribir? [s/N]",
+      "complete": "Completado - {orig} MB -> {out} MB",
+      "error_file": "Error al convertir {name}: {err}",
+      "cancelled_user": "Cancelado por el usuario.",
+      "start": "Iniciando conversion de {total} archivo(s)...",
+      "use_slash": "Uso: convert <archivo o directorio> [directorio de salida]"
+    }
+  },
+  "settings": {
+    "language": "Idioma",
+    "language_changed": "Idioma cambiado a {code}."
+  },
+  "errors": {
+    "unsupported_language": "Idioma no compatible: '{code}'.",
+    "supported_languages": "Idiomas disponibles: {languages}.",
+    "invalid_size": "Tamaño no válido: {size}",
+    "operation": "Error: {error}",
+    "unknown_command": "Comando desconocido: {command}",
+    "cannot_perform": "No se puede realizar la operación: {error}",
+    "no_audio_stream": "Error: el archivo no contiene una pista de audio."
+  },
+  "operations": {
+    "compressing": "\n  Comprimiendo {input} → {output} [{quality}] ...\n",
+    "compression_complete": "Compresión completada. Original: {original} MB, salida: {output} MB ({ratio}% de reducción)",
+    "starting": "\n  {operation} {input} → {output} ...\n",
+    "done": "  Listo → {output}\n"
+  },
+  "usage_messages": {
+    "compress": "Uso: compress <entrada> [salida]",
+    "optimize": "Uso: optimize <archivo> [--preset <p>] [--crf <n>] [--output <archivo>]",
+    "remux": "Uso: remux <entrada> <salida>"
+  },
+  "categories": {
+    "general": "General",
+    "convert": "Convertir",
+    "video": "Vídeo",
+    "audio": "Audio",
+    "extract": "Extraer",
+    "information": "Información",
+    "fuse": "Fuse"
+  },
+  "commands": {
+    "info": {
+      "description": "Muestra información detallada del medio vía FFprobe."
+    },
+    "convert": {
+      "description": "Convierte un archivo multimedia a otro formato."
+    },
+    "compress": {
+      "description": "Comprime un archivo (opciones inteligentes)."
+    },
+    "resize": {
+      "description": "Redimensiona el vídeo."
+    },
+    "rotate": {
+      "description": "Rota el vídeo."
+    },
+    "fps": {
+      "description": "Cambia los FPS del vídeo."
+    },
+    "speed": {
+      "description": "Cambia la velocidad de reproducción."
+    },
+    "trim": {
+      "description": "Recorta un clip de vídeo."
+    },
+    "mute": {
+      "description": "Elimina el audio del vídeo."
+    },
+    "extract-audio": {
+      "description": "Extrae el audio del vídeo."
+    },
+    "thumbnail": {
+      "description": "Extrae una miniatura del vídeo."
+    },
+    "gif": {
+      "description": "Crea un GIF animado desde el vídeo."
+    },
+    "remux": {
+      "description": "Remultiplexa sin recodificar."
+    },
+    "volume": {
+      "description": "Ajusta el volumen de audio."
+    },
+    "normalize": {
+      "description": "Normaliza el volumen del audio."
+    },
+    "fade": {
+      "description": "Añade fade in/out al audio."
+    },
+    "formats": {
+      "description": "Lista los formatos soportados."
+    },
+    "codecs": {
+      "description": "Lista los códecs soportados."
+    },
+    "lang": {
+      "description": "Cambia el idioma de la interfaz."
+    },
+    "version": {
+      "description": "Muestra la versión de Fuse."
+    },
+    "clear": {
+      "description": "Limpia la pantalla."
+    },
+    "help": {
+      "description": "Muestra este mensaje de ayuda."
+    },
+    "exit": {
+      "description": "Sale de Fuse."
+    },
+    "args": {
+      "file": "Archivo de entrada",
+      "input": "Archivo de entrada",
+      "audio_input": "Archivo de audio de entrada",
+      "video_input": "Archivo de vídeo de entrada",
+      "inspect_input": "Archivo multimedia a inspeccionar",
+      "output": "Archivo de salida",
+      "output_path": "Ruta del archivo de salida",
+      "output_extension": "Archivo de salida con la extensión deseada",
+      "audio_output": "Archivo de audio de salida",
+      "image_output": "Imagen de salida",
+      "video_output": "Vídeo de salida",
+      "title": "Etiqueta de título",
+      "artist": "Etiqueta de artista",
+      "album": "Etiqueta de álbum",
+      "year": "Etiqueta de año",
+      "quality": "Calidad: balanced, high, max",
+      "size": "Tamaño objetivo",
+      "target_size": "Tamaño objetivo",
+      "target_size_mb": "Tamaño objetivo, por ejemplo 20MB",
+      "video_size": "Tamaño objetivo, por ejemplo 1280x720",
+      "degrees": "Grados: 90, 180, 270",
+      "target_fps": "FPS objetivo, por ejemplo 60",
+      "rate": "FPS objetivo",
+      "speed_factor": "Factor de velocidad, por ejemplo 2x o 0.5",
+      "factor": "Factor de velocidad",
+      "start_time": "Tiempo de inicio, por ejemplo 00:01:00",
+      "end_time": "Tiempo de fin, por ejemplo 00:02:00",
+      "start": "Tiempo de inicio",
+      "end": "Tiempo de fin",
+      "duration": "Duración en segundos",
+      "thumbnail_time": "Marca de tiempo (predeterminada: 00:00:05)",
+      "frame_time": "Marca de tiempo (predeterminada: 00:00:00)",
+      "start_time_default": "Tiempo de inicio (predeterminado: 00:00:00)",
+      "gif_duration": "Duración en segundos (predeterminada: 5)",
+      "gif_fps": "Fotogramas por segundo (predeterminado: 10)",
+      "gif_width": "Ancho en píxeles (predeterminado: 480)",
+      "gif_output": "GIF de salida",
+      "at": "Marca de tiempo",
+      "fps": "Fotogramas por segundo del GIF",
+      "width": "Ancho del GIF",
+      "value": "Cambio de volumen",
+      "volume": "Cambio de volumen: +20%, -10%, 1.5",
+      "fade_type": "entrada o salida",
+      "fade_duration": "Duración del fade en segundos",
+      "type": "in (entrada) u out (salida)",
+      "preset": "Preset de codificación: ultrafast/medium/slow (predeterminado: medium)",
+      "crf": "Calidad CRF 0-51 (predeterminada: 23)",
+      "subtitle": "Archivo de subtítulos (.srt, .ass)",
+      "watermark": "Imagen de marca de agua",
+      "position": "Posición: arriba-izquierda, arriba-derecha, abajo-izquierda, abajo-derecha, centro",
+      "input_files": "Archivos de entrada separados por espacios",
+      "filter_search": "Nombre del filtro a buscar",
+      "category": "Opcional: categoría (video/audio/imagen) o ruta de archivo",
+      "code": "Código de idioma"
+    },
+    "frame": {
+      "description": "Extract a single frame from a video as an image."
+    },
+    "hardware": {
+      "description": "List available hardware encoders."
+    },
+    "filters": {
+      "description": "List available FFmpeg filters."
+    },
+    "metadata": {
+      "description": "Set metadata tags on a media file (stream copy)."
+    },
+    "optimize": {
+      "description": "Optimize media for size and quality balance (H.264 + AAC)."
+    },
+    "cut": {
+      "description": "Cut a clip from a video (stream copy, no re-encode)."
+    },
+    "concat": {
+      "description": "Concatenate multiple video files into one."
+    },
+    "subtitle": {
+      "description": "Burn subtitles into a video from an external subtitle file."
+    },
+    "watermark": {
+      "description": "Overlay an image watermark on a video."
+    },
+    "audio-info": {
+      "description": "Show audio bitrate, sample rate and codec info."
+    }
+  }
+}

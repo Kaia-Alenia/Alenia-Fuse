@@ -1,7 +1,7 @@
 [project]
-name = "alenia-porter"
-version = "7.1.0"
-description = "Alenia Porter — Professional multimedia CLI and Python library"
+name = "alenia-fuse"
+version = "2.0.0"
+description = "Alenia Fuse — Professional multimedia CLI and Python library"
 readme = "README.md"
 authors = [
     { name = "Alejandro Martinez", email = "contact.aleniastudios@gmail.com" }
@@ -9,11 +9,12 @@ authors = [
 requires-python = ">=3.11"
 dependencies = [
     "rich>=13.7.0",
-    "prompt_toolkit>=3.0.40"
+    "prompt_toolkit>=3.0.40",
+    "Pillow>=10.0.0"
 ]
 
 [project.scripts]
-porter = "alenia_porter.cli.main:main"
+fuse = "fuse.cli.main:main"
 
 [build-system]
 requires = ["setuptools>=68.0"]
@@ -23,7 +24,7 @@ build-backend = "setuptools.build_meta"
 where = ["src"]
 
 [tool.setuptools.package-data]
-alenia_porter = [
+fuse = [
     "py.typed",
     "i18n/locales/*.json"
 ]

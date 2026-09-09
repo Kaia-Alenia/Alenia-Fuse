@@ -2,13 +2,13 @@ import sys
 import os
 from pathlib import Path
 
-# Fix path to import alenia_porter
+# Fix path to import fuse
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
-from alenia_porter.media.models import Media, Stream
-from alenia_porter.cli.interactive import select_format_for_type, scan_directory, detect_media_type
-from alenia_porter.ffmpeg.capabilities import default_registry as caps
-from alenia_porter.planner.planner import OperationPlanner
+from fuse.media.models import Media, Stream
+from fuse.cli.interactive import select_format_for_type, scan_directory, detect_media_type
+from fuse.ffmpeg.capabilities import default_registry as caps
+from fuse.planner.planner import OperationPlanner
 
 def demo_intelligence():
     caps.load_from_ffmpeg()

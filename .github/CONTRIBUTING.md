@@ -1,17 +1,17 @@
-# Contributing to Alenia Porter
+# Contributing to Alenia Fuse
 
-Thank you for your interest in contributing to Alenia Porter! This is an open-source project designed for the indie developer community and we are happy to receive your contributions.
+Thank you for your interest in contributing to Alenia Fuse! This is an open-source project designed for the indie developer community and we are happy to receive your contributions.
 
 ## Getting Started
 1. Fork this repository.
-2. Clone your fork locally: `git clone https://github.com/YOUR-USERNAME/alenia-porter.git`
+2. Clone your fork locally: `git clone https://github.com/YOUR-USERNAME/alenia-fuse.git`
 3. Install dependencies and set up your local environment (we prefer `uv`).
 4. Make your changes in a descriptive branch: `git checkout -b fix/my-fix` or `git checkout -b feat/new-feature`
 
 ## Code Structure
-- **`src/alenia_porter/media_engine.py`**: The core engine that wraps FFmpeg and handles media processing, Smart Caching, and Hardware Acceleration.
-- **`src/alenia_porter/porter.py`**: Secondary logic, utilities, and telemetry.
-- **`src/alenia_porter/cli.py`**: The entry point for the application's GUI (Tkinter).
+- **`src/alenia_fuse/media_engine.py`**: The core engine that wraps FFmpeg and handles media processing, Smart Caching, and Hardware Acceleration.
+- **`src/alenia_fuse/`**: Core logic, utilities, and media processing.
+- **`src/alenia_fuse/cli.py`**: The entry point for the application's GUI (Tkinter).
 - **`cmd/ap/main.go`**: The CLI wrapper written in Go for ultra-fast execution in the terminal.
 
 ## Contribution Guidelines

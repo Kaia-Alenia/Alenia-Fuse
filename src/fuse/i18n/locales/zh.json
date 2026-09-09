@@ -1,0 +1,192 @@
+{
+  "cli": {
+    "title": "ALENIA FUSE",
+    "subtitle": "多媒体化繁为简",
+    "prompt": "您想做什么？",
+    "menu": {
+      "convert": "转换媒体",
+      "compress": "压缩媒体",
+      "edit_video": "编辑视频",
+      "edit_audio": "编辑音频",
+      "process_images": "处理图片",
+      "extract_media": "提取媒体",
+      "analyze": "分析文件",
+      "settings": "设置",
+      "help": "帮助",
+      "exit": "退出"
+    },
+    "converting": "正在将 {input} 转换为 {output}...",
+    "success": "转换成功。",
+    "failed": "转换失败：{error}",
+    "cancelled": "Operation cancelled.",
+    "banner_formats": "formats",
+    "unknown_cmd": "Unknown command:",
+    "usage": "Usage:",
+    "options": "Options:",
+    "commands": "Commands",
+    "error": "Error:",
+    "banner_subtitle": "[EN] Convert • edit • optimize media",
+    "banner_help": "[EN] Type /help for commands",
+    "banner_hint": "输入 / 查看命令 · Tab 查看建议",
+    "history_cleared": "命令历史已清除。",
+    "history_empty": "命令历史已经是空的。",
+    "convert": {
+      "no_input": "Qing tigong shuru wenjian huo mulu.",
+      "no_media": "Zai {path} zhong wei zhao dao meiti wenjian",
+      "scanning": "Zhenggai saomiao {path}...",
+      "found_summary": "Zhao dao {videos} ge shipin, {audios} ge yinpin, {images} zhang tupian.",
+      "section_header": "{type} ({count} ge wenjian)",
+      "choose_format": "Mubiao geshi",
+      "format_options": "Xuanxiang",
+      "skip": "tiaoguo",
+      "invalid_format": "Geshi wuxiao, qing cong liebiaozhong xuanze huo tiaoguo.",
+      "skipping_type": "Tiaoguo {type}.",
+      "no_output_extension": "{output} meiyou kuozhanming. Qing shiyong: convert {input} {output}.mp4  huo: convert {input} to mp4",
+      "converting": "Zhengzai zhuanhuan {name}",
+      "done": "Wancheng!",
+      "output_dir": "Shuchu mulu",
+      "original_size": "Yuanshi daxiao",
+      "output_size": "Shuchu daxiao",
+      "same_format_skip": "Yi tiaoguo (geshi xiangtong): {path}",
+      "overwrite_prompt": "Wenjian yi cunzai. Shifou fugai? [y/N]",
+      "complete": "Yi wancheng - {orig} MB -> {out} MB",
+      "error_file": "Zhuanhuan {name} shi chu cuo: {err}",
+      "cancelled_user": "Yi bei yonghu quxiao.",
+      "start": "Kaishi zhuanhuan {total} ge wenjian...",
+      "use_slash": "Yongfa: convert <wenjian huo mulu> [shuchu mulu]"
+    }
+  },
+  "settings": {
+    "language": "语言"
+  },
+  "categories": {
+    "general": "General",
+    "convert": "Convert",
+    "video": "Video",
+    "audio": "Audio",
+    "extract": "Extract",
+    "information": "Information",
+    "fuse": "Fuse"
+  },
+  "commands": {
+    "info": {
+      "description": "Show detailed media information via FFprobe."
+    },
+    "convert": {
+      "description": "Convert a media file to another format."
+    },
+    "compress": {
+      "description": "Compress a media file (smart quality options)."
+    },
+    "resize": {
+      "description": "Resize video dimensions."
+    },
+    "rotate": {
+      "description": "Rotate video."
+    },
+    "fps": {
+      "description": "Change video frame rate."
+    },
+    "speed": {
+      "description": "Change playback speed."
+    },
+    "trim": {
+      "description": "Trim a video clip."
+    },
+    "mute": {
+      "description": "Remove audio from video."
+    },
+    "extract-audio": {
+      "description": "Extract audio stream from video."
+    },
+    "thumbnail": {
+      "description": "Extract a thumbnail image from video."
+    },
+    "gif": {
+      "description": "Create an animated GIF from video."
+    },
+    "remux": {
+      "description": "Remux to another container without re-encoding."
+    },
+    "volume": {
+      "description": "Adjust audio volume."
+    },
+    "normalize": {
+      "description": "Normalize audio levels (loudnorm)."
+    },
+    "fade": {
+      "description": "Add fade in/out to audio."
+    },
+    "formats": {
+      "description": "List supported media formats."
+    },
+    "codecs": {
+      "description": "List supported codecs."
+    },
+    "lang": {
+      "description": "Change the interface language."
+    },
+    "version": {
+      "description": "Show Fuse version."
+    },
+    "clear": {
+      "description": "Clear the screen."
+    },
+    "help": {
+      "description": "Show this help message."
+    },
+    "exit": {
+      "description": "Exit Fuse."
+    },
+    "args": {
+      "file": "Input file",
+      "input": "Input file",
+      "output": "Output file",
+      "quality": "Quality: balanced, high, max (default: balanced)",
+      "size": "Target size",
+      "degrees": "Degrees: 90, 180, 270",
+      "rate": "Target FPS",
+      "factor": "Speed factor",
+      "start": "Start time",
+      "end": "End time",
+      "duration": "Duration in seconds",
+      "at": "Timestamp",
+      "fps": "GIF frame rate",
+      "width": "GIF width",
+      "value": "Volume change",
+      "type": "in or out",
+      "category": "Optional category",
+      "code": "Language code"
+    },
+    "frame": {
+      "description": "Extract a single frame from a video as an image."
+    },
+    "hardware": {
+      "description": "List available hardware encoders."
+    },
+    "filters": {
+      "description": "List available FFmpeg filters."
+    },
+    "metadata": {
+      "description": "Set metadata tags on a media file (stream copy)."
+    },
+    "optimize": {
+      "description": "Optimize media for size and quality balance (H.264 + AAC)."
+    },
+    "cut": {
+      "description": "Cut a clip from a video (stream copy, no re-encode)."
+    },
+    "concat": {
+      "description": "Concatenate multiple video files into one."
+    },
+    "subtitle": {
+      "description": "Burn subtitles into a video from an external subtitle file."
+    },
+    "watermark": {
+      "description": "Overlay an image watermark on a video."
+    },
+    "audio-info": {
+      "description": "Show audio bitrate, sample rate and codec info."
+    }
+  }
+}

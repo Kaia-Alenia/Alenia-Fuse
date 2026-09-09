@@ -1,8 +1,8 @@
 import pytest
 import os
 from pathlib import Path
-from alenia_porter.ffmpeg.backend import FFmpegBackend
-from alenia_porter.ffmpeg.probe import probe
+from fuse.ffmpeg.backend import FFmpegBackend
+from fuse.ffmpeg.probe import probe
 
 def test_real_conversion_integration(tmp_path):
     # 1. Generate a synthetic input video

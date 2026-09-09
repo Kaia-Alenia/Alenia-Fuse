@@ -1,5 +1,5 @@
 import pytest
-from alenia_porter.ffmpeg import default_resolver
+from fuse.ffmpeg import default_resolver
 
 def test_ffmpeg_resolver_initializes():
     assert hasattr(default_resolver, 'resolve')

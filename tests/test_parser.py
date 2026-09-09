@@ -1,9 +1,9 @@
 """
-Tests para el parser CLI de Alenia Porter.
+Tests para el parser CLI de Alenia Fuse.
 """
 import pytest
 from types import SimpleNamespace
-from alenia_porter.cli.human_parser import parse_human_syntax
+from fuse.cli.human_parser import parse_human_syntax
 
 
 def test_convert_to_syntax():

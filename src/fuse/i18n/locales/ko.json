@@ -1,0 +1,192 @@
+{
+  "cli": {
+    "title": "ALENIA FUSE",
+    "subtitle": "멀티미디어를 간단하게",
+    "prompt": "무엇을 하시겠습니까?",
+    "menu": {
+      "convert": "미디어 변환",
+      "compress": "미디어 압축",
+      "edit_video": "동영상 편집",
+      "edit_audio": "오디오 편집",
+      "process_images": "이미지 처리",
+      "extract_media": "미디어 추출",
+      "analyze": "파일 분석",
+      "settings": "설정",
+      "help": "도움말",
+      "exit": "종료"
+    },
+    "converting": "{input}을(를) {output}(으)로 변환 중...",
+    "success": "변환이 완료되었습니다.",
+    "failed": "변환 실패: {error}",
+    "cancelled": "Operation cancelled.",
+    "banner_formats": "formats",
+    "unknown_cmd": "Unknown command:",
+    "usage": "Usage:",
+    "options": "Options:",
+    "commands": "Commands",
+    "error": "Error:",
+    "banner_subtitle": "[EN] Convert • edit • optimize media",
+    "banner_help": "[EN] Type /help for commands",
+    "banner_hint": "/로 명령어 보기 · Tab으로 제안",
+    "history_cleared": "명령 기록이 삭제되었습니다.",
+    "history_empty": "명령 기록이 이미 비어 있습니다.",
+    "convert": {
+      "no_input": "Ibryeok pail tto-neun directory reul jijeonghaseyo.",
+      "no_media": "{path} e media pairi eopsseumnida",
+      "scanning": "{path} steukaen jung...",
+      "found_summary": "Dongnyeong {videos}gae, odio {audios}gae, imiji {images}gae reul chajassseumnida.",
+      "section_header": "{type} ({count}gae pail)",
+      "choose_format": "Daesang hyeongsik",
+      "format_options": "Obsyeon",
+      "skip": "keonneo-ttwigi",
+      "invalid_format": "Jalmosdoen hyeongsik imnida. Mokrokeso seontaekhageona keonneo ttwiseyo.",
+      "skipping_type": "{type} keonneo twimnikka.",
+      "no_output_extension": "{output} e hwakjangja ga eopsseumnida. Sayong: convert {input} {output}.mp4  ttoneun: convert {input} to mp4",
+      "converting": "{name} byeonhwan jung",
+      "done": "Wanlyo!",
+      "output_dir": "Chulryeok directory",
+      "original_size": "Wonbon",
+      "output_size": "Chulryeok",
+      "same_format_skip": "Keonneo twigim (gateun hyeongsik): {path}",
+      "overwrite_prompt": "Pail i imi issseumnida. Deokkeosseugesseumnigga? [y/N]",
+      "complete": "Wanlyo - {orig} MB -> {out} MB",
+      "error_file": "{name} byeonhwan olyyu: {err}",
+      "cancelled_user": "Sayongja ga chwisohaessseumnida.",
+      "start": "{total}gae pail byeonhwan sijak...",
+      "use_slash": "Sayongbeop: convert <pail tto-neun directory> [chulryeok directory]"
+    }
+  },
+  "settings": {
+    "language": "언어"
+  },
+  "categories": {
+    "general": "General",
+    "convert": "Convert",
+    "video": "Video",
+    "audio": "Audio",
+    "extract": "Extract",
+    "information": "Information",
+    "fuse": "Fuse"
+  },
+  "commands": {
+    "info": {
+      "description": "Show detailed media information via FFprobe."
+    },
+    "convert": {
+      "description": "Convert a media file to another format."
+    },
+    "compress": {
+      "description": "Compress a media file (smart quality options)."
+    },
+    "resize": {
+      "description": "Resize video dimensions."
+    },
+    "rotate": {
+      "description": "Rotate video."
+    },
+    "fps": {
+      "description": "Change video frame rate."
+    },
+    "speed": {
+      "description": "Change playback speed."
+    },
+    "trim": {
+      "description": "Trim a video clip."
+    },
+    "mute": {
+      "description": "Remove audio from video."
+    },
+    "extract-audio": {
+      "description": "Extract audio stream from video."
+    },
+    "thumbnail": {
+      "description": "Extract a thumbnail image from video."
+    },
+    "gif": {
+      "description": "Create an animated GIF from video."
+    },
+    "remux": {
+      "description": "Remux to another container without re-encoding."
+    },
+    "volume": {
+      "description": "Adjust audio volume."
+    },
+    "normalize": {
+      "description": "Normalize audio levels (loudnorm)."
+    },
+    "fade": {
+      "description": "Add fade in/out to audio."
+    },
+    "formats": {
+      "description": "List supported media formats."
+    },
+    "codecs": {
+      "description": "List supported codecs."
+    },
+    "lang": {
+      "description": "Change the interface language."
+    },
+    "version": {
+      "description": "Show Fuse version."
+    },
+    "clear": {
+      "description": "Clear the screen."
+    },
+    "help": {
+      "description": "Show this help message."
+    },
+    "exit": {
+      "description": "Exit Fuse."
+    },
+    "args": {
+      "file": "Input file",
+      "input": "Input file",
+      "output": "Output file",
+      "quality": "Quality: balanced, high, max (default: balanced)",
+      "size": "Target size",
+      "degrees": "Degrees: 90, 180, 270",
+      "rate": "Target FPS",
+      "factor": "Speed factor",
+      "start": "Start time",
+      "end": "End time",
+      "duration": "Duration in seconds",
+      "at": "Timestamp",
+      "fps": "GIF frame rate",
+      "width": "GIF width",
+      "value": "Volume change",
+      "type": "in or out",
+      "category": "Optional category",
+      "code": "Language code"
+    },
+    "frame": {
+      "description": "Extract a single frame from a video as an image."
+    },
+    "hardware": {
+      "description": "List available hardware encoders."
+    },
+    "filters": {
+      "description": "List available FFmpeg filters."
+    },
+    "metadata": {
+      "description": "Set metadata tags on a media file (stream copy)."
+    },
+    "optimize": {
+      "description": "Optimize media for size and quality balance (H.264 + AAC)."
+    },
+    "cut": {
+      "description": "Cut a clip from a video (stream copy, no re-encode)."
+    },
+    "concat": {
+      "description": "Concatenate multiple video files into one."
+    },
+    "subtitle": {
+      "description": "Burn subtitles into a video from an external subtitle file."
+    },
+    "watermark": {
+      "description": "Overlay an image watermark on a video."
+    },
+    "audio-info": {
+      "description": "Show audio bitrate, sample rate and codec info."
+    }
+  }
+}

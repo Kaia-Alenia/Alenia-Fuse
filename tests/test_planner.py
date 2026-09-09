@@ -1,10 +1,10 @@
 """
-Tests para el Planner real de Alenia Porter.
+Tests para el Planner real de Alenia Fuse.
 """
 import pytest
 from unittest.mock import MagicMock, patch
-from alenia_porter.planner.planner import OperationPlanner
-from alenia_porter.media.models import Media, Stream
+from fuse.planner.planner import OperationPlanner
+from fuse.media.models import Media, Stream
 
 
 def make_media(has_video=True, has_audio=True,
@@ -131,3 +131,31 @@ def test_audio_op_requires_audio_stream():
     planner = make_planner()
     plan = planner.plan_audio_op("normalize", media, "/out/out.mp3")
     assert not plan.is_valid
+
+
+def test_public_targets_have_explicit_strategies():
+    media = make_media()
+    planner = make_planner()
+    for target in ("mp4", "webm", "mkv", "mov", "avi", "ts", "flv",
+                   "mp3", "flac", "aac", "m4a", "opus", "ogg", "wav",
+                   "wma", "webp", "jpg", "png", "avif", "bmp", "tiff",
+                   "gif", "webp_animated", "apng"):
+        plan = planner.plan_convert(media, target, f"/out/out.{target}")
+        assert plan.is_valid, f"{target}: {plan.error_reason}"
+        assert not plan.needs_preflight
+
+
+def test_structure_rules_reject_impossible_conversion():
+    media = make_media(has_video=False, has_audio=True)
+    planner = make_planner()
+    plan = planner.plan_convert(media, "mp4", "/out/out.mp4")
+    assert not plan.is_valid
+    assert "video stream" in plan.error_reason
+
+
+def test_pdf_is_specialized_image_operation():
+    media = make_media()
+    planner = make_planner()
+    plan = planner.plan_convert(media, "pdf", "/out/out.pdf")
+    assert not plan.is_valid
+    assert "Image.to_pdf" in plan.error_reason

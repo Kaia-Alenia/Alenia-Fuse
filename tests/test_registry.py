@@ -1,13 +1,13 @@
 """
-Tests para el CommandRegistry de Alenia Porter.
+Tests para el CommandRegistry de Alenia Fuse.
 """
 import pytest
 
 
 def test_registry_is_populated():
     """After importing handlers, registry should have all commands."""
-    import alenia_porter.cli.handlers  # noqa: trigger @register_command
-    from alenia_porter.cli.registry import registry
+    import fuse.cli.commands  # noqa: trigger @register_command
+    from fuse.cli.registry import registry
 
     names = [cmd.name for cmd in registry.get_all()]
     assert "info" in names
@@ -31,8 +31,8 @@ def test_registry_is_populated():
 
 
 def test_registry_alias_resolution():
-    import alenia_porter.cli.handlers  # noqa
-    from alenia_porter.cli.registry import registry
+    import fuse.cli.commands  # noqa
+    from fuse.cli.registry import registry
 
     # "analyze" is an alias of "info"
     cmd = registry.get("analyze")
@@ -41,15 +41,15 @@ def test_registry_alias_resolution():
 
 
 def test_parser_builds_without_error():
-    import alenia_porter.cli.handlers  # noqa
-    from alenia_porter.cli.parser import get_parser
+    import fuse.cli.commands  # noqa
+    from fuse.cli.parser import get_parser
     parser = get_parser()
     assert parser is not None
 
 
 def test_info_is_available():
-    import alenia_porter.cli.handlers  # noqa
-    from alenia_porter.cli.registry import registry
+    import fuse.cli.commands  # noqa
+    from fuse.cli.registry import registry
     cmd = registry.get("info")
     assert cmd is not None
     assert callable(cmd.handler)

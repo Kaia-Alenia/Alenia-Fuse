@@ -1,4 +1,4 @@
-name: Build Alenia Porter CLI
+name: Build Alenia Fuse CLI
 
 on:
   push:
@@ -36,7 +36,7 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: porter-dist
+          name: fuse-dist
           path: dist/*
 
   release:
@@ -58,4 +58,4 @@ jobs:
         with:
           generate_release_notes: true
           files: |
-            artifacts/porter-dist/*
+            artifacts/fuse-dist/*
