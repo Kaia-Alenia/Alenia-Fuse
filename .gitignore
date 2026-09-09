@@ -88,6 +88,11 @@ AleniaFuse.exe
 AleniaFuse-*.zip
 tools/
 
+# Node (npm install from local tooling runs)
+node_modules/
+package.json
+package-lock.json
+
 # Trash and logs
 node_modules_trash_*/
 crash.log
