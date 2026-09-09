@@ -1,5 +1,5 @@
 """
-Tests para el Planner real de Alenia Fuse.
+Tests for the real Planner of Alenia Fuse.
 """
 import pytest
 from unittest.mock import MagicMock, patch
@@ -140,7 +140,8 @@ def test_public_targets_have_explicit_strategies():
                    "mp3", "flac", "aac", "m4a", "opus", "ogg", "wav",
                    "wma", "webp", "jpg", "png", "avif", "bmp", "tiff",
                    "gif", "webp_animated", "apng"):
-        plan = planner.plan_convert(media, target, f"/out/out.{target}")
+        ext = "webp" if target == "webp_animated" else target
+        plan = planner.plan_convert(media, target, f"/out/out.{ext}")
         assert plan.is_valid, f"{target}: {plan.error_reason}"
         assert not plan.needs_preflight
 

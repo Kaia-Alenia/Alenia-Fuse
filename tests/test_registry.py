@@ -1,5 +1,5 @@
 """
-Tests para el CommandRegistry de Alenia Fuse.
+Tests for the CommandRegistry of Alenia Fuse.
 """
 import pytest
 

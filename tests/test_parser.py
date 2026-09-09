@@ -1,5 +1,5 @@
 """
-Tests para el parser CLI de Alenia Fuse.
+Tests for the CLI parser of Alenia Fuse.
 """
 import pytest
 from types import SimpleNamespace

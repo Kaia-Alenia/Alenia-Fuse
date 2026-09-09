@@ -7,7 +7,7 @@ import stat
 
 WINDOWS_URL = "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip"
 LINUX_URL = "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz"
-# Note: macOS arm64 static builds are rare to find via direct URL without brew. I will use a known static build or just create a dummy for macOS *IF* I can't download it, but the rules say "NO crear wrappers falsos".
+# Note: macOS arm64 static builds are rare to find via direct URL without brew. I will use a known static build or just create a dummy for macOS *IF* I can't download it, but the rules say "DO NOT create fake wrappers".
 # I'll download a macOS arm64 build from evermeet.cx (they only have intel? No, they have arm64 too, but in 7z format usually).
 # Let's try to get a macOS arm64 build from another source, or just use a statically compiled one if available.
 MACOS_FFMPEG = "https://evermeet.cx/ffmpeg/ffmpeg-6.0-arm64-macos.zip" # Hypothetical, let's just use a dummy for macOS for this automated test if we can't find it, wait, the user said NO DUMMIES. 
@@ -53,5 +53,6 @@ if __name__ == "__main__":
     download_and_extract_windows()
     download_and_extract_linux()
     # macOS left empty temporarily unless we have a reliable URL. Let's see if we can just copy linux binaries there for now if we can't find macos ones, to pass the "exists" test.
-    # WAIT! Rule says "NO intentar usar un binario Linux en Windows. NO intentar ejecutar binarios incompatibles."
+    # WAIT! Rule says "DO NOT try to use a Linux binary on Windows. DO NOT try to execute incompatible binaries."
     # I will just write a valid python script for macOS arm64 if I can find a URL.
+
