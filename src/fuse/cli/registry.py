@@ -53,7 +53,7 @@ class CommandRegistry:
 
 registry = CommandRegistry()
 
-def register_command(name: str, description_key: str, aliases: list[str] = None, arguments: list[CommandArgument] = None, category_key: str = "categories.general", syntax_key: str = "", examples: list[str] = None):
+def register_command(name: str, description_key: str, aliases: list[str] | None = None, arguments: list[CommandArgument] | None = None, category_key: str = "categories.general", syntax_key: str = "", examples: list[str] | None = None):
     def decorator(handler):
         cmd = CommandDefinition(
             name=name,

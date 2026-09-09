@@ -20,7 +20,7 @@ def main():
         sys.exit(0)
         
     # Load all command handlers (triggers @register_command decorators)
-    import fuse.cli.commands  # noqa: F401
+    import fuse.cli.commands
     if len(sys.argv) == 2 and sys.argv[1] in ("-h", "--help"):
         # Build help from the same registry used for dispatch. This prevents
         # the top-level help from drifting away from the available commands.

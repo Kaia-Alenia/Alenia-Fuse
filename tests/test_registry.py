@@ -29,7 +29,7 @@ def test_registry_is_populated():
 
 
 def test_registry_alias_resolution():
-    import fuse.cli.commands  # noqa
+    import fuse.cli.commands
     from fuse.cli.registry import registry
 
     # "analyze" is an alias of "info"
@@ -39,14 +39,14 @@ def test_registry_alias_resolution():
 
 
 def test_parser_builds_without_error():
-    import fuse.cli.commands  # noqa
+    import fuse.cli.commands
     from fuse.cli.parser import get_parser
     parser = get_parser()
     assert parser is not None
 
 
 def test_info_is_available():
-    import fuse.cli.commands  # noqa
+    import fuse.cli.commands
     from fuse.cli.registry import registry
     cmd = registry.get("info")
     assert cmd is not None

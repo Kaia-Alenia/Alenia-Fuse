@@ -162,7 +162,7 @@ class Job:
             self.state = JobState.COMPLETED
             return True
 
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             self.state = JobState.FAILED
             self.error = str(e)
             return False

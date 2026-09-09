@@ -2,6 +2,10 @@
 ConvertOperation — runs a real media conversion via FFmpeg.
 """
 from collections.abc import Callable
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from fuse.api.result import OperationResult
 from pathlib import Path
 
 from fuse.capabilities.policies import normalize_format
@@ -48,9 +52,8 @@ class ConvertOperation:
         if not plan.is_valid:
             return OperationResult.from_error(plan.error_reason, Path(self.output_path))
 
-        if getattr(plan, "needs_preflight", False):
-            if not planner.preflight_check(plan):
-                return OperationResult.from_error(plan.error_reason or "Preflight check failed. This format conversion is not supported.", Path(self.output_path))
+        if getattr(plan, "needs_preflight", False) and not planner.preflight_check(plan):
+            return OperationResult.from_error(plan.error_reason or "Preflight check failed. This format conversion is not supported by your FFmpeg build.", Path(self.output_path))
 
         ffmpeg_path = str(default_resolver.ffmpeg_path)
         cmd = [ffmpeg_path, "-y"] + apply_ffmpeg_privacy(plan.args)

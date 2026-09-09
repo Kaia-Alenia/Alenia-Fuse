@@ -2,6 +2,10 @@
 Video operations — resize, crop, rotate, fps, speed, trim, mute, extract_audio, thumbnail, gif.
 """
 from collections.abc import Callable
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from fuse.api.result import OperationResult
 from pathlib import Path
 
 from fuse.ffmpeg.resolver import default_resolver

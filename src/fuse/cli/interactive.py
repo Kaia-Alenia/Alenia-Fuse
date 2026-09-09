@@ -233,7 +233,7 @@ def run_interactive():
             _clear_history()
             continue
 
-        if lower.startswith("/help") or lower.startswith("help"):
+        if lower.startswith(("/help", "help")):
             parts = text.split()
             topic = parts[1].lstrip("/") if len(parts) > 1 else None
             _print_internal_help(topic)

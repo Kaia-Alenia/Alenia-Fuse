@@ -26,7 +26,7 @@ def probe(file_path: Path) -> dict[str, Any]:
     ]
     
     try:
-        result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
         return json.loads(result.stdout)
     except subprocess.CalledProcessError as e:
         raise FFprobeError(f"FFprobe failed with code {e.returncode}: {e.stderr}")

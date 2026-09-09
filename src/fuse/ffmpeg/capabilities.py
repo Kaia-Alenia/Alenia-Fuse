@@ -71,8 +71,7 @@ class CapabilityRegistry:
     def _load_list(self, arg: str, target_set: set[str]):
         result = subprocess.run(
             [str(default_resolver.ffmpeg_path), arg],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
             text=True,
             shell=False,
             check=True,
@@ -86,8 +85,7 @@ class CapabilityRegistry:
     def _load_formats(self):
         result = subprocess.run(
             [str(default_resolver.ffmpeg_path), "-formats"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
             text=True,
             shell=False,
             check=True,

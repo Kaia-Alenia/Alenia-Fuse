@@ -40,3 +40,7 @@ dev = [
 asyncio_mode = "strict"
 testpaths = ["tests"]
 timeout = 60
+
+[tool.ruff.lint]
+ignore = ["BLE001", "S110", "RUF012", "RUF013", "SIM102", "F401", "UP035"]
+

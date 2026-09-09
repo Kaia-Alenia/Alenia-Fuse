@@ -35,7 +35,7 @@ def test_short_python_submodule_facades():
 
 
 def test_parser_contains_convert():
-    import fuse.cli.commands  # noqa
+    import fuse.cli.commands
     from fuse.cli.registry import registry
     cmd = registry.get("convert")
     assert cmd is not None

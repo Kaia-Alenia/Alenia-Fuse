@@ -12,7 +12,7 @@ class FFmpegExecutionError(Exception):
 
 class FFmpegBackend:
     @staticmethod
-    def run_operation(args: list[str], on_progress: Callable[[str], None] = None) -> Any:
+    def run_operation(args: list[str], on_progress: Callable[[str], None] | None = None) -> Any:
         if not default_resolver.is_ffmpeg_available:
             raise FFmpegExecutionError("FFmpeg is not available")
             

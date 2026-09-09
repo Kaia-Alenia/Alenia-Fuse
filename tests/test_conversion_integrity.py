@@ -21,6 +21,7 @@ def _ffmpeg(*args: str) -> None:
     result = subprocess.run(
         [str(default_resolver.ffmpeg_path), "-y", *args],
         stdout=subprocess.DEVNULL,
+        check=False,
         stderr=subprocess.PIPE,
         text=True,
     )

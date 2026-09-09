@@ -61,6 +61,12 @@ test_fixtures_generated/
 .test_appdata/
 .test_appdata_*/
 test_run_temp_*/
+.full*/
+.full_output_*/
+.planner*/
+.plannner*/
+.planner_out_2*/
+.planner_out*/
 
 # test_*.py
 test_*.js

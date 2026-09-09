@@ -2,6 +2,10 @@
 Audio operations — volume, normalize, fade, speed, trim.
 """
 from collections.abc import Callable
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from fuse.api.result import OperationResult
 from pathlib import Path
 
 from fuse.ffmpeg.resolver import default_resolver

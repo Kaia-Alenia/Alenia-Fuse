@@ -89,8 +89,8 @@ class FFmpegResolver:
         if not path or not path.exists():
             return False
         try:
-            result = subprocess.run([str(path), "-version"], stdout=subprocess.PIPE,
-                                    stderr=subprocess.PIPE, text=True, shell=False,
+            result = subprocess.run([str(path), "-version"], capture_output=True,
+                                    text=True, shell=False,
                                     check=True)
             marker = f"{kind} version"
             if marker not in result.stdout:

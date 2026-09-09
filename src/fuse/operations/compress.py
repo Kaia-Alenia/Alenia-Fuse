@@ -3,6 +3,10 @@ CompressOperation — compresses media using real FFmpeg strategies.
 """
 from collections.abc import Callable
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from fuse.api.result import OperationResult
 
 from fuse.ffmpeg.resolver import default_resolver
 from fuse.jobs.manager import Job, JobProgress

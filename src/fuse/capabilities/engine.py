@@ -23,7 +23,7 @@ _AVAILABLE_MUXERS: set[str] = set()
 
 def _load_ffmpeg_capabilities() -> None:
     """Populate encoder and muxer sets from the bundled FFmpeg binary."""
-    global _STATUS, _LOAD_ERROR, _AVAILABLE_ENCODERS, _AVAILABLE_MUXERS
+    global _STATUS, _LOAD_ERROR
 
     if _STATUS == "loaded":
         return
@@ -41,8 +41,7 @@ def _load_ffmpeg_capabilities() -> None:
         # Encoders
         enc_result = subprocess.run(
             [ffmpeg, "-encoders"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
             text=True,
             shell=False,
             check=True,
@@ -57,8 +56,7 @@ def _load_ffmpeg_capabilities() -> None:
         # Muxers
         mux_result = subprocess.run(
             [ffmpeg, "-muxers"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
             text=True,
             shell=False,
             check=True,
@@ -99,7 +97,7 @@ def _evaluate_target(
     Returns a ConversionCapability with available=True/False and a reason.
     """
     # Determine which encoder lists are relevant
-    all_required_encoders = (target.video_encoders or []) + (target.audio_encoders or [])
+    (target.video_encoders or []) + (target.audio_encoders or [])
 
     # Find the first available video encoder (if any required)
     chosen_video_enc = ""
@@ -273,7 +271,7 @@ def get_valid_targets(media) -> list[ConversionCapability]:
         MediaType.AUDIO: "audio",
         MediaType.IMAGE: "image",
     }
-    source_kind = kind_map.get(media.type, "video")
+    kind_map.get(media.type, "video")
 
     results = []
     for target in ALL_TARGETS:
@@ -298,6 +296,6 @@ def get_all_capabilities(media) -> list[ConversionCapability]:
         MediaType.AUDIO: "audio",
         MediaType.IMAGE: "image",
     }
-    source_kind = kind_map.get(media.type, "video")
+    kind_map.get(media.type, "video")
 
     return [_evaluate_target(media, t) for t in ALL_TARGETS]

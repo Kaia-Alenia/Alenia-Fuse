@@ -25,7 +25,7 @@ for fmt in audio_formats:
         "-filter_complex", "[0:a][1:a][2:a]amix=inputs=3:duration=first,volume=1.6",
         "-c:a", codec,
         target_file
-    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
 
 # Generate Video Files
 for fmt in video_formats:
@@ -52,7 +52,7 @@ for fmt in video_formats:
         "-c:a", acodec,
         "-shortest",
         target_file
-    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
 
 # Generate Image Files
 def create_pixel_art_landscape():
