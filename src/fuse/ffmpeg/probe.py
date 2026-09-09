@@ -1,13 +1,15 @@
-import subprocess
 import json
-from typing import Dict, Any, List
+import subprocess
 from pathlib import Path
+from typing import Any
+
 from fuse.ffmpeg.resolver import default_resolver
+
 
 class FFprobeError(Exception):
     pass
 
-def probe(file_path: Path) -> Dict[str, Any]:
+def probe(file_path: Path) -> dict[str, Any]:
     """
     Executes ffprobe to get metadata and stream information in JSON format.
     """

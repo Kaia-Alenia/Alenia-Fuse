@@ -1,4 +1,5 @@
 import sys
+
 sys.path.insert(0, 'src')
 from fuse.cli.human_parser import parse_human_syntax
 

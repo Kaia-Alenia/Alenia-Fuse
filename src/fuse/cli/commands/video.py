@@ -1,16 +1,14 @@
-import os
 import sys
 from pathlib import Path
-from fuse.cli.registry import register_command, CommandArgument
-from fuse.i18n.manager import t
-from fuse.media.models import Media
-from fuse.api.result import OperationResult
-from fuse.cli.batch import get_auto_output_path, prompt_batch_formats
+
+from fuse.cli.registry import CommandArgument, register_command
 from fuse.cli.utils import (
-    resolve_inputs, require_file, confirm_overwrite,
-    build_progress_callback, finish_progress, friendly_error,
-    _video_op, _audio_op,
+    _video_op,
+    confirm_overwrite,
+    friendly_error,
+    resolve_inputs,
 )
+
 
 @register_command(name="resize", description_key="commands.resize.description",
                   arguments=[CommandArgument(name="file", help_key="Input file"),
@@ -189,8 +187,8 @@ def handle_concat(args):
 
     try:
         from fuse.ffmpeg.resolver import default_resolver
-        from fuse.media.privacy import apply_ffmpeg_privacy
         from fuse.jobs.manager import Job
+        from fuse.media.privacy import apply_ffmpeg_privacy
 
         with tempfile.NamedTemporaryFile(mode="w", suffix=".txt",
                                          delete=False, encoding="utf-8") as flist:

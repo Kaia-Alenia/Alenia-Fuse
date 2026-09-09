@@ -1,15 +1,12 @@
-import os
 import sys
 from pathlib import Path
-from fuse.cli.registry import register_command, CommandArgument
-from fuse.i18n.manager import t
-from fuse.media.models import Media
-from fuse.api.result import OperationResult
-from fuse.cli.batch import get_auto_output_path, prompt_batch_formats
+
+from fuse.cli.registry import CommandArgument, register_command
 from fuse.cli.utils import (
-    resolve_inputs, require_file, confirm_overwrite,
-    build_progress_callback, finish_progress, friendly_error,
+    friendly_error,
+    require_file,
 )
+
 
 @register_command(
     name="info",
@@ -23,10 +20,9 @@ def handle_info(args):
         print("Error: provide a file path.", file=sys.stderr)
         return 1
     try:
+        from rich import box
         from rich.console import Console
         from rich.table import Table
-        from rich.text import Text
-        from rich import box
 
         media = require_file(file)
         console = Console(highlight=False)
@@ -94,15 +90,20 @@ def handle_info(args):
     ],
 )
 def handle_formats(args):
-    from fuse.capabilities.policies import ALL_TARGETS, VIDEO_TARGETS, AUDIO_TARGETS, IMAGE_TARGETS, ANIMATED_TARGETS
+    from fuse.capabilities.policies import (
+        ANIMATED_TARGETS,
+        AUDIO_TARGETS,
+        IMAGE_TARGETS,
+        VIDEO_TARGETS,
+    )
 
     cat_filter = getattr(args, "input", None) or getattr(args, "category", None)
 
     # ── /formats <file> — contextual targets for a real media file (§12) ──────
     if cat_filter and Path(cat_filter).is_file():
         try:
-            from fuse.media.models import Media
             from fuse.capabilities.engine import get_valid_targets
+            from fuse.media.models import Media
             media = Media.inspect(cat_filter)
             caps = get_valid_targets(media)
             recommended = [c for c in caps if c.target_kind in ("video", "audio", "image", "animated_image")]

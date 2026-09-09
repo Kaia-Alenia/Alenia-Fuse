@@ -1,30 +1,28 @@
 """
 ConvertOperation — runs a real media conversion via FFmpeg.
 """
+from collections.abc import Callable
 from pathlib import Path
-from typing import Optional, Callable
-from fuse.media.models import Media
-from fuse.planner.planner import OperationPlanner
-from fuse.jobs.manager import Job, JobProgress
-from fuse.errors import (
-    IncompatibleOperationError, ConversionError, MediaNotFoundError
-)
-from fuse.ffmpeg.resolver import default_resolver
+
 from fuse.capabilities.policies import normalize_format
+from fuse.ffmpeg.resolver import default_resolver
+from fuse.jobs.manager import Job, JobProgress
+from fuse.media.models import Media
 from fuse.media.privacy import apply_ffmpeg_privacy
+from fuse.planner.planner import OperationPlanner
 
 
 class ConvertOperation:
     def __init__(self, media: Media, target_format: str):
         self.media = media
         self.target_format = normalize_format(target_format)
-        self.output_path: Optional[str] = None
+        self.output_path: str | None = None
 
     def output(self, path: str) -> "ConvertOperation":
         self.output_path = path
         return self
 
-    def run(self, on_progress: Optional[Callable[[JobProgress], None]] = None) -> "OperationResult":
+    def run(self, on_progress: Callable[[JobProgress], None] | None = None) -> "OperationResult":
         from fuse.api.result import OperationResult
         if not self.output_path:
             raise ValueError("Output path must be set before calling run(). Use .output('file.ext')")

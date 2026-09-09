@@ -2,13 +2,12 @@
 Shared CLI helpers used by all command modules.
 """
 import sys
+from collections.abc import Callable
 from pathlib import Path
-from typing import List, Optional, Callable
 
 from fuse.errors import friendly_error  # noqa: re-exported for command modules
 from fuse.i18n.manager import t
 from fuse.media.privacy import apply_ffmpeg_privacy
-
 
 # ── Media resolution ──────────────────────────────────────────────────────────
 
@@ -18,7 +17,7 @@ def require_file(file: str):
     Raises MediaNotFoundError if the file does not exist.
     Raises MediaAnalysisError if ffprobe cannot read it.
     """
-    from fuse.errors import MediaNotFoundError, MediaAnalysisError
+    from fuse.errors import MediaAnalysisError, MediaNotFoundError
     from fuse.media.models import Media
 
     if not Path(file).exists():
@@ -30,14 +29,13 @@ def require_file(file: str):
         raise MediaAnalysisError(f"Cannot analyze '{file}': {exc}") from exc
 
 
-def resolve_inputs(input_path: str) -> List:
+def resolve_inputs(input_path: str) -> list:
     """
     Returns a list of Media objects from a file path or directory.
     For directories, scans recursively (delegating to batch.scan_directory).
     Invalid/non-media files are silently skipped in batch mode; single-file
     mode raises on failure so the user sees a clear error.
     """
-    from fuse.media.models import Media
 
     p = Path(input_path)
 
@@ -77,7 +75,7 @@ def confirm_overwrite(path: str) -> bool:
 _last_progress_len: int = 0
 
 
-def build_progress_callback(label: str, total_duration: float) -> Optional[Callable]:
+def build_progress_callback(label: str, total_duration: float) -> Callable | None:
     """
     Returns a callback that prints a Rich-style inline progress line.
     When total_duration is 0 a spinner-only line is used instead.
@@ -123,7 +121,7 @@ def finish_progress() -> None:
 
 # ── Shared FFmpeg dispatch ────────────────────────────────────────────────────
 
-def _video_op(operation: str, file: str, output: Optional[str],
+def _video_op(operation: str, file: str, output: str | None,
               on_progress_label: str, **kwargs) -> int:
     """
     Plan and execute a video operation via the OperationPlanner + Job.
@@ -168,9 +166,9 @@ def _video_op(operation: str, file: str, output: Optional[str],
         else:
             # Advanced commands not yet exposed by Video remain on the shared
             # planner path until their public API methods are added.
-            from fuse.planner.planner import OperationPlanner
-            from fuse.jobs.manager import Job
             from fuse.ffmpeg.resolver import default_resolver
+            from fuse.jobs.manager import Job
+            from fuse.planner.planner import OperationPlanner
             planner = OperationPlanner()
             plan = planner.plan_video_op(operation, media, output, **kwargs)
             if not plan.is_valid:
@@ -199,7 +197,7 @@ def _video_op(operation: str, file: str, output: Optional[str],
         return 1
 
 
-def _audio_op(operation: str, file: str, output: Optional[str],
+def _audio_op(operation: str, file: str, output: str | None,
               label: str, **kwargs) -> int:
     """
     Plan and execute an audio operation via the OperationPlanner + Job.

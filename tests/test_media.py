@@ -1,5 +1,5 @@
-import pytest
-from fuse.media import Media, Video, Audio, Image, Stream
+from fuse.media import Media, Stream, Video
+
 
 def test_media_models_creation():
     stream = Stream(index=0, codec_type="video", codec_name="h264")

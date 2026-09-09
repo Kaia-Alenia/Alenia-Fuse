@@ -1,6 +1,6 @@
 """
 Media models and definitions.
 """
-from fuse.media.models import Media, Video, Audio, Image, Stream
+from fuse.media.models import Audio, Image, Media, Stream, Video
 
-__all__ = ["Media", "Video", "Audio", "Image", "Stream"]
+__all__ = ["Audio", "Image", "Media", "Stream", "Video"]

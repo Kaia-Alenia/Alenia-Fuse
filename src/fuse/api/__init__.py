@@ -1,6 +1,6 @@
 from .audio import Audio
 from .image import Image
-from .video import Video
 from .result import OperationResult
+from .video import Video
 
-__all__ = ["Video", "Audio", "Image", "OperationResult"]
+__all__ = ["Audio", "Image", "OperationResult", "Video"]

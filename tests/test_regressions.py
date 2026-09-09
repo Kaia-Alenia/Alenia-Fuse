@@ -1,10 +1,8 @@
-import pytest
-from pathlib import Path
-from fuse.media.models import Media, Stream
-from fuse.planner.planner import OperationPlanner, OperationPlan
 from fuse.jobs.manager import Job
+from fuse.media.models import Media, Stream
 from fuse.operations.convert import ConvertOperation
-from fuse.errors import IncompatibleOperationError, ConversionError
+from fuse.planner.planner import OperationPlanner
+
 
 def test_input_equals_output_rejected(tmp_path):
     # Setup dummy media file

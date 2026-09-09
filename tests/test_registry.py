@@ -1,12 +1,10 @@
 """
 Tests for the CommandRegistry of Alenia Fuse.
 """
-import pytest
 
 
 def test_registry_is_populated():
     """After importing handlers, registry should have all commands."""
-    import fuse.cli.commands  # noqa: trigger @register_command
     from fuse.cli.registry import registry
 
     names = [cmd.name for cmd in registry.get_all()]

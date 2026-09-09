@@ -9,11 +9,11 @@ Usage:
     Audio("song.mp3").volume("+20%").output("louder.mp3").run()
 """
 from pathlib import Path
-from typing import Optional, Union
+
+from fuse.errors import MediaAnalysisError, MediaNotFoundError
 from fuse.media.models import Media
-from fuse.operations.convert import ConvertOperation
 from fuse.operations.audio import AudioOperation
-from fuse.errors import MediaNotFoundError, MediaAnalysisError
+from fuse.operations.convert import ConvertOperation
 
 
 class Audio:
@@ -34,7 +34,7 @@ class Audio:
     def convert(self, target_format: str) -> ConvertOperation:
         return ConvertOperation(self._media, target_format)
 
-    def volume(self, value: Union[str, float]) -> AudioOperation:
+    def volume(self, value: str | float) -> AudioOperation:
         return AudioOperation(self._media).volume(value)
 
     def normalize(self) -> AudioOperation:
@@ -46,6 +46,6 @@ class Audio:
     def speed(self, factor: float) -> AudioOperation:
         return AudioOperation(self._media).speed(factor)
 
-    def trim(self, start: Union[str, float], end: Optional[Union[str, float]] = None,
-             duration: Optional[Union[str, float]] = None) -> AudioOperation:
+    def trim(self, start: str | float, end: str | float | None = None,
+             duration: str | float | None = None) -> AudioOperation:
         return AudioOperation(self._media).trim(start, end, duration)

@@ -1,7 +1,6 @@
-import time
-from pathlib import Path
-from typing import Optional, List
 from dataclasses import dataclass, field
+from pathlib import Path
+
 from fuse.media.models import Media
 
 
@@ -10,21 +9,21 @@ class OperationResult:
     """Standardized return type for all API operations (§17)."""
     success: bool
     operation: str = ""
-    input_path: Optional[Path] = None
-    output_path: Optional[Path] = None
-    media: Optional[Media] = None
+    input_path: Path | None = None
+    output_path: Path | None = None
+    media: Media | None = None
     elapsed_seconds: float = 0.0
-    warnings: List[str] = field(default_factory=list)
-    error: Optional[str] = None
+    warnings: list[str] = field(default_factory=list)
+    error: str | None = None
 
     @classmethod
     def from_success(
         cls,
         output_path: Path,
         operation: str = "",
-        input_path: Optional[Path] = None,
+        input_path: Path | None = None,
         elapsed_seconds: float = 0.0,
-        warnings: Optional[List[str]] = None,
+        warnings: list[str] | None = None,
         inspect_output: bool = True,
     ) -> "OperationResult":
         """
@@ -92,10 +91,10 @@ class OperationResult:
         cls,
         error: str,
         operation: str = "",
-        input_path: Optional[Path] = None,
-        output_path: Optional[Path] = None,
+        input_path: Path | None = None,
+        output_path: Path | None = None,
         elapsed_seconds: float = 0.0,
-        warnings: Optional[List[str]] = None,
+        warnings: list[str] | None = None,
     ) -> "OperationResult":
         """Creates a failed result."""
         # Keep compatibility with the original helpers, which passed the

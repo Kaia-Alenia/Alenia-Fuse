@@ -8,10 +8,9 @@ Responsibilities:
 """
 import os
 from pathlib import Path
-from typing import List, Dict, Optional
 
-from fuse.media.models import Media
 from fuse.i18n.manager import t
+from fuse.media.models import Media
 
 # ---------------------------------------------------------------------------
 # Format catalogs per type (conservative defaults only)
@@ -27,7 +26,7 @@ _FORMAT_OPTIONS: dict[str, list[str]] = {
 # Directory scan
 # ---------------------------------------------------------------------------
 
-def scan_directory(input_root: str) -> List[Media]:
+def scan_directory(input_root: str) -> list[Media]:
     """
     Recursively scan the directory for media files, skipping Alenia_Optimized.
     Returns Media objects; silently skips non-media or corrupted files.
@@ -57,9 +56,9 @@ def scan_directory(input_root: str) -> List[Media]:
 
 def get_auto_output_path(
     input_path: str,
-    input_root: Optional[str] = None,
-    output_root: Optional[str] = None,
-    target_ext: Optional[str] = None,
+    input_root: str | None = None,
+    output_root: str | None = None,
+    target_ext: str | None = None,
 ) -> str:
     """
     Compute the output path using smart routing:
@@ -110,21 +109,20 @@ def get_auto_output_path(
 # ---------------------------------------------------------------------------
 
 def prompt_batch_formats(
-    media_list: List[Media],
+    media_list: list[Media],
     use_rich: bool = True,
-) -> Dict[str, str]:
+) -> dict[str, str]:
     """
     For each media type present in media_list, display available formats using
     Rich and prompt the user to choose one (or skip that type).
 
     Returns a dict: {"Video": "mp4", "Audio": "mp3", ...}
     """
-    from rich.console import Console
-    from rich.table import Table
-    from rich.text import Text
-    from rich import box
     from prompt_toolkit import prompt as pt_prompt
     from prompt_toolkit.completion import WordCompleter
+    from rich import box
+    from rich.console import Console
+    from rich.table import Table
 
     console = Console(highlight=False)
 

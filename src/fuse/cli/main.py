@@ -3,6 +3,7 @@ Alenia Fuse CLI entry point.
 """
 import sys
 
+
 def main():
     # Ensure UTF-8 output on Windows
     if hasattr(sys.stdout, "reconfigure"):
@@ -13,7 +14,7 @@ def main():
 
     if len(sys.argv) == 1:
         # No arguments → interactive mode
-        import fuse.cli.commands  # noqa: F401
+        import fuse.cli.commands
         from fuse.cli.interactive import run_interactive
         run_interactive()
         sys.exit(0)

@@ -1,7 +1,8 @@
-import urllib.request
-import zipfile
 import os
 import shutil
+import urllib.request
+import zipfile
+
 
 def download_macos():
     try:

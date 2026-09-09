@@ -3,6 +3,7 @@ Test i18n schema (§6): all locales must contain the keys defined in en.json.
 """
 import json
 from pathlib import Path
+
 import pytest
 
 LOCALES_DIR = (

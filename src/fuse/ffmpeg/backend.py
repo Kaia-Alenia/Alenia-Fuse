@@ -1,16 +1,18 @@
 import subprocess
-from typing import List, Callable, Any
-from pathlib import Path
+from collections.abc import Callable
+from typing import Any
+
+from fuse.ffmpeg.diagnostics import format_ffmpeg_error
 from fuse.ffmpeg.resolver import default_resolver
 from fuse.media.privacy import apply_ffmpeg_privacy
-from fuse.ffmpeg.diagnostics import format_ffmpeg_error
+
 
 class FFmpegExecutionError(Exception):
     pass
 
 class FFmpegBackend:
     @staticmethod
-    def run_operation(args: List[str], on_progress: Callable[[str], None] = None) -> Any:
+    def run_operation(args: list[str], on_progress: Callable[[str], None] = None) -> Any:
         if not default_resolver.is_ffmpeg_available:
             raise FFmpegExecutionError("FFmpeg is not available")
             

@@ -1,8 +1,6 @@
 """
 Tests for the CLI parser of Alenia Fuse.
 """
-import pytest
-from types import SimpleNamespace
 from fuse.cli.human_parser import parse_human_syntax
 
 

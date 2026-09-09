@@ -1,18 +1,18 @@
 """
 Video operations — resize, crop, rotate, fps, speed, trim, mute, extract_audio, thumbnail, gif.
 """
+from collections.abc import Callable
 from pathlib import Path
-from typing import Optional, Callable, Union
-from fuse.media.models import Media
-from fuse.planner.planner import OperationPlanner
-from fuse.jobs.manager import Job, JobProgress
-from fuse.errors import ConversionError, MediaNotFoundError, IncompatibleOperationError
+
 from fuse.ffmpeg.resolver import default_resolver
+from fuse.jobs.manager import Job
+from fuse.media.models import Media
 from fuse.media.privacy import apply_ffmpeg_privacy
+from fuse.planner.planner import OperationPlanner
 
 
 def _run_plan(operation: str, media: Media, output_path: str,
-              on_progress: Optional[Callable] = None, **kwargs) -> "OperationResult":
+              on_progress: Callable | None = None, **kwargs) -> "OperationResult":
     from fuse.api.result import OperationResult
     if not Path(media.path).exists():
         return OperationResult.from_error(f"Input file not found: {media.path}", Path(output_path))
@@ -53,15 +53,15 @@ class VideoOperation:
 
     def __init__(self, media: Media):
         self.media = media
-        self._op: Optional[str] = None
+        self._op: str | None = None
         self._kwargs: dict = {}
-        self._output_path: Optional[str] = None
+        self._output_path: str | None = None
 
     def output(self, path: str) -> "VideoOperation":
         self._output_path = path
         return self
 
-    def run(self, on_progress: Optional[Callable] = None) -> "OperationResult":
+    def run(self, on_progress: Callable | None = None) -> "OperationResult":
         if not self._op:
             raise ValueError("No operation specified.")
         if not self._output_path:
@@ -94,8 +94,8 @@ class VideoOperation:
         self._kwargs = {"factor": factor}
         return self
 
-    def trim(self, start: Union[str, float], end: Optional[Union[str, float]] = None,
-             duration: Optional[Union[str, float]] = None) -> "VideoOperation":
+    def trim(self, start: str | float, end: str | float | None = None,
+             duration: str | float | None = None) -> "VideoOperation":
         self._op = "trim"
         self._kwargs = {"start": start, "end": end, "duration": duration}
         return self
@@ -113,7 +113,7 @@ class VideoOperation:
         self._kwargs = {"timestamp": timestamp}
         return self
 
-    def gif(self, start: str = "00:00:00", duration: Union[str, float] = 5,
+    def gif(self, start: str = "00:00:00", duration: str | float = 5,
             fps: int = 10, width: int = 480) -> "VideoOperation":
         self._op = "gif"
         self._kwargs = {"start": start, "duration": duration, "fps": fps, "width": width}

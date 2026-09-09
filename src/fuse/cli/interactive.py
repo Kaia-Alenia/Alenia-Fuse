@@ -1,24 +1,21 @@
-import sys
 import platform
 import shlex
 from pathlib import Path
-from typing import Optional
 
 from prompt_toolkit import PromptSession
-from prompt_toolkit.history import FileHistory
-from prompt_toolkit.styles import Style
-from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.formatted_text import FormattedText
-
+from prompt_toolkit.history import FileHistory
+from prompt_toolkit.key_binding import KeyBindings
+from prompt_toolkit.styles import Style
+from rich import box
 from rich.console import Console
 from rich.panel import Panel
+from rich.rule import Rule
 from rich.table import Table
 from rich.text import Text
-from rich import box
-from rich.rule import Rule
 
-from fuse.cli.registry import registry, CommandDefinition
 from fuse.cli.parser import parse_and_run
+from fuse.cli.registry import registry
 from fuse.ffmpeg.capabilities import default_registry as caps
 from fuse.i18n.manager import t
 
@@ -103,7 +100,7 @@ def _print_slash_discoverer():
         _console.print(table)
 
 
-def _print_internal_help(topic: Optional[str] = None):
+def _print_internal_help(topic: str | None = None):
     if topic:
         cmd = registry.get(topic)
         if not cmd:
@@ -247,8 +244,7 @@ def run_interactive():
             _print_slash_discoverer()
             continue
 
-        if text.startswith("/"):
-            text = text[1:]
+        text = text.removeprefix("/")
 
         try:
             tokens = shlex.split(text, posix=False)

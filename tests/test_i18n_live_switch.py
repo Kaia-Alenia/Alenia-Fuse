@@ -2,6 +2,7 @@
 Test i18n live switch (§6): /lang must change the session without restarting Fuse.
 """
 import pytest
+
 from fuse.i18n.manager import I18nManager
 
 

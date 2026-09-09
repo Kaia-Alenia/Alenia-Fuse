@@ -2,7 +2,6 @@
 Capability models — data structures for the conversion capability engine.
 """
 from dataclasses import dataclass, field
-from typing import List, Optional
 
 
 @dataclass
@@ -13,15 +12,15 @@ class TargetDefinition:
     """
     id: str
     display_name: str
-    extensions: List[str]
+    extensions: list[str]
     kind: str                        # 'video' | 'audio' | 'image' | 'animated_image'
     muxer: str
     level: int = 1                   # 1: Recommended, 2: Compatible
     supports_alpha: bool = True      # Does this target support transparency?
-    video_encoders: List[str] = field(default_factory=list)
-    audio_encoders: List[str] = field(default_factory=list)
-    requirements: List[str] = field(default_factory=list)
-    limitations: List[str] = field(default_factory=list)
+    video_encoders: list[str] = field(default_factory=list)
+    audio_encoders: list[str] = field(default_factory=list)
+    requirements: list[str] = field(default_factory=list)
+    limitations: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -37,9 +36,9 @@ class ConversionCapability:
     available: bool
     reason: str                      # human-readable explanation if not available
     level: int = 1
-    warnings: List[str] = field(default_factory=list)
-    required_streams: List[str] = field(default_factory=list)
-    forbidden_streams: List[str] = field(default_factory=list)
-    required_encoders: List[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+    required_streams: list[str] = field(default_factory=list)
+    forbidden_streams: list[str] = field(default_factory=list)
+    required_encoders: list[str] = field(default_factory=list)
     required_muxer: str = ""
-    compatibility_rules: List[str] = field(default_factory=list)
+    compatibility_rules: list[str] = field(default_factory=list)

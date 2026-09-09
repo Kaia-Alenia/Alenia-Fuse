@@ -1,9 +1,9 @@
-import urllib.request
-import zipfile
-import tarfile
 import os
 import shutil
 import stat
+import tarfile
+import urllib.request
+import zipfile
 
 WINDOWS_URL = "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip"
 LINUX_URL = "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz"

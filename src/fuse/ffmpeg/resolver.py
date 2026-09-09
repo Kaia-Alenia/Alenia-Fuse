@@ -3,7 +3,7 @@ import platform
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Optional, Dict
+
 
 class FFmpegUnavailableError(Exception):
     pass
@@ -13,9 +13,9 @@ class UnsupportedPlatformError(Exception):
 
 class FFmpegResolver:
     def __init__(self):
-        self.ffmpeg_path: Optional[Path] = None
-        self.ffprobe_path: Optional[Path] = None
-        self.version_info: Dict[str, str] = {}
+        self.ffmpeg_path: Path | None = None
+        self.ffprobe_path: Path | None = None
+        self.version_info: dict[str, str] = {}
         
         self.resolve()
 
@@ -81,11 +81,11 @@ class FFmpegResolver:
             if self.ffprobe_path:
                 self._verify(self.ffprobe_path, "ffprobe")
 
-    def _set_paths(self, ffmpeg: Path, ffprobe: Optional[Path]):
+    def _set_paths(self, ffmpeg: Path, ffprobe: Path | None):
         self.ffmpeg_path = ffmpeg
         self.ffprobe_path = ffprobe
 
-    def _verify(self, path: Optional[Path], kind: str) -> bool:
+    def _verify(self, path: Path | None, kind: str) -> bool:
         if not path or not path.exists():
             return False
         try:

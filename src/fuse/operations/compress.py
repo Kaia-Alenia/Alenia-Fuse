@@ -1,15 +1,14 @@
 """
 CompressOperation — compresses media using real FFmpeg strategies.
 """
-import os
+from collections.abc import Callable
 from pathlib import Path
-from typing import Optional, Callable
-from fuse.media.models import Media
-from fuse.planner.planner import OperationPlanner
-from fuse.jobs.manager import Job, JobProgress
-from fuse.errors import ConversionError, MediaNotFoundError
+
 from fuse.ffmpeg.resolver import default_resolver
+from fuse.jobs.manager import Job, JobProgress
+from fuse.media.models import Media
 from fuse.media.privacy import apply_ffmpeg_privacy
+from fuse.planner.planner import OperationPlanner
 
 
 class CompressOperation:
@@ -17,18 +16,18 @@ class CompressOperation:
         self,
         media: Media,
         quality: str = "balanced",
-        target_size_mb: Optional[float] = None,
+        target_size_mb: float | None = None,
     ):
         self.media = media
         self.quality = quality
         self.target_size_mb = target_size_mb
-        self.output_path: Optional[str] = None
+        self.output_path: str | None = None
 
     def output(self, path: str) -> "CompressOperation":
         self.output_path = path
         return self
 
-    def run(self, on_progress: Optional[Callable[[JobProgress], None]] = None) -> "OperationResult":
+    def run(self, on_progress: Callable[[JobProgress], None] | None = None) -> "OperationResult":
         from fuse.api.result import OperationResult
         if not self.output_path:
             p = Path(self.media.path)

@@ -1,9 +1,8 @@
 import json
-import os
-import platform
 import locale
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any
+
 from fuse.config.manager import config
 
 # Compatibility map for command metadata that predates the locale-key system.
@@ -58,8 +57,8 @@ class I18nManager:
         self.current_lang = "en"
         self.requested_lang = "en"
         self.resolved_lang = "en"
-        self.translations: Dict[str, Any] = {}
-        self.fallback_translations: Dict[str, Any] = {}
+        self.translations: dict[str, Any] = {}
+        self.fallback_translations: dict[str, Any] = {}
         self.locales_dir = Path(__file__).parent / "locales"
         
         saved_lang = config.get("language")
@@ -80,7 +79,7 @@ class I18nManager:
         except Exception:
             pass
 
-    def _read_locale(self, lang: str) -> Dict[str, Any]:
+    def _read_locale(self, lang: str) -> dict[str, Any]:
         path = self.locales_dir / f"{lang}.json"
         try:
             with path.open("r", encoding="utf-8") as handle:
@@ -138,7 +137,7 @@ class I18nManager:
         return val
 
     @staticmethod
-    def _get_from(source: Dict[str, Any], keys: list[str]) -> Any:
+    def _get_from(source: dict[str, Any], keys: list[str]) -> Any:
         value: Any = source
         for key in keys:
             if not isinstance(value, dict) or key not in value:

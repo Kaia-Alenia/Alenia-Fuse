@@ -1,6 +1,6 @@
 import subprocess
-from typing import Set, Dict, List, Optional
 from dataclasses import dataclass
+
 from fuse.ffmpeg.resolver import default_resolver
 
 
@@ -29,22 +29,22 @@ class CapabilityRegistry:
     }
 
     def __init__(self):
-        self.codecs: Set[str] = set()
-        self.filters: Set[str] = set()
-        self.encoders: Set[str] = set()
-        self.decoders: Set[str] = set()
-        self.formats: Dict[str, FormatInfo] = {}
+        self.codecs: set[str] = set()
+        self.filters: set[str] = set()
+        self.encoders: set[str] = set()
+        self.decoders: set[str] = set()
+        self.formats: dict[str, FormatInfo] = {}
 
         # Load status exposed for diagnostics (§32)
         self._load_status: str = "not_loaded"  # 'not_loaded' | 'loaded' | 'failed'
-        self._load_error: Optional[str] = None
+        self._load_error: str | None = None
 
     @property
     def load_status(self) -> str:
         return self._load_status
 
     @property
-    def load_error(self) -> Optional[str]:
+    def load_error(self) -> str | None:
         return self._load_error
 
     def load_from_ffmpeg(self):
@@ -68,7 +68,7 @@ class CapabilityRegistry:
             self._load_error = str(exc)
             raise  # re-raise — §32 forbids silencing errors here
 
-    def _load_list(self, arg: str, target_set: Set[str]):
+    def _load_list(self, arg: str, target_set: set[str]):
         result = subprocess.run(
             [str(default_resolver.ffmpeg_path), arg],
             stdout=subprocess.PIPE,
@@ -172,7 +172,7 @@ class CapabilityRegistry:
             return target.muxer in self.formats and self.formats[target.muxer].can_mux
         return fmt in self.formats and self.formats[fmt].can_mux
 
-    def get_muxers_by_category(self, category: str) -> List[FormatInfo]:
+    def get_muxers_by_category(self, category: str) -> list[FormatInfo]:
         if self._load_status == "not_loaded":
             self.load_from_ffmpeg()
         return [f for f in self.formats.values() if f.category == category and f.can_mux]

@@ -1,14 +1,15 @@
 """
 Job Manager — tracks real FFmpeg jobs with states, progress, and cancellation.
 """
-import subprocess
-import threading
 import os
 import signal
+import subprocess
+import threading
+from collections.abc import Callable
+from dataclasses import dataclass
 from enum import Enum
-from typing import Optional, Callable, List
 from pathlib import Path
-from dataclasses import dataclass, field
+
 from fuse.ffmpeg.diagnostics import format_ffmpeg_error
 
 
@@ -49,10 +50,10 @@ class Job:
 
     def __init__(
         self,
-        cmd: List[str],
+        cmd: list[str],
         total_duration: float = 0.0,
-        output_path: Optional[Path] = None,
-        on_progress: Optional[Callable[[JobProgress], None]] = None,
+        output_path: Path | None = None,
+        on_progress: Callable[[JobProgress], None] | None = None,
     ):
         self.cmd = cmd
         self.total_duration = total_duration
@@ -60,8 +61,8 @@ class Job:
         self.on_progress = on_progress
 
         self.state = JobState.PENDING
-        self.error: Optional[str] = None
-        self._process: Optional[subprocess.Popen] = None
+        self.error: str | None = None
+        self._process: subprocess.Popen | None = None
         self._lock = threading.Lock()
 
     def run(self) -> bool:
@@ -149,7 +150,7 @@ class Job:
                     return False
 
                 # FFprobe validation
-                from fuse.ffmpeg.probe import probe, FFprobeError
+                from fuse.ffmpeg.probe import FFprobeError, probe
                 try:
                     probe(out)
                 except FFprobeError as e:
@@ -161,7 +162,7 @@ class Job:
             self.state = JobState.COMPLETED
             return True
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             self.state = JobState.FAILED
             self.error = str(e)
             return False

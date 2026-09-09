@@ -1,13 +1,12 @@
 import sys
-import os
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
-from fuse.media.models import Media, Stream
-from fuse.cli.interactive import select_format_for_type, scan_directory, detect_media_type
 from fuse.ffmpeg.capabilities import default_registry as caps
+from fuse.media.models import Media, Stream
 from fuse.planner.planner import OperationPlanner
+
 
 def demo_intelligence():
     caps.load_from_ffmpeg()

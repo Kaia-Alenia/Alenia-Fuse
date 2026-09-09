@@ -6,7 +6,7 @@ from typing import Optional
 
 class FuseError(Exception):
     """Base error for Alenia Fuse operations."""
-    def __init__(self, message: str, technical_detail: Optional[str] = None):
+    def __init__(self, message: str, technical_detail: str | None = None):
         super().__init__(message)
         self.technical_detail = technical_detail
 
@@ -16,32 +16,26 @@ class FuseError(Exception):
 
 class MediaNotFoundError(FuseError):
     """Raised when the input file does not exist or cannot be read."""
-    pass
 
 
 class MediaAnalysisError(FuseError):
     """Raised when FFprobe cannot analyze the file."""
-    pass
 
 
 class IncompatibleOperationError(FuseError):
     """Raised when an operation is not compatible with the media type."""
-    pass
 
 
 class ConversionError(FuseError):
     """Raised when FFmpeg conversion fails."""
-    pass
 
 
 class FFmpegNotAvailableError(FuseError):
     """Raised when the FFmpeg binary is not found."""
-    pass
 
 
 class UnsupportedFormatError(FuseError):
     """Raised when the target format is not supported."""
-    pass
 
 
 def friendly_error(exc: Exception) -> str:

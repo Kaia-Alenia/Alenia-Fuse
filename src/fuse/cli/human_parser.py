@@ -10,8 +10,6 @@ Supports:
   speed movie.mp4 2x
 """
 import re
-import sys
-from typing import List, Optional, Tuple
 from dataclasses import dataclass
 
 
@@ -21,7 +19,7 @@ class ParsedCommand:
     args: dict
 
 
-def parse_human_syntax(tokens: List[str]) -> Optional[ParsedCommand]:
+def parse_human_syntax(tokens: list[str]) -> ParsedCommand | None:
     """
     Attempt to parse human-friendly syntax before falling back to argparse.
     Returns a ParsedCommand if recognized, None otherwise.

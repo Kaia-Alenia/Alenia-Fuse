@@ -1,7 +1,8 @@
 import os
-import subprocess
-from PIL import Image, ImageDraw
 import random
+import subprocess
+
+from PIL import Image, ImageDraw
 
 test_dir = os.path.dirname(os.path.abspath(__file__))
 

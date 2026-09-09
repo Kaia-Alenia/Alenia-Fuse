@@ -9,12 +9,12 @@ Usage:
     Video("movie.mp4").trim("00:01:00", end="00:02:00").output("clip.mp4").run()
 """
 from pathlib import Path
-from typing import Optional, Union, Callable
+
+from fuse.errors import MediaAnalysisError, MediaNotFoundError
 from fuse.media.models import Media
-from fuse.operations.convert import ConvertOperation
 from fuse.operations.compress import CompressOperation
+from fuse.operations.convert import ConvertOperation
 from fuse.operations.video import VideoOperation
-from fuse.errors import MediaNotFoundError, MediaAnalysisError
 
 
 class Video:
@@ -40,7 +40,7 @@ class Video:
         return ConvertOperation(self._media, target_format)
 
     def compress(self, quality: str = "balanced",
-                 target_size_mb: Optional[float] = None) -> CompressOperation:
+                 target_size_mb: float | None = None) -> CompressOperation:
         """Compress the video."""
         return CompressOperation(self._media, quality=quality, target_size_mb=target_size_mb)
 
@@ -59,8 +59,8 @@ class Video:
     def speed(self, factor: float) -> VideoOperation:
         return VideoOperation(self._media).speed(factor)
 
-    def trim(self, start: Union[str, float], end: Optional[Union[str, float]] = None,
-             duration: Optional[Union[str, float]] = None) -> VideoOperation:
+    def trim(self, start: str | float, end: str | float | None = None,
+             duration: str | float | None = None) -> VideoOperation:
         return VideoOperation(self._media).trim(start, end, duration)
 
     def mute(self) -> VideoOperation:
@@ -72,7 +72,7 @@ class Video:
     def thumbnail(self, timestamp: str = "00:00:05") -> VideoOperation:
         return VideoOperation(self._media).thumbnail(timestamp)
 
-    def gif(self, start: str = "00:00:00", duration: Union[str, float] = 5,
+    def gif(self, start: str = "00:00:00", duration: str | float = 5,
             fps: int = 10, width: int = 480) -> VideoOperation:
         return VideoOperation(self._media).gif(start, duration, fps, width)
 

@@ -11,7 +11,6 @@ from fuse.ffmpeg.probe import probe
 from fuse.ffmpeg.resolver import default_resolver
 from fuse.media.models import Media, MediaType
 
-
 pytestmark = pytest.mark.skipif(
     not default_resolver.is_ffmpeg_available,
     reason="FFmpeg/FFprobe are required for real conversion tests",

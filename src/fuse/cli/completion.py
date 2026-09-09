@@ -12,8 +12,8 @@ Format autocomplete must consult the Capability Engine and FFprobe (§8).
 from __future__ import annotations
 
 import shlex
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable
 
 from prompt_toolkit.completion import Completer, Completion, PathCompleter
 from prompt_toolkit.document import Document
@@ -136,8 +136,8 @@ class CompletionEngine:
 
         if input_path and Path(input_path).is_file():
             try:
-                from fuse.media.models import Media
                 from fuse.capabilities.engine import get_valid_targets
+                from fuse.media.models import Media
                 media = Media.inspect(input_path)
                 caps = get_valid_targets(media)
                 results = []

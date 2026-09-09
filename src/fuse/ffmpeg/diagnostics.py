@@ -1,8 +1,6 @@
 """Helpers for turning FFmpeg's stderr into useful API error messages."""
 
 import re
-from typing import Optional
-
 
 _ANSI_ESCAPE = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]")
 _PROGRESS_LINE = re.compile(r"^\s*(?:frame=|size=|bitrate=|speed=|time=)")
@@ -12,7 +10,7 @@ _ERROR_LINE = re.compile(
 )
 
 
-def format_ffmpeg_error(stderr: Optional[str], returncode: Optional[int] = None) -> str:
+def format_ffmpeg_error(stderr: str | None, returncode: int | None = None) -> str:
     """Return a readable FFmpeg diagnostic instead of exposing only its exit code."""
     text = _ANSI_ESCAPE.sub("", stderr or "")
     lines = [line.strip() for line in text.splitlines() if line.strip()]

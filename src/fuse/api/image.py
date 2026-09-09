@@ -8,11 +8,10 @@ Usage:
     Image("photo.jpg").resize(1920, 1080).output("resized.jpg").run()
 """
 from pathlib import Path
-from typing import Optional
+
+from fuse.errors import MediaAnalysisError, MediaNotFoundError
 from fuse.media.models import Media
-from fuse.operations.convert import ConvertOperation
 from fuse.operations.image import ImageOperation
-from fuse.errors import MediaNotFoundError, MediaAnalysisError
 
 
 class Image:

@@ -1,9 +1,8 @@
 """Privacy defaults applied to every generated media file."""
 
-from typing import List
 
 
-def apply_ffmpeg_privacy(args: List[str]) -> List[str]:
+def apply_ffmpeg_privacy(args: list[str]) -> list[str]:
     """Disable automatic metadata and chapter copying for a file output.
 
     Technical stream properties needed for playback are left to FFmpeg. This

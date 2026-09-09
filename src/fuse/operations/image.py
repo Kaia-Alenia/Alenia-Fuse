@@ -2,20 +2,22 @@
 Image operations — convert, resize, crop, rotate via FFmpeg.
 Note: No Pillow dependency. All processing via FFmpeg video filters.
 """
+from collections.abc import Callable
 from pathlib import Path
-from typing import Optional, Callable
-from fuse.media.models import Media
-from fuse.jobs.manager import Job, JobProgress
+
 from fuse.api.result import OperationResult
 from fuse.capabilities.policies import TARGET_BY_ID, normalize_format
 from fuse.ffmpeg.resolver import default_resolver
+from fuse.jobs.manager import Job
+from fuse.media.models import Media
 from fuse.media.privacy import apply_ffmpeg_privacy
 
 
 def _write_pdf(input_paths: list[Path], output_path: Path, dpi: int = 150) -> "OperationResult":
     """Create a clean, local PDF from one or more raster images."""
     try:
-        from PIL import Image as PILImage, ImageOps
+        from PIL import Image as PILImage
+        from PIL import ImageOps
     except ImportError:
         return OperationResult.from_error(
             "PDF export requires Pillow. Install it with: pip install Pillow",
@@ -55,7 +57,7 @@ def _write_pdf(input_paths: list[Path], output_path: Path, dpi: int = 150) -> "O
 
 
 def _run_image_plan(args: list, output_path: str, input_path: str,
-                    on_progress: Optional[Callable] = None) -> "OperationResult":
+                    on_progress: Callable | None = None) -> "OperationResult":
     from fuse.api.result import OperationResult
     if not default_resolver.is_ffmpeg_available:
         return OperationResult.from_error(
@@ -85,8 +87,8 @@ class ImageOperation:
     def __init__(self, media: Media):
         self.media = media
         self._vf_filters: list = []
-        self._output_path: Optional[str] = None
-        self._target_fmt: Optional[str] = None
+        self._output_path: str | None = None
+        self._target_fmt: str | None = None
         self._pdf_dpi: int = 150
 
     def output(self, path: str) -> "ImageOperation":
@@ -115,7 +117,7 @@ class ImageOperation:
         self._pdf_dpi = max(72, int(dpi))
         return self
 
-    def run(self, on_progress: Optional[Callable] = None) -> "OperationResult":
+    def run(self, on_progress: Callable | None = None) -> "OperationResult":
         input_path = Path(self.media.path)
         if not input_path.is_file():
             return OperationResult.from_error(f"Input file not found: {self.media.path}")

@@ -2,10 +2,11 @@
 Parser and dispatcher for Alenia Fuse CLI.
 Integrates human-syntax parser with argparse-based registry.
 """
-import sys
 import argparse
-from fuse.cli.registry import registry
+import sys
+
 from fuse.cli.human_parser import parse_human_syntax
+from fuse.cli.registry import registry
 
 
 def get_parser():

@@ -11,20 +11,18 @@ Flow (single file):
   - If output argument has no extension, error with helpful hint
   - If only input given, prompt for target format
 """
-import sys
 from pathlib import Path
 
 from rich.console import Console
-from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn, SpinnerColumn
-from rich.table import Table
-from rich import box
 
-from fuse.cli.registry import register_command, CommandArgument
-from fuse.i18n.manager import t
+from fuse.cli.registry import CommandArgument, register_command
 from fuse.cli.utils import (
-    resolve_inputs, require_file, confirm_overwrite,
-    build_progress_callback, finish_progress, friendly_error,
+    build_progress_callback,
+    finish_progress,
+    friendly_error,
+    require_file,
 )
+from fuse.i18n.manager import t
 
 _console = Console(highlight=False)
 
@@ -59,11 +57,10 @@ def handle_convert(args):
 # ---------------------------------------------------------------------------
 
 def _single_convert(input_path: Path, output_arg: str | None) -> int:
-    from fuse.media.models import Media
-    from fuse.operations.convert import ConvertOperation
-    from fuse.cli.batch import get_auto_output_path
     from prompt_toolkit import prompt as pt_prompt
     from prompt_toolkit.completion import WordCompleter
+
+    from fuse.cli.batch import get_auto_output_path
 
     try:
         media = require_file(str(input_path))
@@ -122,7 +119,11 @@ def _single_convert(input_path: Path, output_arg: str | None) -> int:
 # ---------------------------------------------------------------------------
 
 def _batch_convert(input_dir: Path, output_dir: str | None) -> int:
-    from fuse.cli.batch import scan_directory, get_auto_output_path, prompt_batch_formats
+    from fuse.cli.batch import (
+        get_auto_output_path,
+        prompt_batch_formats,
+        scan_directory,
+    )
 
     # Determine output root
     # output_dir could be:
@@ -205,7 +206,7 @@ def _batch_convert(input_dir: Path, output_dir: str | None) -> int:
             _console.print(f"[#34D399]{t('cli.convert.done')}[/] [dim]{out_mb:.1f} MB[/]")
         else:
             errors += 1
-            _console.print(f"[#EF4444]Error[/]")
+            _console.print("[#EF4444]Error[/]")
 
     _console.print()
     if errors == 0:
@@ -223,7 +224,6 @@ def _batch_convert(input_dir: Path, output_dir: str | None) -> int:
 
 def _run_conversion(media, target_fmt: str, output_file: str, quiet: bool = False) -> int:
     from fuse.operations.convert import ConvertOperation
-    from fuse.media.models import Media
 
     try:
         op = ConvertOperation(media, target_fmt).output(output_file)

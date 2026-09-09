@@ -1,7 +1,10 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import List, Dict, Any, Optional
 from pathlib import Path
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from fuse.operations.convert import ConvertOperation
 
 
 class MediaType(Enum):
@@ -16,19 +19,19 @@ class Stream:
     index: int
     codec_type: str
     codec_name: str
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
     
     # Video specific
-    width: Optional[int] = None
-    height: Optional[int] = None
-    fps: Optional[float] = None
-    pix_fmt: Optional[str] = None
+    width: int | None = None
+    height: int | None = None
+    fps: float | None = None
+    pix_fmt: str | None = None
     
     # Audio specific
-    sample_rate: Optional[int] = None
-    channels: Optional[int] = None
+    sample_rate: int | None = None
+    channels: int | None = None
     
-    bitrate: Optional[int] = None
+    bitrate: int | None = None
 
 @dataclass
 class Media:
@@ -36,25 +39,25 @@ class Media:
     container: str
     duration: float
     size: int
-    streams: List[Stream] = field(default_factory=list)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    streams: list[Stream] = field(default_factory=list)
+    metadata: dict[str, Any] = field(default_factory=dict)
     type: MediaType = MediaType.UNKNOWN
 
     @property
-    def video_streams(self) -> List[Stream]:
+    def video_streams(self) -> list[Stream]:
         return [s for s in self.streams if s.codec_type == 'video']
 
     @property
-    def audio_streams(self) -> List[Stream]:
+    def audio_streams(self) -> list[Stream]:
         return [s for s in self.streams if s.codec_type == 'audio']
 
     @property
-    def main_video(self) -> Optional[Stream]:
+    def main_video(self) -> Stream | None:
         streams = self.video_streams
         return streams[0] if streams else None
 
     @property
-    def main_audio(self) -> Optional[Stream]:
+    def main_audio(self) -> Stream | None:
         streams = self.audio_streams
         return streams[0] if streams else None
 
@@ -133,20 +136,20 @@ class Media:
 class Video(Media):
     """Specific wrapper for video content."""
     
-    def convert(self, target_format: str) -> 'fuse.operations.convert.ConvertOperation':
+    def convert(self, target_format: str) -> "ConvertOperation":
         from fuse.operations.convert import ConvertOperation
         return ConvertOperation(self, target_format)
 
 class Audio(Media):
     """Specific wrapper for audio content."""
     
-    def convert(self, target_format: str) -> 'fuse.operations.convert.ConvertOperation':
+    def convert(self, target_format: str) -> "ConvertOperation":
         from fuse.operations.convert import ConvertOperation
         return ConvertOperation(self, target_format)
 
 class Image(Media):
     """Specific wrapper for image content."""
     
-    def convert(self, target_format: str) -> 'fuse.operations.convert.ConvertOperation':
+    def convert(self, target_format: str) -> "ConvertOperation":
         from fuse.operations.convert import ConvertOperation
         return ConvertOperation(self, target_format)

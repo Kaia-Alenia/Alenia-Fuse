@@ -1,10 +1,10 @@
 """
 Tests for the real Planner of Alenia Fuse.
 """
-import pytest
-from unittest.mock import MagicMock, patch
-from fuse.planner.planner import OperationPlanner
+from unittest.mock import MagicMock
+
 from fuse.media.models import Media, Stream
+from fuse.planner.planner import OperationPlanner
 
 
 def make_media(has_video=True, has_audio=True,

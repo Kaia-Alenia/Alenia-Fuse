@@ -10,14 +10,13 @@ against the product-level catalog in policies.py. It never silences errors (§32
 from __future__ import annotations
 
 import subprocess
-from typing import Optional
 
 from fuse.capabilities.models import ConversionCapability, TargetDefinition
-from fuse.capabilities.policies import ALL_TARGETS, TARGET_BY_ID
+from fuse.capabilities.policies import ALL_TARGETS
 
 # Load status exposed for diagnostics (§32)
 _STATUS: str = "not_loaded"   # 'not_loaded' | 'loaded' | 'failed'
-_LOAD_ERROR: Optional[str] = None
+_LOAD_ERROR: str | None = None
 _AVAILABLE_ENCODERS: set[str] = set()
 _AVAILABLE_MUXERS: set[str] = set()
 
