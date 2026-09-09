@@ -3,14 +3,13 @@ Operation Planner — makes real decisions about how to perform an operation
 based on media analysis, capabilities, and the requested intent.
 """
 import os
-import tempfile
 import subprocess
+import tempfile
 from pathlib import Path
-from typing import Optional, List
 
-from fuse.ffmpeg.resolver import default_resolver
+from fuse.capabilities.policies import TARGET_BY_ID, normalize_format
 from fuse.ffmpeg.capabilities import default_registry
-from fuse.capabilities.policies import normalize_format, TARGET_BY_ID
+from fuse.ffmpeg.resolver import default_resolver
 from fuse.media.privacy import apply_ffmpeg_privacy
 
 STREAM_COPY_COMPATIBLE = {
@@ -61,11 +60,11 @@ class OperationPlan:
     """Result of planning — contains the FFmpeg args list to execute."""
 
     def __init__(self):
-        self.args: List[str] = []
+        self.args: list[str] = []
         self.strategy: str = "reencode"
-        self.warnings: List[str] = []
+        self.warnings: list[str] = []
         self.is_valid: bool = True
-        self.error_reason: Optional[str] = None
+        self.error_reason: str | None = None
         self.needs_preflight: bool = False
 
     def is_stream_copy(self) -> bool:
@@ -88,7 +87,7 @@ class OperationPlanner:
             args.insert(out_idx, "-t")
             args.insert(out_idx + 1, "1")
             cmd = [str(default_resolver.ffmpeg_path), "-y"] + apply_ffmpeg_privacy(args)
-            result = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True, timeout=timeout)
+            result = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True, timeout=timeout, check=False)
             if result.returncode == 0 and os.path.exists(tmp_path) and os.path.getsize(tmp_path) > 0:
                 return True
             plan.is_valid = False
@@ -186,7 +185,7 @@ class OperationPlanner:
         plan.args = args
         return plan
 
-    def plan_compress(self, media, output_path: str, quality: str = "balanced", target_size_mb: Optional[float] = None) -> OperationPlan:
+    def plan_compress(self, media, output_path: str, quality: str = "balanced", target_size_mb: float | None = None) -> OperationPlan:
         plan = OperationPlan()
         if not media.main_video:
             plan.args = ["-i", media.path, "-c:a", "libmp3lame", "-q:a", "4", output_path]
@@ -320,6 +319,4 @@ class OperationPlanner:
             return False
         if media.main_video and media.main_video.codec_name not in compat.get("video", []):
             return False
-        if media.main_audio and media.main_audio.codec_name not in compat.get("audio", []):
-            return False
-        return True
+        return not (media.main_audio and media.main_audio.codec_name not in compat.get("audio", []))

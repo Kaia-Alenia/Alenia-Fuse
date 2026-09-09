@@ -5,7 +5,7 @@ import sys
 from collections.abc import Callable
 from pathlib import Path
 
-from fuse.errors import friendly_error  # noqa: re-exported for command modules
+from fuse.errors import friendly_error
 from fuse.i18n.manager import t
 from fuse.media.privacy import apply_ffmpeg_privacy
 
