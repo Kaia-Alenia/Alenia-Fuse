@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alenia Porter - Optimizador de Medios</title>
+    <title>Alenia Fuse - Optimizador de Medios</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -451,78 +451,6 @@
         }
 
 
-        .stats-grid {
-            display: grid;
-
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-            gap: 1.5rem;
-        }
-
-        .stat-card {
-            background: var(--surface);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--line);
-            border-radius: var(--radius);
-            padding: 2rem 1.5rem;
-            text-align: center;
-            position: relative;
-
-            transform-style: preserve-3d;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s cubic-bezier(0.16,1,0.3,1);
-            will-change: transform;
-        }
-        
-        .stat-card > * { transform: translateZ(30px); display: block; }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 3px;
-            background: var(--dim-2);
-            border-top-left-radius: var(--radius);
-            border-top-right-radius: var(--radius);
-            transform: translateZ(0);
-        }
-        .stat-card.type-audio::before { background: var(--amber); }
-        .stat-card.type-video::before { background: var(--magenta); }
-        .stat-card.type-image::before { background: var(--purple); }
-        .stat-card.type-active::before { background: var(--success); }
-
-        .stat-card:hover { 
-            border-color: var(--line-strong); 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
-            z-index: 2; 
-        }
-
-        .stat-value {
-            font-family: var(--font-display);
-            font-size: clamp(2rem, 5vw, 2.6rem);
-            font-weight: 700;
-            margin: 0.8rem 0 0.4rem;
-            color: #fff;
-        }
-
-        .stat-label {
-            color: var(--dim);
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.1em;
-            font-weight: 600;
-            font-family: var(--font-mono);
-        }
-
-        #avg-time-details {
-            font-size: 0.75rem; color: var(--dim); margin-top: 1rem;
-            display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;
-            font-family: var(--font-mono);
-        }
-        #avg-time-details span { 
-            background: rgba(0,0,0,0.3); 
-            padding: 0.35rem 0.6rem; 
-            border-radius: 12px; 
-            border: 1px solid var(--line); 
-        }
-
         .features {
             max-width: 1200px;
             margin: clamp(4rem, 10vw, 7rem) auto;
@@ -612,9 +540,9 @@
 
     <header class="reveal reveal-up">
         <div class="header-inner">
-            <div class="logo"><span class="dot"></span>Alenia<span>Porter</span></div>
+            <div class="logo"><span class="dot"></span>Alenia<span>Fuse</span></div>
             <div class="header-actions">
-                <a href="https://github.com/Kaia-Alenia/Alenia-Porter" class="github-icon-link" aria-label="GitHub">
+                <a href="https://github.com/Kaia-Alenia/Alenia-Fuse" class="github-icon-link" aria-label="GitHub">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                     </svg>
@@ -649,9 +577,9 @@
                 </a>
                 <div class="platform-row">
                     <span data-i18n="otherOS">Otras plataformas:</span>
-                    <a href="https://github.com/Kaia-Alenia/Alenia-Porter/releases/latest/download/AleniaPorter-Windows.zip" class="platform-link">Windows</a>
-                    <a href="https://github.com/Kaia-Alenia/Alenia-Porter/releases/latest/download/AleniaPorter-macOS.zip" class="platform-link">macOS</a>
-                    <a href="https://github.com/Kaia-Alenia/Alenia-Porter/releases/latest/download/AleniaPorter-Linux.tar.gz" class="platform-link">Linux</a>
+                    <a href="https://github.com/Kaia-Alenia/Alenia-Fuse/releases/latest/download/AleniaFuse-Windows.zip" class="platform-link">Windows</a>
+                    <a href="https://github.com/Kaia-Alenia/Alenia-Fuse/releases/latest/download/AleniaFuse-macOS.zip" class="platform-link">macOS</a>
+                    <a href="https://github.com/Kaia-Alenia/Alenia-Fuse/releases/latest/download/AleniaFuse-Linux.tar.gz" class="platform-link">Linux</a>
                 </div>
             </div>
 
@@ -659,60 +587,17 @@
                 <div class="cli-container">
                     <div class="cli-caption" data-i18n="cliCaption">Instalación en una sola línea, multiplataforma:</div>
                     <div class="cli-header">
-                        <span class="cli-title">Alenia Porter CLI (Linux / macOS)</span>
+                        <span class="cli-title">Alenia Fuse CLI (Linux / macOS)</span>
                         <button id="copy-btn-unix" class="copy-btn" onclick="copyCliCommand('cli-code-unix', 'copy-btn-unix')" data-i18n="copyBtn">Copiar</button>
                     </div>
-                    <pre class="cli-command" style="margin-bottom:1rem;"><code id="cli-code-unix">curl -sSfL https://raw.githubusercontent.com/Kaia-Alenia/Alenia-Porter/main/install.sh | bash</code></pre>
+                    <pre class="cli-command" style="margin-bottom:1rem;"><code id="cli-code-unix">curl -sSfL https://raw.githubusercontent.com/Kaia-Alenia/Alenia-Fuse/main/install.sh | bash</code></pre>
 
                     <div class="cli-header">
-                        <span class="cli-title">Alenia Porter CLI (Windows PowerShell)</span>
+                        <span class="cli-title">Alenia Fuse CLI (Windows PowerShell)</span>
                         <button id="copy-btn-win" class="copy-btn" onclick="copyCliCommand('cli-code-win', 'copy-btn-win')" data-i18n="copyBtn">Copiar</button>
                     </div>
-                    <pre class="cli-command"><code id="cli-code-win">iwr https://raw.githubusercontent.com/Kaia-Alenia/Alenia-Porter/main/install.ps1 -useb | iex</code></pre>
+                    <pre class="cli-command"><code id="cli-code-win">iwr https://raw.githubusercontent.com/Kaia-Alenia/Alenia-Fuse/main/install.ps1 -useb | iex</code></pre>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="dashboard-section">
-        <div class="reveal reveal-up">
-            <div class="section-kicker" data-i18n="dashboardKicker">EN TIEMPO REAL</div>
-            <h2 class="dashboard-title" data-i18n="dashboardTitle">Estadísticas de la Comunidad</h2>
-        </div>
-        
-        <div class="stats-grid">
-            <div class="stat-card type-audio reveal reveal-scale delay-1">
-                <div class="stat-label" data-i18n="statAudio">Archivos de Audio</div>
-                <div class="stat-value" id="audio-count" data-val="0">0</div>
-            </div>
-            <div class="stat-card type-video reveal reveal-scale delay-2">
-                <div class="stat-label" data-i18n="statVideo">Archivos de Video</div>
-                <div class="stat-value" id="video-count" data-val="0">0</div>
-            </div>
-            <div class="stat-card type-image reveal reveal-scale delay-3">
-                <div class="stat-label" data-i18n="statImages">Imágenes Optimizadas</div>
-                <div class="stat-value" id="image-count" data-val="0">0</div>
-            </div>
-            <div class="stat-card reveal reveal-scale delay-4">
-                <div class="stat-label" data-i18n="statTime">Tiempo Medio (por archivo)</div>
-                <div class="stat-value" id="avg-time" data-val="0" data-suffix="s">0s</div>
-                <div id="avg-time-details"></div>
-            </div>
-            <div class="stat-card type-active reveal reveal-scale delay-1">
-                <div class="stat-label" data-i18n="statActive">Usuarios Activos</div>
-                <div class="stat-value" id="active-users" data-val="0">0</div>
-            </div>
-            <div class="stat-card reveal reveal-scale delay-2">
-                <div class="stat-label" data-i18n="statWindows">Usuarios Windows</div>
-                <div class="stat-value" id="users-windows" data-val="0">0</div>
-            </div>
-            <div class="stat-card reveal reveal-scale delay-3">
-                <div class="stat-label" data-i18n="statLinux">Usuarios Linux</div>
-                <div class="stat-value" id="users-linux" data-val="0">0</div>
-            </div>
-            <div class="stat-card reveal reveal-scale delay-4">
-                <div class="stat-label" data-i18n="statMacos">Usuarios macOS</div>
-                <div class="stat-value" id="users-macos" data-val="0">0</div>
             </div>
         </div>
     </section>
@@ -777,23 +662,13 @@
     <script>
         const translations = {
             es: {
-                title: "Alenia Porter - Optimizador de Medios",
+                title: "Alenia Fuse - Optimizador de Medios",
                 eyebrow: "CÓDIGO ABIERTO · MULTIPLATAFORMA · GPL V3",
                 heroTitle: "Optimización Multimedia Universal",
                 heroTagline: "Comprime y adapta música, vídeos e imágenes con procesamiento paralelo multihilo, optimizado para creadores indie.",
                 tabApp: "App de Escritorio",
                 tabCli: "CLI",
                 cliCaption: "Instalación en una sola línea, multiplataforma:",
-                dashboardKicker: "EN TIEMPO REAL",
-                dashboardTitle: "Estadísticas de la Comunidad",
-                statAudio: "Archivos de Audio",
-                statVideo: "Archivos de Video",
-                statImages: "Imágenes Optimizadas",
-                statTime: "Tiempo Medio (por archivo)",
-                statActive: "Usuarios Activos",
-                statWindows: "Usuarios Windows",
-                statLinux: "Usuarios Linux",
-                statMacos: "Usuarios macOS",
                 featMultithreadTitle: "Multihilo Real",
                 featMultithreadDesc: "Migración a ProcessPoolExecutor sorteando el GIL de Python para una velocidad de procesamiento sin precedentes en equipos multi-núcleo.",
                 featDependenciesTitle: "Cero Dependencias",
@@ -809,23 +684,13 @@
                 copyBtn: "Copiar"
             },
             en: {
-                title: "Alenia Porter - Media Optimizer",
+                title: "Alenia Fuse - Media Optimizer",
                 eyebrow: "OPEN SOURCE · CROSS-PLATFORM · GPL V3",
                 heroTitle: "Universal Multimedia Optimization",
                 heroTagline: "Compress and adapt music, videos, and images with multi-threaded parallel processing, optimized for indie creators.",
                 tabApp: "Desktop App",
                 tabCli: "CLI",
                 cliCaption: "One-line, cross-platform install:",
-                dashboardKicker: "REAL-TIME",
-                dashboardTitle: "Community Stats",
-                statAudio: "Audio Files",
-                statVideo: "Video Files",
-                statImages: "Optimized Images",
-                statTime: "Average Time (per file)",
-                statActive: "Active Users",
-                statWindows: "Windows Users",
-                statLinux: "Linux Users",
-                statMacos: "macOS Users",
                 featMultithreadTitle: "Real Multithreading",
                 featMultithreadDesc: "Migration to ProcessPoolExecutor bypassing Python's GIL for unprecedented processing speed on multi-core machines.",
                 featDependenciesTitle: "Zero Dependencies",
@@ -898,58 +763,6 @@
             window.requestAnimationFrame(step);
         }
 
-        async function fetchStats() {
-            try {
-                const response = await fetch("https://alenia-porter.onrender.com/telemetry/stats");
-                const data = await response.json();
-                if (data.status === "ok") {
-                    const statsMap = [
-                        { id: "audio-count", value: data.stats.audio },
-                        { id: "video-count", value: data.stats.video },
-                        { id: "image-count", value: data.stats.image },
-                        { id: "active-users", value: data.active_users }
-                    ];
-                    if (data.avg_time_per_file !== undefined) {
-                        statsMap.push({ id: "avg-time", value: data.avg_time_per_file, suffix: "s" });
-                    }
-                    let winCount = 0, linCount = 0, macCount = 0;
-                    if (data.os_distribution) {
-                        for (const [os, count] of Object.entries(data.os_distribution)) {
-                            const osLower = os.toLowerCase();
-                            if (osLower.includes("win")) winCount += count;
-                            else if (osLower.includes("lin")) linCount += count;
-                            else if (osLower.includes("mac") || osLower.includes("dar")) macCount += count;
-                        }
-                    }
-                    statsMap.push({ id: "users-windows", value: winCount });
-                    statsMap.push({ id: "users-linux", value: linCount });
-                    statsMap.push({ id: "users-macos", value: macCount });
-
-                    statsMap.forEach(stat => {
-                        const el = document.getElementById(stat.id);
-                        if (el && stat.value !== undefined) {
-                            el.dataset.val = stat.value;
-                            animateValue(el, 0, stat.value, 2000, stat.suffix || "");
-                        }
-                    });
-
-                    const avgDetails = document.getElementById("avg-time-details");
-                    avgDetails.textContent = "";
-                    if (data.avg_time_by_type) {
-                        const types = { audio: "🎵", video: "🎥", image: "🖼️" };
-                        for (const [type, avg] of Object.entries(data.avg_time_by_type)) {
-                            const icon = types[type] || "📄";
-                            const item = document.createElement("span");
-                            item.innerText = `${icon} ${avg}s`;
-                            avgDetails.appendChild(item);
-                        }
-                    }
-                }
-            } catch (e) {
-                console.error("Error cargando estadísticas", e);
-            }
-        }
-
         function getOS() {
             const ua = window.navigator.userAgent.toLowerCase();
             if (ua.indexOf("win") !== -1) return "windows";
@@ -963,13 +776,13 @@
             const btn = document.getElementById("main-download-btn");
             const textEl = document.getElementById("main-download-text");
             if (os === "windows") {
-                btn.href = "https://github.com/Kaia-Alenia/Alenia-Porter/releases/latest/download/AleniaPorter-Windows.zip";
+                btn.href = "https://github.com/Kaia-Alenia/Alenia-Fuse/releases/latest/download/AleniaFuse-Windows.zip";
                 textEl.setAttribute("data-i18n", "dlWindows");
             } else if (os === "macos") {
-                btn.href = "https://github.com/Kaia-Alenia/Alenia-Porter/releases/latest/download/AleniaPorter-macOS.zip";
+                btn.href = "https://github.com/Kaia-Alenia/Alenia-Fuse/releases/latest/download/AleniaFuse-macOS.zip";
                 textEl.setAttribute("data-i18n", "dlMacos");
             } else {
-                btn.href = "https://github.com/Kaia-Alenia/Alenia-Porter/releases/latest/download/AleniaPorter-Linux.tar.gz";
+                btn.href = "https://github.com/Kaia-Alenia/Alenia-Fuse/releases/latest/download/AleniaFuse-Linux.tar.gz";
                 textEl.setAttribute("data-i18n", "dlLinux");
             }
             applyTranslations();
@@ -1205,7 +1018,6 @@
 
 
         initScrollAnimations();
-        fetchStats();
         setupDownloadButton();
         setupTabs();
         setupInteractions();

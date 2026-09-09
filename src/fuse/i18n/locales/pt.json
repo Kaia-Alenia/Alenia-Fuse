@@ -1,0 +1,192 @@
+{
+  "cli": {
+    "title": "ALENIA FUSE",
+    "subtitle": "Multimedia feita simples",
+    "prompt": "O que você quer fazer?",
+    "menu": {
+      "convert": "Converter mídia",
+      "compress": "Comprimir mídia",
+      "edit_video": "Editar vídeo",
+      "edit_audio": "Editar áudio",
+      "process_images": "Processar imagens",
+      "extract_media": "Extrair mídia",
+      "analyze": "Analisar arquivo",
+      "settings": "Configurações",
+      "help": "Ajuda",
+      "exit": "Sair"
+    },
+    "converting": "Convertendo {input} para {output}...",
+    "success": "Conversão concluída.",
+    "failed": "Conversão falhou: {error}",
+    "cancelled": "Operation cancelled.",
+    "banner_formats": "formats",
+    "unknown_cmd": "Unknown command:",
+    "usage": "Usage:",
+    "options": "Options:",
+    "commands": "Commands",
+    "error": "Error:",
+    "banner_subtitle": "[EN] Convert • edit • optimize media",
+    "banner_help": "[EN] Type /help for commands",
+    "banner_hint": "Digite / para comandos · Tab para sugestões",
+    "history_cleared": "Histórico de comandos apagado.",
+    "history_empty": "O histórico de comandos já estava vazio.",
+    "convert": {
+      "no_input": "Forneca um arquivo ou diretorio de entrada.",
+      "no_media": "Nenhum arquivo de midia encontrado em {path}",
+      "scanning": "Verificando {path}...",
+      "found_summary": "Encontrado(s) {videos} video(s), {audios} audio(s), {images} imagem/ns.",
+      "section_header": "{type} ({count} arquivos)",
+      "choose_format": "Formato de destino",
+      "format_options": "Opcoes",
+      "skip": "pular",
+      "invalid_format": "Formato invalido. Escolha da lista ou pule.",
+      "skipping_type": "Pulando {type}.",
+      "no_output_extension": "{output} nao tem extensao. Use: convert {input} {output}.mp4  ou: convert {input} to mp4",
+      "converting": "Convertendo {name}",
+      "done": "Pronto!",
+      "output_dir": "Diretorio de saida",
+      "original_size": "Original",
+      "output_size": "Saida",
+      "same_format_skip": "Ignorado (mesmo formato): {path}",
+      "overwrite_prompt": "O arquivo ja existe. Sobrescrever? [s/N]",
+      "complete": "Concluido - {orig} MB -> {out} MB",
+      "error_file": "Erro ao converter {name}: {err}",
+      "cancelled_user": "Cancelado pelo usuario.",
+      "start": "Iniciando conversao de {total} arquivo(s)...",
+      "use_slash": "Uso: convert <arquivo ou diretorio> [diretorio de saida]"
+    }
+  },
+  "settings": {
+    "language": "Idioma"
+  },
+  "categories": {
+    "general": "General",
+    "convert": "Convert",
+    "video": "Video",
+    "audio": "Audio",
+    "extract": "Extract",
+    "information": "Information",
+    "fuse": "Fuse"
+  },
+  "commands": {
+    "info": {
+      "description": "Show detailed media information via FFprobe."
+    },
+    "convert": {
+      "description": "Convert a media file to another format."
+    },
+    "compress": {
+      "description": "Compress a media file (smart quality options)."
+    },
+    "resize": {
+      "description": "Resize video dimensions."
+    },
+    "rotate": {
+      "description": "Rotate video."
+    },
+    "fps": {
+      "description": "Change video frame rate."
+    },
+    "speed": {
+      "description": "Change playback speed."
+    },
+    "trim": {
+      "description": "Trim a video clip."
+    },
+    "mute": {
+      "description": "Remove audio from video."
+    },
+    "extract-audio": {
+      "description": "Extract audio stream from video."
+    },
+    "thumbnail": {
+      "description": "Extract a thumbnail image from video."
+    },
+    "gif": {
+      "description": "Create an animated GIF from video."
+    },
+    "remux": {
+      "description": "Remux to another container without re-encoding."
+    },
+    "volume": {
+      "description": "Adjust audio volume."
+    },
+    "normalize": {
+      "description": "Normalize audio levels (loudnorm)."
+    },
+    "fade": {
+      "description": "Add fade in/out to audio."
+    },
+    "formats": {
+      "description": "List supported media formats."
+    },
+    "codecs": {
+      "description": "List supported codecs."
+    },
+    "lang": {
+      "description": "Change the interface language."
+    },
+    "version": {
+      "description": "Show Fuse version."
+    },
+    "clear": {
+      "description": "Clear the screen."
+    },
+    "help": {
+      "description": "Show this help message."
+    },
+    "exit": {
+      "description": "Exit Fuse."
+    },
+    "args": {
+      "file": "Input file",
+      "input": "Input file",
+      "output": "Output file",
+      "quality": "Quality: balanced, high, max (default: balanced)",
+      "size": "Target size",
+      "degrees": "Degrees: 90, 180, 270",
+      "rate": "Target FPS",
+      "factor": "Speed factor",
+      "start": "Start time",
+      "end": "End time",
+      "duration": "Duration in seconds",
+      "at": "Timestamp",
+      "fps": "GIF frame rate",
+      "width": "GIF width",
+      "value": "Volume change",
+      "type": "in or out",
+      "category": "Optional category",
+      "code": "Language code"
+    },
+    "frame": {
+      "description": "Extract a single frame from a video as an image."
+    },
+    "hardware": {
+      "description": "List available hardware encoders."
+    },
+    "filters": {
+      "description": "List available FFmpeg filters."
+    },
+    "metadata": {
+      "description": "Set metadata tags on a media file (stream copy)."
+    },
+    "optimize": {
+      "description": "Optimize media for size and quality balance (H.264 + AAC)."
+    },
+    "cut": {
+      "description": "Cut a clip from a video (stream copy, no re-encode)."
+    },
+    "concat": {
+      "description": "Concatenate multiple video files into one."
+    },
+    "subtitle": {
+      "description": "Burn subtitles into a video from an external subtitle file."
+    },
+    "watermark": {
+      "description": "Overlay an image watermark on a video."
+    },
+    "audio-info": {
+      "description": "Show audio bitrate, sample rate and codec info."
+    }
+  }
+}

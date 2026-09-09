@@ -1,35 +1,46 @@
 [project]
-name = "alenia-porter"
-version = "7.0.0"
-description = "Python code transformation and analysis tool"
+name = "alenia-fuse"
+version = "2.0.0"
+description = "Alenia Fuse — Professional multimedia CLI and Python library"
 readme = "README.md"
 authors = [
-    { name = "Alejandro Martinez", email = "alejandrotrrsa9@gmail.com" },
-    { name = "Kevin Turcios", email = "turcioskevinr@gmail.com" }
+    { name = "Alejandro Martinez", email = "contact.aleniastudios@gmail.com" }
 ]
 requires-python = ">=3.11"
 dependencies = [
-    "pywebview>=6.2",
-    "pillow>=10.0",
+    "rich>=13.7.0",
+    "prompt_toolkit>=3.0.40",
+    "Pillow>=10.0.0"
 ]
 
 [project.scripts]
-porter = "alenia_porter.cli:main"
+fuse = "fuse.cli.main:main"
 
 [build-system]
-requires = ["uv_build>=0.11.17,<0.12.0"]
-build-backend = "uv_build"
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-package-dir = {"" = "src"}
-packages = ["alenia_porter"]
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.setuptools.package-data]
-alenia_porter = ["py.typed", "assets/images/*", "assets/locales/*", "assets/themes/*"]
+fuse = [
+    "py.typed",
+    "i18n/locales/*.json"
+]
 
 [dependency-groups]
 dev = [
     "pytest>=9.1.1",
-    "pytest-cov>=7.1.0",
-    "pytest-mock>=3.15.1",
+    "pytest-asyncio>=0.21.0",
+    "pytest-timeout>=2.4.0",
 ]
+
+[tool.pytest.ini_options]
+asyncio_mode = "strict"
+testpaths = ["tests"]
+timeout = 60
+
+[tool.ruff.lint]
+ignore = ["BLE001", "S110", "RUF012", "RUF013", "SIM102", "F401", "UP035"]
+

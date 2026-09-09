@@ -1,30 +1,32 @@
 <div align="center">
 
-# Alenia Porter v7.0
+# Alenia Fuse v2.0
+
+> Alenia Fuse se llamaba anteriormente **Alenia-Porter**. Desde la versión 2.0, el paquete de PyPI es `alenia-fuse` y el comando oficial es `fuse`.
 
 *Optimizador multimedia universal de alto rendimiento — imágenes, video y audio en una sola herramienta.*
 
-<a href="https://www.producthunt.com/products/alenia-porter?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-alenia-porter" target="_blank" rel="noopener noreferrer"><img alt="Alenia Porter - Universal multimedia optimizer for image, video &amp; audio. | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1199433&amp;theme=light&amp;t=1784323367056"></a>
+<a href="https://www.producthunt.com/products/alenia-fuse?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-alenia-fuse" target="_blank" rel="noopener noreferrer"><img alt="Alenia Fuse - Universal multimedia optimizer for image, video &amp; audio. | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1199433&amp;theme=light&amp;t=1784323367056"></a>
 
 ---
 
 **Construcción y CI**
 <br>
-[![Build Status](https://github.com/Kaia-Alenia/Alenia-Porter/actions/workflows/build.yml/badge.svg)](https://github.com/Kaia-Alenia/Alenia-Porter/actions/workflows/build.yml)
-[![Pages Deploy](https://github.com/Kaia-Alenia/Alenia-Porter/actions/workflows/pages.yml/badge.svg)](https://github.com/Kaia-Alenia/Alenia-Porter/actions/workflows/pages.yml)
-[![GitHub release](https://img.shields.io/github/v/release/Kaia-Alenia/Alenia-Porter?include_prereleases&color=6c8ebf&label=latest)](https://github.com/Kaia-Alenia/Alenia-Porter/releases)
-[![Downloads](https://img.shields.io/github/downloads/Kaia-Alenia/Alenia-Porter/total?color=4caf50)](https://github.com/Kaia-Alenia/Alenia-Porter/releases)
+[![Build Status](https://github.com/Kaia-Alenia/Alenia-Fuse/actions/workflows/build.yml/badge.svg)](https://github.com/Kaia-Alenia/Alenia-Fuse/actions/workflows/build.yml)
+[![Pages Deploy](https://github.com/Kaia-Alenia/Alenia-Fuse/actions/workflows/pages.yml/badge.svg)](https://github.com/Kaia-Alenia/Alenia-Fuse/actions/workflows/pages.yml)
+[![GitHub release](https://img.shields.io/github/v/release/Kaia-Alenia/Alenia-Fuse?include_prereleases&color=6c8ebf&label=latest)](https://github.com/Kaia-Alenia/Alenia-Fuse/releases)
+[![Downloads](https://img.shields.io/github/downloads/Kaia-Alenia/Alenia-Fuse/total?color=4caf50)](https://github.com/Kaia-Alenia/Alenia-Fuse/releases)
 
-**Licencia y Estadísticas**
+**Licencia**
 <br>
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Coding time (all-time)](https://devglobe.app/api/badge/Kaia-Alenia/coding-time-all.svg?theme=dark)](https://devglobe.app/developers/Kaia-Alenia)
-[![GitGem](https://gitgem.org/api/badge/github/Kaia-Alenia/Alenia-Porter.svg)](https://gitgem.org/github/Kaia-Alenia/Alenia-Porter)
+[![GitGem](https://gitgem.org/api/badge/github/Kaia-Alenia/Alenia-Fuse.svg)](https://gitgem.org/github/Kaia-Alenia/Alenia-Fuse)
 </div>
 
 ---
 
-Alenia Porter es una herramienta profesional, multiplataforma y autónoma que automatiza la optimización, compresión y preparación de recursos multimedia. Incluye binarios de FFmpeg integrados — sin dependencias externas, sin configuración previa.
+Alenia Fuse es una herramienta profesional, multiplataforma y autónoma que automatiza la optimización, compresión y preparación de recursos multimedia. Incluye binarios de FFmpeg integrados — sin dependencias externas, sin configuración previa.
 
 Originalmente diseñado para motores de videojuegos (Ren'Py, Godot), ha evolucionado hacia un **optimizador multimedia de propósito general** para músicos, editores de video, desarrolladores web y creadores de contenido.
 
@@ -34,7 +36,7 @@ Originalmente diseñado para motores de videojuegos (Ren'Py, Godot), ha evolucio
 
 <div align="center">
 
-<img src="docs/images/ide-dashboard.png" alt="Alenia Porter IDE Dashboard" width="860" />
+<img src="docs/images/ide-dashboard.png" alt="Alenia Fuse IDE Dashboard" width="860" />
 
 *Panel principal — selector de carpeta, selector de formato, barra de progreso en tiempo real*
 
@@ -46,9 +48,9 @@ Originalmente diseñado para motores de videojuegos (Ren'Py, Godot), ha evolucio
 
 ### Descargar Edición IDE
 
-| [![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/Kaia-Alenia/Alenia-Porter/releases/latest) | [![macOS](https://img.shields.io/badge/macOS-000000?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/Kaia-Alenia/Alenia-Porter/releases/latest) | [![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)](https://github.com/Kaia-Alenia/Alenia-Porter/releases/latest) |
+| [![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/Kaia-Alenia/Alenia-Fuse/releases/latest) | [![macOS](https://img.shields.io/badge/macOS-000000?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/Kaia-Alenia/Alenia-Fuse/releases/latest) | [![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)](https://github.com/Kaia-Alenia/Alenia-Fuse/releases/latest) |
 | :---: | :---: | :---: |
-| [Descargar `.exe`](https://github.com/Kaia-Alenia/Alenia-Porter/releases/latest) | [Descargar `.dmg`](https://github.com/Kaia-Alenia/Alenia-Porter/releases/latest) | [Descargar `.AppImage`](https://github.com/Kaia-Alenia/Alenia-Porter/releases/latest) |
+| [Descargar `.exe`](https://github.com/Kaia-Alenia/Alenia-Fuse/releases/latest) | [Descargar `.dmg`](https://github.com/Kaia-Alenia/Alenia-Fuse/releases/latest) | [Descargar `.AppImage`](https://github.com/Kaia-Alenia/Alenia-Fuse/releases/latest) |
 | Windows 10 / 11 | macOS 12 Monterey+ | Ubuntu 20.04+ / Arch |
 
 </div>
@@ -57,15 +59,15 @@ Originalmente diseñado para motores de videojuegos (Ren'Py, Godot), ha evolucio
 
 **Inicio rápido:**
 
-1. Ejecuta el ejecutable **AleniaPorter**.
-2. Configura un apodo personalizado en el primer inicio (vincula tus estadísticas locales de forma anónima).
+1. Ejecuta el ejecutable **AleniaFuse**.
+2. Inicia Alenia Fuse y configura tus preferencias locales.
 3. Elige el formato de salida preferido para audio (OGG u OPUS), video (WebM o MP4) e imágenes (WebP o JPG).
 4. Haz clic en **Select Folder** y selecciona el directorio de origen.
 5. Los archivos procesados se guardan en una subcarpeta `Alenia_Optimized/`, respetando la estructura de directorios original.
 
 <div align="center">
 
-<img src="docs/images/ide-settings.png" alt="Panel de Configuración de Alenia Porter" width="860" />
+<img src="docs/images/ide-settings.png" alt="Panel de Configuración de Alenia Fuse" width="860" />
 
 *Selección de formato, controles de calidad y selector de tema*
 
@@ -77,7 +79,7 @@ Originalmente diseñado para motores de videojuegos (Ren'Py, Godot), ha evolucio
 
 <div align="center">
 
-<img src="docs/images/cli-view-process.gif" alt="Alenia Porter CLI Video" width="860" />
+<img src="docs/images/cli-view-process.gif" alt="Alenia Fuse CLI Video" width="860" />
 
 *TUI principal — paleta de comandos, historial de sesión y selector de idioma*
 
@@ -87,7 +89,7 @@ Originalmente diseñado para motores de videojuegos (Ren'Py, Godot), ha evolucio
 
 <div align="center">
 
-<img src="docs/images/cli-optimize.png" alt="Alenia Porter CLI Flujo Optimize" width="860" />
+<img src="docs/images/cli-optimize.png" alt="Alenia Fuse CLI Flujo Optimize" width="860" />
 
 *Flujo `/optimize` — escaneo de directorio, selección de formato y progreso en tiempo real*
 
@@ -97,7 +99,7 @@ Originalmente diseñado para motores de videojuegos (Ren'Py, Godot), ha evolucio
 
 <div align="center">
 
-<img src="docs/images/cli-complete.png" alt="Alenia Porter CLI Conversión Completa" width="860" />
+<img src="docs/images/cli-complete.png" alt="Alenia Fuse CLI Conversión Completa" width="860" />
 
 *Resumen de conversión — archivos procesados, rutas de salida, tiempo transcurrido*
 
@@ -105,7 +107,7 @@ Originalmente diseñado para motores de videojuegos (Ren'Py, Godot), ha evolucio
 
 <br>
 
-La CLI es un **binario nativo en Go** autocontenido — sin Python, sin Node, sin runtime. Diseñada para servidores headless, pipelines CI/CD y flujos de automatización.
+La CLI se instala como el comando **`fuse`** mediante el instalador rápido o PyPI. Está diseñada para servidores headless, pipelines CI/CD y flujos de automatización.
 
 <div align="center">
 
@@ -114,21 +116,21 @@ La CLI es un **binario nativo en Go** autocontenido — sin Python, sin Node, si
 | [![Windows](https://img.shields.io/badge/Windows_(PowerShell)-0078D6?style=for-the-badge&logo=powershell&logoColor=white)](#) | [![Linux & macOS](https://img.shields.io/badge/Linux_&_macOS_(Bash)-1f883d?style=for-the-badge&logo=gnubash&logoColor=white)](#) |
 | :---: | :---: |
 | Abre **PowerShell como Administrador** y ejecuta: | Abre una terminal y ejecuta: |
-| `irm https://kaia-alenia.github.io/Alenia-Porter/install.ps1 \| iex` | `curl -fsSL https://kaia-alenia.github.io/Alenia-Porter/install.sh \| bash` |
-| Instala `porter.exe` en `%LOCALAPPDATA%\Programs\AleniaPorterCLI` | Añade el symlink `porter` a `~/.local/bin` |
+| `irm https://kaia-alenia.github.io/Alenia-Fuse/install.ps1 \| iex` | `curl -fsSL https://kaia-alenia.github.io/Alenia-Fuse/install.sh \| bash` |
+| Instala `fuse.exe` en `%LOCALAPPDATA%\Programs\AleniaFuseCLI` | Añade el symlink `fuse` a `~/.local/bin` |
 | Requiere Windows 10 1607+ | Requiere `git` y `go` instalados |
 
 </div>
 
 <br>
 
-Una vez instalado, escribe `porter` en cualquier terminal para abrir la TUI interactiva.
+Una vez instalado, escribe `fuse` en cualquier terminal para abrir la TUI interactiva.
 
 **Modo no interactivo** (omite la TUI completamente, útil para scripts y CI):
 
 ```
-porter version
-porter optimize <directorio> --vformat mp4 --aformat mp3 --iformat webp
+fuse --version
+fuse optimize <directorio> --vformat mp4 --aformat mp3 --iformat webp
 ```
 
 **Dentro de la TUI**, los comandos usan el prefijo `/`. Escribe `/` para ver sugerencias de autocompletado:
@@ -144,7 +146,6 @@ porter optimize <directorio> --vformat mp4 --aformat mp3 --iformat webp
 | `/a-bitrate [valor]` | Establece el bitrate de audio (ej. `128k`, `192k`, `320k`) |
 | `/clear` | Limpia el historial de la sesión |
 | `/update` | Ejecuta el script de actualización del proyecto |
-| `/self-update` | Descarga el código fuente más reciente y recompila el binario |
 | `/exit` | Cierra la TUI |
 
 
@@ -207,7 +208,6 @@ Todos los formatos a continuación son **detectados automáticamente** al escane
 | TIFF | `.tiff` | Alta calidad para impresión |
 | GIF | `.gif` | Animado / legado |
 | ICO | `.ico` | Icono de Windows |
-| PDF | `.pdf` | Documento portátil (lectura) |
 | AVIF | `.avif## Formatos de Salida (Objetivos de Conversión)
 
 > **Estabilidad:** `Estable` = ruta de código dedicada | `Inestable` = fallback genérico de FFmpeg, puede producir archivos vacíos o corruptos | `Roto` = protocolo de streaming o formato sin soporte de escritura
@@ -276,7 +276,6 @@ Todos los formatos a continuación son **detectados automáticamente** al escane
 | TIFF | `.tiff` | Calidad de archivo | Estable |
 | TGA | `.tga` | Texturas de juegos | Estable |
 | ICO | `.ico` | Auto-escalado a máx 256×256, pixel format `rgba` forzado | Estable |
-| PDF | `.pdf` | Vía Pillow (no FFmpeg), convierte a RGB primero | Estable |
 | GIF (desde imagen) | `.gif` | FFmpeg aplica filtro de 15fps + escala a imagen estática — produce un GIF de 1 frame; puede verse corrupto en algunos visores | Inestable |
 | AVIF | `.avif` | Cae a handler genérico — requiere build FFmpeg con `libavif` | Inestable |
 | APNG | `.apng` | Cae a handler genérico — muxer de PNG animado poco fiable en builds estándar | Inestable |
@@ -326,14 +325,6 @@ Todos los formatos a continuación son **detectados automáticamente** al escane
 5. **Resiliencia ante Fallos** — Ante un fallo de FFmpeg, reintenta automáticamente en modo seguro (solo software). Genera volcados de crash con marca de tiempo para diagnóstico.
 
 ---
-
-## Telemetría y Privacidad
-
-Alenia Porter incluye un sistema de telemetría ligero, **totalmente anónimo** y asíncrono.
-
-- **No se recopilan datos personales** — sin nombres de archivos, sin nombres reales, sin contraseñas, sin contenido del disco.
-- **Qué se envía:** UUID anónimo, apodo elegido, tipo de SO, modo de ejecución (GUI/CLI), extensión del formato de salida (ej. `webp`), conteo de archivos y tiempo transcurrido.
-- **Propósito:** benchmarks públicos para medir el rendimiento en distintas plataformas y configuraciones de hardware.
 
 ---
 
