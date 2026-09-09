@@ -131,7 +131,11 @@ def _video_op(operation: str, file: str, output: Optional[str],
     """
     from pathlib import Path as _Path
     try:
-        media = require_file(file)
+        # Use the public API for operations that it exposes. The CLI must be
+        # a presentation layer, not a second implementation of Fuse.
+        from fuse import Video
+        video = Video(file)
+        media = video.info
 
         if not output:
             p = _Path(file)
@@ -143,35 +147,52 @@ def _video_op(operation: str, file: str, output: Optional[str],
 
         print(t("operations.starting", operation=operation.capitalize(), input=file, output=output))
 
-        from fuse.planner.planner import OperationPlanner
-        from fuse.jobs.manager import Job
-        from fuse.ffmpeg.resolver import default_resolver
-
-        planner = OperationPlanner()
-        plan = planner.plan_video_op(operation, media, output, **kwargs)
-
-        if not plan.is_valid:
-            print(t("errors.cannot_perform", error=plan.error_reason), file=sys.stderr)
-            return 1
-
         progress_cb = build_progress_callback(on_progress_label, media.duration)
-        cmd = [str(default_resolver.ffmpeg_path), "-y"] + apply_ffmpeg_privacy(plan.args)
-        job = Job(cmd=cmd, total_duration=media.duration,
-                  output_path=_Path(output), on_progress=progress_cb)
+        operation_builders = {
+            "resize": lambda: video.resize(kwargs["width"], kwargs["height"]),
+            "crop": lambda: video.crop(kwargs["width"], kwargs["height"], kwargs.get("x", 0), kwargs.get("y", 0)),
+            "rotate": lambda: video.rotate(kwargs["degrees"]),
+            "fps": lambda: video.fps(kwargs["fps"]),
+            "speed": lambda: video.speed(kwargs["factor"]),
+            "trim": lambda: video.trim(kwargs.get("start", "00:00:00"), kwargs.get("end"), kwargs.get("duration")),
+            "cut": lambda: video.trim(kwargs.get("start", "00:00:00"), kwargs.get("end"), kwargs.get("duration")),
+            "mute": video.mute,
+            "extract_audio": video.extract_audio,
+            "thumbnail": lambda: video.thumbnail(kwargs.get("timestamp", "00:00:05")),
+            "gif": lambda: video.gif(kwargs.get("start", "00:00:00"), kwargs.get("duration", 5), kwargs.get("fps", 10), kwargs.get("width", 480)),
+            "remux": video.remux,
+        }
 
-        try:
-            success = job.run()
-        except KeyboardInterrupt:
-            job.cancel()
-            print(t("cli.cancelled"), file=sys.stderr)
-            return 0
+        if operation in operation_builders:
+            result = operation_builders[operation]().output(output).run(on_progress=progress_cb)
+        else:
+            # Advanced commands not yet exposed by Video remain on the shared
+            # planner path until their public API methods are added.
+            from fuse.planner.planner import OperationPlanner
+            from fuse.jobs.manager import Job
+            from fuse.ffmpeg.resolver import default_resolver
+            planner = OperationPlanner()
+            plan = planner.plan_video_op(operation, media, output, **kwargs)
+            if not plan.is_valid:
+                print(t("errors.cannot_perform", error=plan.error_reason), file=sys.stderr)
+                return 1
+            cmd = [str(default_resolver.ffmpeg_path), "-y"] + apply_ffmpeg_privacy(plan.args)
+            result_job = Job(cmd=cmd, total_duration=media.duration,
+                             output_path=_Path(output), on_progress=progress_cb)
+            success = result_job.run()
+            result = None
 
         finish_progress()
-        if success:
+        if result is not None and result.success:
             print(t("operations.done", output=output))
-        elif job.error:
-            print(t("errors.operation", error=job.error), file=sys.stderr)
-        return 0 if success else 1
+            return 0
+        if result is None and success:
+            print(t("operations.done", output=output))
+            return 0
+        error = result.error if result is not None else result_job.error
+        if error:
+            print(t("errors.operation", error=error), file=sys.stderr)
+        return 1
 
     except Exception as exc:
         print(t("errors.operation", error=friendly_error(exc)), file=sys.stderr)
@@ -186,7 +207,9 @@ def _audio_op(operation: str, file: str, output: Optional[str],
     """
     from pathlib import Path as _Path
     try:
-        media = require_file(file)
+        from fuse import Audio
+        audio = Audio(file)
+        media = audio.info
 
         if not media.main_audio:
             print(t("errors.no_audio_stream"), file=sys.stderr)
@@ -202,35 +225,27 @@ def _audio_op(operation: str, file: str, output: Optional[str],
 
         print(t("operations.starting", operation=label, input=file, output=output))
 
-        from fuse.planner.planner import OperationPlanner
-        from fuse.jobs.manager import Job
-        from fuse.ffmpeg.resolver import default_resolver
-
-        planner = OperationPlanner()
-        plan = planner.plan_audio_op(operation, media, output, **kwargs)
-
-        if not plan.is_valid:
-            print(t("errors.cannot_perform", error=plan.error_reason), file=sys.stderr)
+        progress_cb = build_progress_callback(label, media.duration)
+        operation_builders = {
+            "volume": lambda: audio.volume(kwargs["value"]),
+            "normalize": audio.normalize,
+            "fade": lambda: audio.fade(kwargs.get("fade_type", "in"), kwargs.get("duration", 3.0)),
+            "speed": lambda: audio.speed(kwargs["factor"]),
+            "trim": lambda: audio.trim(kwargs.get("start", "00:00:00"), kwargs.get("end"), kwargs.get("duration")),
+        }
+        if operation not in operation_builders:
+            print(t("errors.cannot_perform", error=f"Unsupported audio operation: {operation}"), file=sys.stderr)
             return 1
 
-        progress_cb = build_progress_callback(label, media.duration)
-        cmd = [str(default_resolver.ffmpeg_path), "-y"] + apply_ffmpeg_privacy(plan.args)
-        job = Job(cmd=cmd, total_duration=media.duration,
-                  output_path=_Path(output), on_progress=progress_cb)
-
-        try:
-            success = job.run()
-        except KeyboardInterrupt:
-            job.cancel()
-            print(t("cli.cancelled"), file=sys.stderr)
-            return 0
+        result = operation_builders[operation]().output(output).run(on_progress=progress_cb)
 
         finish_progress()
-        if success:
+        if result.success:
             print(t("operations.done", output=output))
-        elif job.error:
-            print(t("errors.operation", error=job.error), file=sys.stderr)
-        return 0 if success else 1
+            return 0
+        if result.error:
+            print(t("errors.operation", error=result.error), file=sys.stderr)
+        return 1
 
     except Exception as exc:
         print(t("errors.operation", error=friendly_error(exc)), file=sys.stderr)

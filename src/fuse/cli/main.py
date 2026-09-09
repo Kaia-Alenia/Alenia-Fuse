@@ -18,29 +18,15 @@ def main():
         run_interactive()
         sys.exit(0)
         
-    if len(sys.argv) == 2 and sys.argv[1] in ("-h", "--help"):
-        print("""ALENIA FUSE
-Professional multimedia toolkit
-
-Usage:
-  fuse                       Start interactive Fuse CLI
-  fuse formats               Browse supported output formats
-  fuse --version             Show version
-  fuse --help                Show this help
-
-Interactive commands:
-  Start Fuse and type /help
-
-Examples:
-  fuse
-  fuse formats
-  fuse formats video
-
-""")
-        sys.exit(0)
-
     # Load all command handlers (triggers @register_command decorators)
     import fuse.cli.commands  # noqa: F401
+    if len(sys.argv) == 2 and sys.argv[1] in ("-h", "--help"):
+        # Build help from the same registry used for dispatch. This prevents
+        # the top-level help from drifting away from the available commands.
+        from fuse.cli.parser import get_parser
+        get_parser().print_help()
+        sys.exit(0)
+
     from fuse.cli.parser import parse_and_run
     sys.exit(parse_and_run())
 

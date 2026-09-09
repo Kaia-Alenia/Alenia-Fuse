@@ -117,15 +117,16 @@ def handle_extract_audio(args):
                 if not confirm_overwrite(output_file): continue
 
             print(f"\n  Extracting Audio {media.path} → {output_file} ...\n")
-            from fuse.operations.extract import ExtractAudioOperation
-            op = ExtractAudioOperation(media).output(output_file)
-            progress_cb = build_progress_callback(f"{Path(media.path).name} →", media.duration)
-
-            try:
-                result = op.run(on_progress=progress_cb)
-                finish_progress()
-                if not result.success: success_all = False
-            except KeyboardInterrupt: return 0
+            # Audio extraction is an existing video operation in the planner;
+            # do not route the CLI through a separate, nonexistent operation.
+            rc = _video_op(
+                "extract_audio",
+                media.path,
+                output_file,
+                f"{Path(media.path).name} →",
+            )
+            if rc != 0:
+                success_all = False
 
         return 0 if success_all else 1
     except Exception as e:

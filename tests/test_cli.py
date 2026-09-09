@@ -45,3 +45,14 @@ def test_parser_contains_info():
     from fuse.cli.registry import registry
     cmd = registry.get("info")
     assert cmd is not None
+
+
+def test_top_level_help_is_generated_from_registered_commands(capsys):
+    from fuse.cli.parser import get_parser
+
+    get_parser().print_help()
+    output = capsys.readouterr().out
+
+    assert "fuse convert" in output
+    assert "fuse info" in output
+    assert "fuse formats" in output
