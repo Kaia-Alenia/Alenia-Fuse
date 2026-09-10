@@ -60,6 +60,7 @@
       "same_format_skip": "Skipping (same format): {path}",
       "overwrite_prompt": "File already exists. Overwrite? [y/N]",
       "complete": "Complete — {orig} MB → {out} MB",
+      "saved_to": "Saved to: {path}",
       "error_file": "Error converting {name}: {err}",
       "cancelled_user": "Cancelled by user.",
       "start": "Starting conversion of {total} file(s)...",

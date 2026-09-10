@@ -22,7 +22,10 @@ STREAM_COPY_COMPATIBLE = {
 
 ENCODE_STRATEGIES = {
     "webm": {"video_codec": "libvpx-vp9", "audio_codec": "libopus", "extra": ["-b:v", "0", "-crf", "30"]},
-    "mp4": {"video_codec": "libx264", "audio_codec": "aac", "extra": ["-crf", "23", "-preset", "medium"]},
+    # H.264 + yuv420p is broadly playable (including Windows media players).
+    # Faststart moves the MP4 index to the front so the file can be opened
+    # immediately after creation and streamed from its output location.
+    "mp4": {"video_codec": "libx264", "audio_codec": "aac", "extra": ["-pix_fmt", "yuv420p", "-movflags", "+faststart", "-crf", "23", "-preset", "medium"]},
     "mkv": {"video_codec": "libx264", "audio_codec": "aac", "extra": ["-crf", "23", "-preset", "medium"]},
     "mov": {"video_codec": "libx264", "audio_codec": "aac", "extra": ["-crf", "23", "-preset", "medium"]},
     "avi": {"video_codec": "libx264", "audio_codec": "libmp3lame", "extra": ["-crf", "23"]},

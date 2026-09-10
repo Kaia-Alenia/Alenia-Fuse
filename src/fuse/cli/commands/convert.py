@@ -226,7 +226,12 @@ def _run_conversion(media, target_fmt: str, output_file: str, quiet: bool = Fals
     from fuse.operations.convert import ConvertOperation
 
     try:
-        op = ConvertOperation(media, target_fmt).output(output_file)
+        # Resolve relative paths once so the user can always find the result,
+        # regardless of the directory from which the interactive CLI started.
+        resolved_output = Path(output_file).expanduser().resolve()
+        resolved_output.parent.mkdir(parents=True, exist_ok=True)
+
+        op = ConvertOperation(media, target_fmt).output(str(resolved_output))
         progress_cb = build_progress_callback(
             Path(media.path).name, media.duration
         ) if not quiet else None
@@ -244,9 +249,12 @@ def _run_conversion(media, target_fmt: str, output_file: str, quiet: bool = Fals
 
         if not quiet:
             orig_mb = media.size / 1024 / 1024
-            out_mb  = Path(output_file).stat().st_size / 1024 / 1024
+            out_mb  = resolved_output.stat().st_size / 1024 / 1024
             _console.print(
                 f"\n  [#34D399]{t('cli.convert.complete').format(orig=f'{orig_mb:.1f}', out=f'{out_mb:.1f}')}[/]\n"
+            )
+            _console.print(
+                f"  [dim]{t('cli.convert.saved_to').format(path=str(resolved_output))}[/]\n"
             )
         return 0
 
