@@ -33,7 +33,7 @@ That opens the interactive CLI. Type `/help` to see all commands.
 ## Interactive CLI
 
 ```
-  ◈ Alenia Fuse 2.0.4
+  ◈ Alenia Fuse 2.0.5
   Multimedia toolkit
 
   Type / for commands · Tab for suggestions

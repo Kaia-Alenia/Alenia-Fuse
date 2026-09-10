@@ -1,6 +1,6 @@
 [project]
 name = "alenia-fuse"
-version = "2.0.4"
+version = "2.0.5"
 description = "Alenia Fuse — Professional multimedia CLI and Python library"
 readme = "README.md"
 authors = [
