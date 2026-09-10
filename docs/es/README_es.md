@@ -2,7 +2,8 @@
 
 # Alenia Fuse v2.0
 
-> Alenia Fuse se llamaba anteriormente **Alenia-Porter**. Desde la versión 2.0, el paquete de PyPI es `alenia-fuse` y el comando oficial es `fuse`.
+> **Esta es la versión mejorada de Alenia Porter** — reescrita completamente en Python puro, con una API limpia, soporte multiplataforma y publicación en PyPI.
+> Alenia Fuse se llamaba anteriormente **Alenia-Porter**. El proyecto fue rebrandeado en la versión 2.0; las instalaciones nuevas usan el paquete `alenia-fuse` y el comando `fuse`.
 
 *Optimizador multimedia universal de alto rendimiento — imágenes, video y audio en una sola herramienta.*
 

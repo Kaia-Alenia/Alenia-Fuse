@@ -1,7 +1,7 @@
 # Alenia Fuse
 
-> **Esta es la versión mejorada de Alenia Porter** — reescrita completamente en Python puro, con una API limpia, soporte multiplataforma y publicación en PyPI.
-> Alenia Fuse se llamaba anteriormente **Alenia-Porter**. El proyecto fue rebrandeado en la versión 2.0; las instalaciones nuevas usan el paquete `alenia-fuse` y el comando `fuse`.
+> **This is the improved version of Alenia Porter** — completely rewritten in pure Python, with a clean API, cross-platform support, and PyPI distribution.
+> Alenia Fuse was previously known as **Alenia-Porter**. The project was rebranded in version 2.0; new installations use the `alenia-fuse` package and the `fuse` command.
 
 **Professional multimedia toolkit — Python library + interactive CLI**
 
