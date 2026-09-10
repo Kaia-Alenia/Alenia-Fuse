@@ -34,6 +34,6 @@ La conversión de video web usa `webm` y produce un archivo `.webm` con VP9/Opus
 
 ## Distribución de FFmpeg
 
-El paquete de Python no requiere binarios empaquetados de FFmpeg. Fuse resuelve FFmpeg en este orden: `FUSE_FFMPEG_DIR`, un caché local explícitamente configurado, binarios de desarrollo empaquetados, y el `PATH` del sistema operativo. Si falta FFmpeg, se devuelve un error de operación claro. Fuse nunca descarga un ejecutable durante la importación ni contacta silenciosamente a un servicio externo.
+El paquete de Python no incluye binarios pesados de FFmpeg. Fuse resuelve FFmpeg en este orden: `FUSE_FFMPEG_DIR`, la caché local, binarios de desarrollo y el `PATH` del sistema. Si falta, descarga el asset correspondiente del release de GitHub en el primer uso, verifica su checksum SHA-256 y lo guarda en la caché del usuario. Puedes desactivar la descarga con `FUSE_DISABLE_FFMPEG_DOWNLOAD=1` o ejecutar `fuse setup` manualmente.
 
 Cada operación devuelve un `OperationResult`, incluyendo `success`, `operation`, `input_path`, `output_path`, el `media` opcionalmente inspeccionado, advertencias y un mensaje de error útil.

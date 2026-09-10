@@ -9,7 +9,7 @@
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](#supported-platforms)
 
 Alenia Fuse converts, edits, compresses, and inspects audio, video, and images.
-It ships with a bundled FFmpeg binary — no external dependencies required.
+It downloads a verified platform FFmpeg asset on first use when FFmpeg is not already available in the system PATH.
 
 ---
 
@@ -27,7 +27,7 @@ That opens the interactive CLI. Type `/help` to see all commands.
 ## Interactive CLI
 
 ```
-  ◈ Alenia Fuse 2.0.0
+  ◈ Alenia Fuse 2.0.1
   Multimedia toolkit
 
   Type / for commands · Tab for suggestions

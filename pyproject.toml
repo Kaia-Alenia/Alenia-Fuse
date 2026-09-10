@@ -1,6 +1,6 @@
 [project]
 name = "alenia-fuse"
-version = "2.0.0"
+version = "2.0.1"
 description = "Alenia Fuse — Professional multimedia CLI and Python library"
 readme = "README.md"
 authors = [
@@ -43,4 +43,3 @@ timeout = 60
 
 [tool.ruff.lint]
 ignore = ["BLE001", "S110", "RUF012", "RUF013", "SIM102", "F401", "UP035"]
-

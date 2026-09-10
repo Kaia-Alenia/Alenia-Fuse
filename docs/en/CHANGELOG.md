@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.1] — FFmpeg release assets
+
+### Changed
+
+- Added verified, cached FFmpeg downloads from GitHub Release assets.
+- Added the `fuse setup` command for explicit media-engine setup.
+- Kept FFmpeg binaries out of the PyPI package and Git repository.
+
 ## [2.0.0] — Alenia Fuse rebrand
 
 Alenia Fuse starts a new product line with a clean public identity and a focused multimedia workflow.
