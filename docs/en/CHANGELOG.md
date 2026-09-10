@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.6
+
+- Route `convert image.png output.pdf` through the built-in image-to-PDF exporter.
+- Produce broadly compatible MP4 output for animated images.
+
 ## [2.0.1] — FFmpeg release assets
 
 ### Changed

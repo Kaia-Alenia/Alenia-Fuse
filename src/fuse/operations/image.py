@@ -123,6 +123,17 @@ class ImageOperation:
             return OperationResult.from_error(f"Input file not found: {self.media.path}")
 
         target = normalize_format(self._target_fmt or Path(self._output_path or input_path).suffix)
+
+        # PDF is a document export handled by Pillow, not an FFmpeg image
+        # target. Handle it before validating the regular image target list.
+        if target == "pdf":
+            if not self._output_path:
+                self._output_path = str(input_path.parent / f"processed_{input_path.stem}.pdf")
+            output_path = Path(self._output_path)
+            if output_path.resolve() == input_path.resolve():
+                return OperationResult.from_error("Input and output paths must be different.")
+            return _write_pdf([input_path], output_path, dpi=self._pdf_dpi)
+
         definition = TARGET_BY_ID.get(target)
         if not definition or definition.kind not in {"image", "animated_image"}:
             return OperationResult.from_error(
@@ -137,9 +148,6 @@ class ImageOperation:
         output_path = Path(self._output_path)
         if output_path.resolve() == input_path.resolve():
             return OperationResult.from_error("Input and output paths must be different.")
-
-        if target == "pdf":
-            return _write_pdf([input_path], output_path, dpi=self._pdf_dpi)
 
         args = ["-i", str(input_path)]
 

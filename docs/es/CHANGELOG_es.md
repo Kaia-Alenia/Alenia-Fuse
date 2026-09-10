@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.6
+
+- `convert imagen.png salida.pdf` usa correctamente el exportador integrado de imagen a PDF.
+- La salida MP4 de imágenes animadas usa un formato compatible con reproductores comunes.
+
 ## [2.0.1] — Assets de FFmpeg
 
 ### Cambios

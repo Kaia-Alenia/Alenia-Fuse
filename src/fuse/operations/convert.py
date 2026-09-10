@@ -37,6 +37,15 @@ class ConvertOperation:
         if in_p == out_p:
             return OperationResult.from_error("Input and output paths cannot be identical (would overwrite input).", Path(self.output_path))
 
+        out_p.parent.mkdir(parents=True, exist_ok=True)
+
+        # PDF export is a real image-to-document conversion. Route it through
+        # the dedicated Pillow implementation instead of sending PDF to the
+        # FFmpeg media planner.
+        if self.target_format == "pdf" and self.media.type.value == "image":
+            from fuse.operations.image import ImageOperation
+            return ImageOperation(self.media).pdf().output(str(out_p)).run()
+
         # Validate input still exists
         if not in_p.exists():
             return OperationResult.from_error(f"Input file not found: {self.media.path}", Path(self.output_path))
