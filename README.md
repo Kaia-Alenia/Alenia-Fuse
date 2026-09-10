@@ -1,12 +1,18 @@
 # Alenia Fuse
 
+> **Esta es la versión mejorada de Alenia Porter** — reescrita completamente en Python puro, con una API limpia, soporte multiplataforma y publicación en PyPI.
 > Alenia Fuse se llamaba anteriormente **Alenia-Porter**. El proyecto fue rebrandeado en la versión 2.0; las instalaciones nuevas usan el paquete `alenia-fuse` y el comando `fuse`.
 
 **Professional multimedia toolkit — Python library + interactive CLI**
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![PyPI](https://img.shields.io/pypi/v/alenia-fuse.svg)](https://pypi.org/project/alenia-fuse/)
+[![PyPI Downloads](https://img.shields.io/pypi/dm/alenia-fuse.svg)](https://pypi.org/project/alenia-fuse/)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://python.org)
-[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](#supported-platforms)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![CI](https://github.com/Kaia-Alenia/Alenia-Fuse/actions/workflows/lint.yml/badge.svg)](https://github.com/Kaia-Alenia/Alenia-Fuse/actions/workflows/lint.yml)
+[![Linux](https://img.shields.io/badge/Linux-x64-blue?logo=linux&logoColor=white)](#supported-platforms)
+[![Windows](https://img.shields.io/badge/Windows-x64-blue?logo=windows&logoColor=white)](#supported-platforms)
+[![macOS](https://img.shields.io/badge/macOS-arm64-blue?logo=apple&logoColor=white)](#supported-platforms)
 
 Alenia Fuse converts, edits, compresses, and inspects audio, video, and images.
 It downloads a verified platform FFmpeg asset on first use when FFmpeg is not already available in the system PATH.
