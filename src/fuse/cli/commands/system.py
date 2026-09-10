@@ -69,7 +69,7 @@ def handle_compress(args):
                 result = op.run(on_progress=progress_cb)
                 finish_progress()
                 if not result.success:
-                    print(t("errors.operation", error=result.error_message))
+                    print(t("errors.operation", error=result.error or "Compression failed."))
                     success_all = False
                 else:
                     orig_mb = media.size / 1024 / 1024

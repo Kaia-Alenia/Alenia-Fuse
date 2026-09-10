@@ -47,6 +47,13 @@ def test_parser_contains_info():
     assert cmd is not None
 
 
+def test_convert_output_is_optional_for_interactive_format_selection():
+    parser = get_parser()
+    args = parser.parse_args(["convert", "input.png"])
+    assert args.input == "input.png"
+    assert args.output is None
+
+
 def test_top_level_help_is_generated_from_registered_commands(capsys):
     from fuse.cli.parser import get_parser
 

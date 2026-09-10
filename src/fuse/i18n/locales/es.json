@@ -26,6 +26,15 @@
     "options": "Opciones:",
     "commands": "Comandos",
     "error": "Error:",
+    "command": "Comando",
+    "argument": "Argumento",
+    "description": "Descripción",
+    "arguments": "Argumentos",
+    "optional": "opcional",
+    "required": "obligatorio",
+    "command_reference": "Referencia del comando",
+    "aliases": "Alias",
+    "goodbye": "Hasta luego.",
     "banner_formats": "formatos",
     "banner_hint": "Escribe / para ver comandos · Tab para sugerencias",
     "history_cleared": "Historial de comandos eliminado.",
@@ -220,34 +229,34 @@
       "code": "Código de idioma"
     },
     "frame": {
-      "description": "Extract a single frame from a video as an image."
+      "description": "Extrae un fotograma del vídeo como imagen."
     },
     "hardware": {
-      "description": "List available hardware encoders."
+      "description": "Lista los codificadores de hardware disponibles."
     },
     "filters": {
-      "description": "List available FFmpeg filters."
+      "description": "Lista los filtros FFmpeg disponibles."
     },
     "metadata": {
-      "description": "Set metadata tags on a media file (stream copy)."
+      "description": "Establece metadatos en un archivo multimedia."
     },
     "optimize": {
-      "description": "Optimize media for size and quality balance (H.264 + AAC)."
+      "description": "Optimiza el tamaño y la calidad del archivo multimedia."
     },
     "cut": {
-      "description": "Cut a clip from a video (stream copy, no re-encode)."
+      "description": "Corta un clip de vídeo sin recodificar."
     },
     "concat": {
-      "description": "Concatenate multiple video files into one."
+      "description": "Une varios archivos de vídeo en uno."
     },
     "subtitle": {
-      "description": "Burn subtitles into a video from an external subtitle file."
+      "description": "Integra subtítulos en un vídeo desde un archivo externo."
     },
     "watermark": {
-      "description": "Overlay an image watermark on a video."
+      "description": "Superpone una marca de agua en un vídeo."
     },
     "audio-info": {
-      "description": "Show audio bitrate, sample rate and codec info."
+      "description": "Muestra bitrate, frecuencia de muestreo y códec del audio."
     }
   }
 }

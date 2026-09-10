@@ -33,7 +33,7 @@ _console = Console(highlight=False)
     aliases=[],
     arguments=[
         CommandArgument(name="input",  help_key="commands.args.input",  completion="path"),
-        CommandArgument(name="output", help_key="commands.args.output", completion="path"),
+        CommandArgument(name="output", help_key="commands.args.output", completion="path", nargs="?"),
     ],
 )
 def handle_convert(args):
@@ -238,7 +238,7 @@ def _run_conversion(media, target_fmt: str, output_file: str, quiet: bool = Fals
         if not result.success:
             if not quiet:
                 _console.print(
-                    f"\n  [#EF4444]{t('cli.error')}[/] {result.error_message}\n"
+                    f"\n  [#EF4444]{t('cli.error')}[/] {result.error or 'Conversion failed.'}\n"
                 )
             return 1
 

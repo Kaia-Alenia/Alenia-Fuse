@@ -92,8 +92,8 @@ def _print_slash_discoverer():
             border_style="#1E293B",
             show_edge=False,
         )
-        table.add_column("Command", style=f"bold {color}", no_wrap=True)
-        table.add_column("Description", style="#94A3B8")
+        table.add_column(t("cli.command"), style=f"bold {color}", no_wrap=True)
+        table.add_column(t("cli.description"), style="#94A3B8")
         for c in sorted(categories[cat_key], key=lambda x: x.name):
             desc = t(c.description_key)
             table.add_row(f"/{c.name}", desc)
@@ -104,14 +104,14 @@ def _print_internal_help(topic: str | None = None):
     if topic:
         cmd = registry.get(topic)
         if not cmd:
-            _console.print(f"\n  [#EF4444]Unknown command:[/] {topic}\n")
+            _console.print(f"\n  [#EF4444]{t('cli.unknown_cmd')}[/] {topic}\n")
             return
 
         _console.print()
         _console.print(Panel(
             f"[#CBD5E1]{t(cmd.description_key)}[/]",
             title=f"[bold #A78BFA]/{cmd.name}[/]",
-            subtitle="[dim]Command reference[/]",
+            subtitle=f"[dim]{t('cli.command_reference')}[/]",
             border_style="#7C3AED",
             box=box.ROUNDED,
             padding=(1, 2),
@@ -119,28 +119,30 @@ def _print_internal_help(topic: str | None = None):
 
         if cmd.arguments:
             table = Table(
-                title="Arguments",
+                title=t("cli.arguments"),
                 box=box.SIMPLE_HEAD,
                 padding=(0, 1),
                 border_style="#1E293B",
             )
-            table.add_column("Argument", style="#22D3EE", no_wrap=True)
-            table.add_column("Description", style="#94A3B8")
+            table.add_column(t("cli.argument"), style="#22D3EE", no_wrap=True)
+            table.add_column(t("cli.description"), style="#94A3B8")
             for arg in cmd.arguments:
-                marker = "[dim]optional[/] " if arg.action else "[bold #F8FAFC]required[/] "
+                is_optional = bool(arg.action or arg.nargs in {"?", "*"})
+                marker_text = t("cli.optional") if is_optional else t("cli.required")
+                marker = f"[dim]{marker_text}[/] " if is_optional else f"[bold #F8FAFC]{marker_text}[/] "
                 table.add_row(arg.name, marker + t(arg.help_key))
             _console.print(table)
 
         if cmd.aliases:
             aliases_str = "  ".join(f"[#A78BFA]/{a}[/]" for a in cmd.aliases)
-            _console.print(f"  [dim]Aliases:[/] {aliases_str}\n")
+            _console.print(f"  [dim]{t('cli.aliases')}:[/] {aliases_str}\n")
         else:
             _console.print()
         return
 
     _console.print()
     _console.print(
-        Rule("[bold #8B5CF6]Fuse Commands[/]", style="#2D2B55")
+        Rule(f"[bold #8B5CF6]{t('cli.commands')}[/]", style="#2D2B55")
     )
     _print_slash_discoverer()
 
@@ -222,7 +224,7 @@ def run_interactive():
         lower = text.lower()
 
         if lower in ("exit", "quit", "/exit", "/quit"):
-            _console.print("\n  [dim]Goodbye.[/]\n")
+            _console.print(f"\n  [dim]{t('cli.goodbye')}[/]\n")
             break
 
         if lower in ("clear", "/clear"):
@@ -248,10 +250,20 @@ def run_interactive():
 
         try:
             tokens = shlex.split(text, posix=False)
+            if len(tokens) == 1:
+                command = registry.get(tokens[0])
+                if command:
+                    required_arguments = [
+                        arg for arg in command.arguments
+                        if not arg.name.startswith("--") and arg.nargs not in {"?", "*"}
+                    ]
+                    if required_arguments:
+                        _print_internal_help(command.name)
+                        continue
             parse_and_run(tokens)
         except SystemExit:
             pass
         except KeyboardInterrupt:
             _console.print(f"\n  [dim]{t('cli.cancelled')}[/]")
         except Exception as exc:
-            _console.print(f"\n  [bold #EF4444]Error:[/] {exc}\n")
+            _console.print(f"\n  [bold #EF4444]{t('cli.error')}[/] {exc}\n")
