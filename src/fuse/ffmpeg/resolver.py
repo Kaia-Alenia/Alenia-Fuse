@@ -16,6 +16,7 @@ class FFmpegResolver:
         self.ffmpeg_path: Path | None = None
         self.ffprobe_path: Path | None = None
         self.version_info: dict[str, str] = {}
+        self._download_attempted = False
         
         self.resolve()
 
@@ -102,6 +103,22 @@ class FFmpegResolver:
 
     @property
     def is_ffmpeg_available(self) -> bool:
-        return self.ffmpeg_path is not None and self.ffmpeg_path.exists()
+        if self.ffmpeg_path is not None and self.ffmpeg_path.exists():
+            return True
+        if self._download_attempted or os.environ.get("FUSE_DISABLE_FFMPEG_DOWNLOAD") == "1":
+            return False
+        self._download_attempted = True
+        try:
+            from fuse.ffmpeg.downloader import download_ffmpeg
+            ffmpeg, ffprobe = download_ffmpeg()
+            self._set_paths(ffmpeg, ffprobe)
+            return self._verify(ffmpeg, "ffmpeg") and self._verify(ffprobe, "ffprobe")
+        except Exception:
+            return False
+
+    def ensure_available(self) -> bool:
+        """Explicit setup entry point used by `fuse setup`."""
+        self._download_attempted = False
+        return self.is_ffmpeg_available
 
 default_resolver = FFmpegResolver()

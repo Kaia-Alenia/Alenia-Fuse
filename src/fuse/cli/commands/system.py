@@ -110,6 +110,18 @@ def handle_version(args):
     return 0
 
 
+@register_command(name="setup", description_key="commands.setup.description", arguments=[])
+def handle_setup(args):
+    """Download and verify the platform FFmpeg asset into the user cache."""
+    from fuse.ffmpeg.resolver import default_resolver
+    print("\n  Preparing Fuse media engine...\n")
+    if not default_resolver.ensure_available():
+        print("  FFmpeg setup failed. Install FFmpeg manually or check your network and release tag.", file=sys.stderr)
+        return 1
+    print(f"  FFmpeg ready: {default_resolver.ffmpeg_path}\n")
+    return 0
+
+
 # ─── Thumbnail ───────────────────────────────────────────────────────────────
 
 

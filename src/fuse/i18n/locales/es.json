@@ -151,6 +151,9 @@
     "version": {
       "description": "Muestra la versión de Fuse."
     },
+    "setup": {
+      "description": "Descarga y verifica el motor multimedia FFmpeg."
+    },
     "clear": {
       "description": "Limpia la pantalla."
     },

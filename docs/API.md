@@ -53,8 +53,10 @@ target; it is not treated as raw AAC.
 The Python package does not require bundled FFmpeg binaries. Fuse resolves
 FFmpeg in this order: `FUSE_FFMPEG_DIR`, an explicitly configured local
 cache, packaged development binaries, and the operating-system `PATH`.
-Missing FFmpeg returns a clear operation error. Fuse never downloads an
-executable during import or silently contacts an external service.
+If FFmpeg is missing, Fuse downloads the matching GitHub Release asset on
+first use, verifies its SHA-256 checksum, and stores it in the user cache.
+Set `FUSE_DISABLE_FFMPEG_DOWNLOAD=1` to disable this behavior, or run
+`fuse setup` explicitly before the first operation.
 
 Every operation returns `OperationResult`, including `success`, `operation`,
 `input_path`, `output_path`, optional inspected `media`, warnings and a useful
