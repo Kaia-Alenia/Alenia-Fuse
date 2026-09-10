@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.7
+
+- Route image-to-PDF conversion through the built-in PDF exporter.
+- Preserve transparent animated images in WebM where supported.
+- Reject video targets that cannot preserve an input alpha channel.
+
 ## 2.0.6
 
 - Route `convert image.png output.pdf` through the built-in image-to-PDF exporter.

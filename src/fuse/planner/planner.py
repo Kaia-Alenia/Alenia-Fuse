@@ -110,9 +110,17 @@ class OperationPlanner:
         if not media.main_video:
             return True
         pix_fmt = media.main_video.pix_fmt or ""
-        if any(value in pix_fmt for value in ("rgba", "alpha", "yuva", "argb", "bgra")) and target_fmt in ("jpg", "jpeg"):
+        has_alpha = any(value in pix_fmt for value in ("rgba", "alpha", "yuva", "argb", "bgra"))
+        if has_alpha and target_fmt in ("jpg", "jpeg"):
             plan.is_valid = False
             plan.error_reason = "The input image has an alpha channel (transparency). JPEG does not support transparency. Please choose a background color or a different format."
+            return False
+        if has_alpha and target_fmt in {"mp4", "mkv", "mov", "avi", "ts", "flv"}:
+            plan.is_valid = False
+            plan.error_reason = (
+                f"The input image has transparency, but {target_fmt.upper()} cannot preserve it. "
+                "Use WebM to keep the alpha channel, or explicitly flatten the image first."
+            )
             return False
         return True
 
@@ -175,6 +183,12 @@ class OperationPlanner:
             args += ["-vn"]
         elif target.kind in {"image", "animated_image"}:
             args += ["-an"]
+        if fmt == "webm" and media.main_video:
+            pix_fmt = media.main_video.pix_fmt or ""
+            if any(value in pix_fmt for value in ("rgba", "alpha", "yuva", "argb", "bgra")):
+                # VP9 in WebM can carry alpha when alternate reference frames
+                # are disabled. This avoids silently compositing on white.
+                args += ["-pix_fmt", "yuva420p", "-auto-alt-ref", "0"]
         if media.main_audio and strategy["audio_codec"]:
             if not self.registry.has_encoder(strategy["audio_codec"]):
                 plan.is_valid = False

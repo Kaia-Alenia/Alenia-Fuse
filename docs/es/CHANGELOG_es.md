@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.7
+
+- Las conversiones de imagen a PDF usan el exportador integrado.
+- Se conserva la transparencia de imágenes animadas en WebM cuando es compatible.
+- Se rechazan formatos de video que no pueden conservar el canal alfa.
+
 ## 2.0.6
 
 - `convert imagen.png salida.pdf` usa correctamente el exportador integrado de imagen a PDF.
