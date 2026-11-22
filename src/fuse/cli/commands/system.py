@@ -116,7 +116,13 @@ def handle_setup(args):
     from fuse.ffmpeg.resolver import default_resolver
     print("\n  Preparing Fuse media engine...\n")
     if not default_resolver.ensure_available():
-        print("  FFmpeg setup failed. Install FFmpeg manually or check your network and release tag.", file=sys.stderr)
+        reason = default_resolver.unavailable_reason
+        print("  FFmpeg setup failed.", file=sys.stderr)
+        if reason:
+            print(f"  Reason: {reason}", file=sys.stderr)
+        print("  Install FFmpeg manually (https://ffmpeg.org/download.html) "
+              "or set FUSE_FFMPEG_DIR to a folder containing ffmpeg and ffprobe.",
+              file=sys.stderr)
         return 1
     print(f"  FFmpeg ready: {default_resolver.ffmpeg_path}\n")
     return 0
