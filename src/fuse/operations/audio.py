@@ -22,7 +22,8 @@ def _run_audio_plan(operation: str, media: Media, output_path: str,
         return OperationResult.from_error(f"Input file not found: {media.path}", Path(output_path))
     if not default_resolver.is_ffmpeg_available:
         return OperationResult.from_error(
-            "FFmpeg is not available. Install it or set FUSE_FFMPEG_DIR.",
+            "FFmpeg is not available. Install it or set FUSE_FFMPEG_DIR."
+            + (f" Reason: {default_resolver.unavailable_reason}" if default_resolver.unavailable_reason else ""),
             Path(output_path),
         )
 

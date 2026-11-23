@@ -49,9 +49,21 @@ class ConvertOperation:
         # Validate input still exists
         if not in_p.exists():
             return OperationResult.from_error(f"Input file not found: {self.media.path}", Path(self.output_path))
+
+        # Still image -> still image without FFmpeg: Pillow does it.
+        # (Media.type is IMAGE thanks to the Pillow inspect fallback, so
+        # this also works for `fuse convert photo.png out.webp`.)
+        if self.media.type.value == "image" and self.target_format in {
+            "png", "jpg", "jpeg", "webp", "bmp", "tiff",
+        }:
+            from fuse.operations.image import ImageOperation
+            return ImageOperation(self.media).convert(self.target_format).output(str(out_p)).run()
+
         if not default_resolver.is_ffmpeg_available:
+            reason = default_resolver.unavailable_reason
             return OperationResult.from_error(
-            "FFmpeg is not available. Install it or set FUSE_FFMPEG_DIR.",
+                "FFmpeg is not available. Install it or set FUSE_FFMPEG_DIR."
+                + (f" Reason: {reason}" if reason else ""),
                 Path(self.output_path),
             )
 

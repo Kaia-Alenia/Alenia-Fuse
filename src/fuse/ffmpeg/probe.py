@@ -14,7 +14,17 @@ def probe(file_path: Path) -> dict[str, Any]:
     Executes ffprobe to get metadata and stream information in JSON format.
     """
     if not default_resolver.is_ffmpeg_available:
-        raise FFprobeError("FFprobe is not available")
+        reason = default_resolver.unavailable_reason
+        raise FFprobeError(f"FFprobe is not available. {reason}" if reason else "FFprobe is not available")
+    if not default_resolver.is_ffprobe_available:
+        # Never build a command out of str(None) == "None": that used to
+        # explode as a confusing "file not found" for the literal path
+        # "None" on machines with ffmpeg but no ffprobe.
+        raise FFprobeError(
+            "FFmpeg was found but ffprobe is missing. Install a complete "
+            "FFmpeg build that includes ffprobe, or set FUSE_FFMPEG_DIR "
+            "to a folder containing both ffmpeg and ffprobe."
+        )
         
     cmd = [
         str(default_resolver.ffprobe_path),

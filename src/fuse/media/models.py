@@ -62,9 +62,51 @@ class Media:
         return streams[0] if streams else None
 
     @staticmethod
+    def _inspect_image_with_pillow(file_path: str) -> "Media | None":
+        """Inspect a still image with Pillow when ffprobe is unavailable.
+
+        Returns None when Pillow cannot read the file (not an image, or a
+        corrupt one) so the caller can report the original ffprobe error.
+        """
+        suffix = Path(file_path).suffix.lower()
+        if suffix not in {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tiff", ".tif", ".gif"}:
+            return None
+        try:
+            from PIL import Image as PILImage
+        except ImportError:
+            return None
+        try:
+            with PILImage.open(file_path) as image:
+                width, height = image.size
+                fmt = (image.format or suffix.lstrip(".")).lower()
+        except Exception:
+            return None
+        media = Media(
+            path=str(file_path),
+            container=fmt,
+            duration=0.0,
+            size=Path(file_path).stat().st_size,
+            type=MediaType.IMAGE,
+        )
+        media.streams.append(Stream(
+            index=0, codec_type="video", codec_name=fmt,
+            width=width, height=height,
+        ))
+        return media
+
+    @staticmethod
     def inspect(file_path: str) -> 'Media':
         from fuse.ffmpeg.probe import probe
-        data = probe(Path(file_path))
+        try:
+            data = probe(Path(file_path))
+        except Exception:
+            # Still images do not need ffprobe: Pillow already knows their
+            # size and format. Without this, every image operation failed
+            # on machines without FFmpeg before any conversion was tried.
+            pillow_media = Media._inspect_image_with_pillow(file_path)
+            if pillow_media is not None:
+                return pillow_media
+            raise
 
         format_info = data.get("format", {})
         streams_info = data.get("streams", [])

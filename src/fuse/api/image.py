@@ -19,7 +19,11 @@ from fuse.operations.image import ImageOperation
 
 
 class Image:
-    """High-level API for image files (via FFmpeg, no Pillow required)."""
+    """High-level API for image files.
+
+    Still images convert with Pillow when FFmpeg is not available;
+    animated GIF / AVIF still require FFmpeg.
+    """
 
     def __init__(self, path: str):
         if not Path(path).is_file():
