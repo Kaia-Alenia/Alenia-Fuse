@@ -178,6 +178,14 @@ def handle_formats(args):
                   arguments=[])
 def handle_codecs(args):
     from fuse.ffmpeg.capabilities import default_registry
+    from fuse.ffmpeg.resolver import default_resolver
+    if not default_resolver.is_ffmpeg_available:
+        print("\n  FFmpeg is not available, so no codecs can be listed.", file=sys.stderr)
+        reason = default_resolver.unavailable_reason
+        if reason:
+            print(f"  Reason: {reason}", file=sys.stderr)
+        print("  Run `fuse setup` to download FFmpeg, or install it manually.\n", file=sys.stderr)
+        return 1
     default_registry.load_from_ffmpeg()
     codecs = sorted(default_registry.codecs)
     print(f"\n  Supported codecs ({len(codecs)} total):\n")
@@ -197,6 +205,14 @@ def handle_codecs(args):
 )
 def handle_hardware(args):
     from fuse.ffmpeg.capabilities import default_registry
+    from fuse.ffmpeg.resolver import default_resolver
+    if not default_resolver.is_ffmpeg_available:
+        print("\n  FFmpeg is not available, so no hardware encoders can be detected.", file=sys.stderr)
+        reason = default_resolver.unavailable_reason
+        if reason:
+            print(f"  Reason: {reason}", file=sys.stderr)
+        print("  Run `fuse setup` to download FFmpeg, or install it manually.\n", file=sys.stderr)
+        return 1
     default_registry.load_from_ffmpeg()
     hw_prefixes = ("nvenc", "amf", "qsv", "videotoolbox", "vaapi", "vulkan")
     hw_encoders = [e for e in sorted(default_registry.encoders) if any(e.endswith(p) for p in hw_prefixes)]
@@ -221,6 +237,14 @@ def handle_hardware(args):
 )
 def handle_filters(args):
     from fuse.ffmpeg.capabilities import default_registry
+    from fuse.ffmpeg.resolver import default_resolver
+    if not default_resolver.is_ffmpeg_available:
+        print("\n  FFmpeg is not available, so no filters can be listed.", file=sys.stderr)
+        reason = default_resolver.unavailable_reason
+        if reason:
+            print(f"  Reason: {reason}", file=sys.stderr)
+        print("  Run `fuse setup` to download FFmpeg, or install it manually.\n", file=sys.stderr)
+        return 1
     default_registry.load_from_ffmpeg()
     search = getattr(args, "search", None)
     filters = sorted(default_registry.filters)

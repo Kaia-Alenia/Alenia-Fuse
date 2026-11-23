@@ -17,30 +17,45 @@ class FFmpegResolver:
         self.ffprobe_path: Path | None = None
         self.version_info: dict[str, str] = {}
         self._download_attempted = False
-        
+        # The real reason FFmpeg is unavailable, when it is. Previously the
+        # download failure was swallowed by a bare `except: return False`,
+        # so users only ever saw "FFmpeg is not available" with no cause.
+        self.last_error: str | None = None
+        self.ffprobe_missing: bool = False
+
         self.resolve()
+
+    @property
+    def unavailable_reason(self) -> str:
+        """Human-readable cause for FFmpeg being unavailable (or '')."""
+        if self.is_ffmpeg_available:
+            return ""
+        return self.last_error or (
+            "FFmpeg was not found in FUSE_FFMPEG_DIR, the bundled _bin "
+            "folder, the user cache, or the system PATH."
+        )
 
     def _get_platform_dir_and_ext(self):
         system = platform.system().lower()
         machine = platform.machine().lower()
-        
+
         if system == "windows":
             if machine in ["amd64", "x86_64"]:
                 return "windows-x64", ".exe"
             else:
-                raise UnsupportedPlatformError(f"Fuse does not include an FFmpeg build for:\\nPlatform: {system}\\nArchitecture: {machine}")
+                raise UnsupportedPlatformError(f"Fuse does not include an FFmpeg build for:\nPlatform: {system}\nArchitecture: {machine}")
         elif system == "linux":
             if machine in ["amd64", "x86_64"]:
                 return "linux-x64", ""
             else:
-                raise UnsupportedPlatformError(f"Fuse does not include an FFmpeg build for:\\nPlatform: {system}\\nArchitecture: {machine}")
+                raise UnsupportedPlatformError(f"Fuse does not include an FFmpeg build for:\nPlatform: {system}\nArchitecture: {machine}")
         elif system == "darwin":
             if machine in ["arm64", "aarch64"]:
                 return "macos-arm64", ""
             else:
-                raise UnsupportedPlatformError(f"Fuse does not include an FFmpeg build for:\\nPlatform: {system}\\nArchitecture: {machine}")
+                raise UnsupportedPlatformError(f"Fuse does not include an FFmpeg build for:\nPlatform: {system}\nArchitecture: {machine}")
         else:
-            raise UnsupportedPlatformError(f"Fuse does not include an FFmpeg build for:\\nPlatform: {system}\\nArchitecture: {machine}")
+            raise UnsupportedPlatformError(f"Fuse does not include an FFmpeg build for:\nPlatform: {system}\nArchitecture: {machine}")
 
     def resolve(self):
         candidates = []
@@ -60,6 +75,14 @@ class FFmpegResolver:
         cache_root = os.environ.get("FUSE_FFMPEG_CACHE")
         if cache_root:
             candidates.append(Path(cache_root))
+        else:
+            # The downloader's default cache (~/.cache/alenia-fuse/ffmpeg)
+            # is a candidate too, so a previous `fuse setup` is reused.
+            try:
+                from fuse.ffmpeg.downloader import default_cache_dir
+                candidates.append(default_cache_dir() / self._get_platform_dir_and_ext()[0])
+            except Exception:
+                pass
 
         names = [f"ffmpeg{ext}", "ffmpeg.exe" if ext != ".exe" else "ffmpeg"]
         probe_names = [f"ffprobe{ext}", "ffprobe.exe" if ext != ".exe" else "ffprobe"]
@@ -71,6 +94,8 @@ class FFmpegResolver:
                 if self._verify(self.ffmpeg_path, "ffmpeg"):
                     if self.ffprobe_path:
                         self._verify(self.ffprobe_path, "ffprobe")
+                    else:
+                        self._note_missing_ffprobe(ffmpeg)
                     return
 
         # Lean pip installs use the operating system package manager instead
@@ -78,13 +103,34 @@ class FFmpegResolver:
         system_ffmpeg = shutil.which("ffmpeg")
         system_ffprobe = shutil.which("ffprobe")
         if system_ffmpeg and self._verify(Path(system_ffmpeg), "ffmpeg"):
-            self._set_paths(Path(system_ffmpeg), Path(system_ffprobe) if system_ffprobe else None)
+            ffprobe = Path(system_ffprobe) if system_ffprobe else self._sibling_ffprobe(Path(system_ffmpeg))
+            self._set_paths(Path(system_ffmpeg), ffprobe)
             if self.ffprobe_path:
                 self._verify(self.ffprobe_path, "ffprobe")
+            else:
+                self._note_missing_ffprobe(Path(system_ffmpeg))
+
+    def _sibling_ffprobe(self, ffmpeg_path: Path) -> Path | None:
+        """ffprobe usually ships next to ffmpeg even when not in PATH."""
+        ext = ffmpeg_path.suffix
+        candidate = ffmpeg_path.parent / f"ffprobe{ext}"
+        if candidate.is_file():
+            return candidate
+        return None
+
+    def _note_missing_ffprobe(self, ffmpeg_path: Path) -> None:
+        self.ffprobe_missing = True
+        self.last_error = (
+            f"FFmpeg was found at {ffmpeg_path} but ffprobe is missing "
+            "(checked PATH and the folder next to ffmpeg). "
+            "Install a complete FFmpeg build that includes ffprobe, "
+            "or set FUSE_FFMPEG_DIR to a folder containing both."
+        )
 
     def _set_paths(self, ffmpeg: Path, ffprobe: Path | None):
         self.ffmpeg_path = ffmpeg
         self.ffprobe_path = ffprobe
+        self.ffprobe_missing = ffprobe is None
 
     def _verify(self, path: Path | None, kind: str) -> bool:
         if not path or not path.exists():
@@ -113,8 +159,19 @@ class FFmpegResolver:
             ffmpeg, ffprobe = download_ffmpeg()
             self._set_paths(ffmpeg, ffprobe)
             return self._verify(ffmpeg, "ffmpeg") and self._verify(ffprobe, "ffprobe")
-        except Exception:
+        except Exception as exc:
+            # Do NOT swallow the cause: record it so `fuse setup` and
+            # every conversion can show the user why it failed.
+            self.last_error = (
+                f"Automatic FFmpeg download failed: {exc}. "
+                "Install FFmpeg manually (see https://ffmpeg.org/download.html) "
+                "or set FUSE_FFMPEG_DIR to a folder containing ffmpeg and ffprobe."
+            )
             return False
+
+    @property
+    def is_ffprobe_available(self) -> bool:
+        return self.ffprobe_path is not None and self.ffprobe_path.exists()
 
     def ensure_available(self) -> bool:
         """Explicit setup entry point used by `fuse setup`."""
